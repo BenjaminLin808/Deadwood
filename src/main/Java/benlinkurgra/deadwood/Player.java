@@ -1,3 +1,5 @@
+package benlinkurgra.deadwood;
+
 public class Player {
     String name = "";
     String location = "";

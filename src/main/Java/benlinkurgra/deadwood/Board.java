@@ -1,3 +1,5 @@
+package benlinkurgra.deadwood;
+
 import benlinkurgra.deadwood.location.Location;
 
 import java.util.HashMap;

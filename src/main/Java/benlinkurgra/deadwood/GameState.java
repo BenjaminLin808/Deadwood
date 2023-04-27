@@ -1,3 +1,5 @@
+package benlinkurgra.deadwood;
+
 import benlinkurgra.deadwood.location.Scene;
 
 import java.util.PriorityQueue;

@@ -1,2 +1,2 @@
 # Deadwood
-Deadwood Board Game
+Deadwood benlinkurgra.deadwood.Board Game
