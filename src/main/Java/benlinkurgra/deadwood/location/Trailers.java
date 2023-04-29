@@ -1,8 +1,13 @@
 package benlinkurgra.deadwood.location;
 
-public class Trailers extends Location {
+import java.util.ArrayList;
 
-    public Trailers(String name) {
+public class Trailers extends Location {
+    ArrayList<String> neighbors = new ArrayList<>();
+
+    public Trailers(String name, ArrayList<String> neighbors) {
         super(name);
+        this.neighbors = neighbors;
     }
+
 }

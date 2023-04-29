@@ -5,9 +5,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
 
-import benlinkurgra.deadwood.location.RoleData;
-import benlinkurgra.deadwood.location.Roles;
-import benlinkurgra.deadwood.location.SetLocation;
+import benlinkurgra.deadwood.location.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -38,7 +36,7 @@ public class ParseXML {
             Document doc = null;
 
             try{
-                doc = db.parse("D:\\IdeaProjects\\Deadwood\\src\\main\\Java\\benlinkurgra\\deadwood\\board.xml");
+                doc = db.parse("D:\\IdeaProjects\\Deadwood\\src\\main\\resources\\board.xml");
             } catch (Exception ex){
                 System.out.println("XML parse failure");
                 ex.printStackTrace();
@@ -53,8 +51,8 @@ public class ParseXML {
         NodeList trailers = root.getElementsByTagName("trailer");
         NodeList offices = root.getElementsByTagName("office");
 
-        readBoardSets(sets);
-        readTrailers(trailers);
+//        readBoardSets(sets);
+//        readTrailers(trailers);
         readOffices(offices);
 
     }
@@ -100,39 +98,36 @@ public class ParseXML {
                 roleList.add(new RoleData(roleRank, partName, partLine, false));
             }
             Roles setRoles = new Roles(roleList);
-            SetLocation setLocation = new SetLocation(setName, takes, setRoles);
+            SetLocation setLocation = new SetLocation(setName, takes, setRoles, neighbors);
             setsData.put(setName, setLocation);
-            System.out.println(neighbors);
-            System.out.println(takes);
-            System.out.println(roleName + ", " + roleRank + ", " + roleLine);
-            System.out.println("");
         }
         return setsData;
     }
 
-    public void readTrailers(NodeList trailers){
+    public Trailers readTrailers(NodeList trailers){
+        ArrayList<String> neighbors = new ArrayList<>();
         for(int i = 0; i < trailers.getLength(); i++){
             Element trailer = (Element) trailers.item(i);
             NodeList neighborsElement = trailer.getElementsByTagName("neighbor");
-            ArrayList<String> neighbors = new ArrayList<>();
             for(int j = 0; j < neighborsElement.getLength(); j++) {
                 Element neighbor = (Element) neighborsElement.item(j);
                 String neighborName = neighbor.getAttribute("name");
                 neighbors.add(neighborName);
             }
-            System.out.println(neighbors);
         }
+        return new Trailers("trailers", neighbors);
     }
 
-    public void readOffices(NodeList offices){
+    public CastingOffice readOffices(NodeList offices){
+        ArrayList<String> neighbors = new ArrayList<>();
+        Map<Integer, Map<String, Integer>> upgradeCost = new HashMap<>();
+        int upgradeRank = 0;
+        String currencyType = "";
+        int amount = 0;
         for(int i = 0; i < offices.getLength(); i++){
             Element office = (Element) offices.item(i);
             NodeList neighborsElement = office.getElementsByTagName("neighbor");
             NodeList upgradeElement = office.getElementsByTagName("upgrade");
-            ArrayList<String> neighbors = new ArrayList<>();
-            int upgradeRank = 0;
-            String currencyType = "";
-            int amount = 0;
             for(int j = 0; j < neighborsElement.getLength(); j++) {
                 Element neighbor = (Element) neighborsElement.item(j);
                 String neighborName = neighbor.getAttribute("name");
@@ -146,10 +141,14 @@ public class ParseXML {
                 upgradeRank = Integer.parseInt(level);
                 currencyType = currency;
                 amount = Integer.parseInt(amt);
-                System.out.println(upgradeRank + ", " + currencyType + ", " + amount);
+                Map<String, Integer> temp = new HashMap<>();
+                temp.put(currencyType, amount);
+                upgradeCost.put(upgradeRank, temp);
+                System.out.println(upgradeCost.get(upgradeRank).get(currencyType));
             }
-            System.out.println(neighbors);
+
         }
+        return new CastingOffice("CastingOffice", upgradeCost, neighbors);
     }
 
 }

@@ -9,13 +9,15 @@ public class SetLocation extends Location{
     private final Roles roles;
     private Scene scene;
     private SceneStatus sceneStatus;
+    private ArrayList<String> neighbors = new ArrayList<>();
 
-    public SetLocation(String name, int maxShotTokens, Roles roles) {
+    public SetLocation(String name, int maxShotTokens, Roles roles, ArrayList<String> neighbors) {
         super(name);
         this.maxShotTokens = maxShotTokens;
         this.currentShotTokens = maxShotTokens;
         this.roles = roles;
         this.sceneStatus = SceneStatus.HIDDEN;
+        this.neighbors = neighbors;
     }
 
     public int getCurrentShotTokens() {
