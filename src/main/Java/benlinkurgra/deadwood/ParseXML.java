@@ -5,16 +5,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
 
+import benlinkurgra.deadwood.location.RoleData;
+import benlinkurgra.deadwood.location.Roles;
 import benlinkurgra.deadwood.location.SetLocation;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ParseXML {
     public static void main(String[] args) {
@@ -88,6 +87,8 @@ public class ParseXML {
                     takes = shotCounter;
                 }
             }
+
+            List<RoleData> roleList = new ArrayList<>();
             for(int j = 0; j < partsElement.getLength(); j++){
                 Element part = (Element) partsElement.item(j);
                 String partName = part.getAttribute("name");
@@ -96,8 +97,10 @@ public class ParseXML {
                 roleName = partName;
                 roleRank = Integer.parseInt(partLevel);
                 roleLine = partLine;
+                roleList.add(new RoleData(roleRank, partName, partLine, false));
             }
-            SetLocation setLocation = new SetLocation(setName, takes, )
+            Roles setRoles = new Roles(roleList);
+            SetLocation setLocation = new SetLocation(setName, takes, setRoles);
             setsData.put(setName, setLocation);
             System.out.println(neighbors);
             System.out.println(takes);

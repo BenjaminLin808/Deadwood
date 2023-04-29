@@ -10,21 +10,8 @@ public class Roles {
     // a map where keys are the scene name and values are role information
     private final List<RoleData> roleList;
 
-    public Roles(Card rawData, boolean onCard) {
-        this.roleList = new ArrayList<>();
-        //TODO build hashmap from rawData
-
-        // EXAMPLE
-        roleList.add(new RoleData(
-                2,
-                "Falls off Roof",
-                "Aaaaiiiigggghh!",
-                onCard));
-        roleList.add(new RoleData(2,
-                "Woman in Black Dress",
-                "Aaaaiiiigggghh!",
-                onCard));
-        // END EXAMPLE
+    public Roles(List<RoleData> roles) {
+        this.roleList = roles;
     }
 
     public List<RoleData> availableRoles(int playerRank) {
