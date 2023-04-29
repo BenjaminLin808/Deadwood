@@ -1,20 +1,23 @@
 package benlinkurgra.deadwood;
 
 public class Player {
-    String name = "";
-    String location = "";
-    int credits;
-    int dollars;
-    int actingRank;
-    boolean workingRole;
-    int practiceToken;
+    private String name = "player1";
+    private String location = "trailer";
+    private int credits = 0;
+    private int dollars = 0;
+    private int actingRank = 1;
+    private boolean workingRole = false;
+    private int practiceToken = 0;
 
-    public Player(String name, int credits, int dollars, int actingRank) {
+    public Player(String name, int credits, int actingRank) {
         this.name = name;
         this.credits = credits;
-        this.dollars = dollars;
         this.actingRank = actingRank;
     }
+    public Player(String name){
+        this.name = name;
+    }
+
 
     public void move(String newLocation){
         this.location = newLocation;

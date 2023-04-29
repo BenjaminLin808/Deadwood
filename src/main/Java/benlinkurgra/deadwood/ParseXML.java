@@ -5,6 +5,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
 
+import benlinkurgra.deadwood.location.SetLocation;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -12,6 +13,8 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ParseXML {
     public static void main(String[] args) {
@@ -50,15 +53,25 @@ public class ParseXML {
         NodeList sets = root.getElementsByTagName("set");
         NodeList trailers = root.getElementsByTagName("trailer");
         NodeList offices = root.getElementsByTagName("office");
+
+        readBoardSets(sets);
+        readTrailers(trailers);
+        readOffices(offices);
+
+    }
+
+    public Map<String, SetLocation> readBoardSets(NodeList sets){
+        Map<String, SetLocation> setsData = new HashMap<>();
+
         for (int i = 0; i < sets.getLength(); i++){
             Element set = (Element) sets.item(i);
-            String setName = set.getAttribute("name");
-            System.out.println(setName);
             NodeList neighborsElement = set.getElementsByTagName("neighbor");
             NodeList takesElement = set.getElementsByTagName("take");
             NodeList partsElement = set.getElementsByTagName("part");
 
+            String setName = set.getAttribute("name");
             ArrayList<String> neighbors = new ArrayList<>();
+
             int takes = 0;
             String roleName = "";
             int roleRank = 0;
@@ -84,11 +97,17 @@ public class ParseXML {
                 roleRank = Integer.parseInt(partLevel);
                 roleLine = partLine;
             }
-//            System.out.println(neighbors);
-//            System.out.println(takes);
-//            System.out.println(roleName + ", " + roleRank + ", " + roleLine);
+            SetLocation setLocation = new SetLocation(setName, takes, )
+            setsData.put(setName, setLocation);
+            System.out.println(neighbors);
+            System.out.println(takes);
+            System.out.println(roleName + ", " + roleRank + ", " + roleLine);
+            System.out.println("");
         }
+        return setsData;
+    }
 
+    public void readTrailers(NodeList trailers){
         for(int i = 0; i < trailers.getLength(); i++){
             Element trailer = (Element) trailers.item(i);
             NodeList neighborsElement = trailer.getElementsByTagName("neighbor");
@@ -98,9 +117,11 @@ public class ParseXML {
                 String neighborName = neighbor.getAttribute("name");
                 neighbors.add(neighborName);
             }
-//            System.out.println(neighbors);
+            System.out.println(neighbors);
         }
+    }
 
+    public void readOffices(NodeList offices){
         for(int i = 0; i < offices.getLength(); i++){
             Element office = (Element) offices.item(i);
             NodeList neighborsElement = office.getElementsByTagName("neighbor");
@@ -127,4 +148,5 @@ public class ParseXML {
             System.out.println(neighbors);
         }
     }
+
 }
