@@ -1,7 +1,5 @@
 package benlinkurgra.deadwood.location;
 
-import benlinkurgra.deadwood.readxml.models.Card;
-
 import java.util.ArrayList;
 import java.util.List;
 

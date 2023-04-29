@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class CastingOffice extends Location {
     private final Map<Integer, UpgradeCost> upgrades;
-    public CastingOffice(String name, Map<Integer, UpgradeCost> upgrades) {
-        super(name);
+    public CastingOffice(String name, Map<Integer, UpgradeCost> upgrades, ArrayList<String> neighbors) {
+        super(name, neighbors);
         this.upgrades = upgrades;
     }
 
