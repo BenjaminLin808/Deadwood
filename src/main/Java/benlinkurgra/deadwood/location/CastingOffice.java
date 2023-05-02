@@ -26,9 +26,9 @@ public class CastingOffice extends Location {
         UpgradeCost rankCost = upgrades.get(newRank);
         if (player.getActingRank() <= newRank) {
             return false;
-        } else if (currency == CurrencyType.CREDITS && player.getCredits() < rankCost.creditCost()) {
+        } else if (currency == CurrencyType.CREDITS && player.getCredits() < rankCost.getCreditsCost()) {
             return false;
-        } else if (currency == CurrencyType.DOLLARS && player.getDollars() < rankCost.dollarCost()) {
+        } else if (currency == CurrencyType.DOLLARS && player.getDollars() < rankCost.getDollarCost()) {
             return false;
         } else {
             return true;

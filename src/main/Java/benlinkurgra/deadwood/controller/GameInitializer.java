@@ -1,5 +1,7 @@
-package benlinkurgra.deadwood;
+package benlinkurgra.deadwood.controller;
 
+import benlinkurgra.deadwood.Display;
+import benlinkurgra.deadwood.Player;
 import benlinkurgra.deadwood.location.Location;
 
 import java.util.List;
@@ -7,6 +9,14 @@ import java.util.Map;
 import java.util.Queue;
 
 public class GameInitializer {
+    private final Display display;
+    public GameInitializer(Display display) {
+        this.display = display;
+    }
+    public int startGame() {
+        return display.startingDisplay();
+    }
+
     public void configureBoard(Map<Location, List<Location>> layout){
         System.out.println("based on the map from Board class, we will set up the board");
     }

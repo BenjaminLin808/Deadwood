@@ -63,9 +63,7 @@ public class ParseBoardXML {
             ArrayList<String> neighbors = new ArrayList<>();
 
             int takes = 0;
-            String roleName = "";
             int roleRank = 0;
-            String roleLine = "";
             for(int j = 0; j < neighborsElement.getLength(); j++) {
                 Element neighbor = (Element) neighborsElement.item(j);
                 String neighborName = neighbor.getAttribute("name");
@@ -83,12 +81,9 @@ public class ParseBoardXML {
             for(int j = 0; j < partsElement.getLength(); j++){
                 Element part = (Element) partsElement.item(j);
                 String partName = part.getAttribute("name");
-                String partLevel = part.getAttribute("level");
+                int partLevel = Integer.parseInt(part.getAttribute("level"));
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
-                roleName = partName;
-                roleRank = Integer.parseInt(partLevel);
-                roleLine = partLine;
-                roleList.add(new RoleData(roleRank, partName, partLine, false));
+                roleList.add(new RoleData(partLevel, partName, partLine, false));
             }
             Roles setRoles = new Roles(roleList);
             SetLocation setLocation = new SetLocation(setName, takes, setRoles, neighbors);

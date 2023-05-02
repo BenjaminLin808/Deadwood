@@ -1,4 +1,4 @@
-package benlinkurgra.deadwood;
+package benlinkurgra.deadwood.controller;
 
 public class LocationProvider {
     public void updateSetLocationStatus(String location){
