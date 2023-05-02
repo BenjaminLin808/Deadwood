@@ -25,10 +25,7 @@ public class GameInitializer extends DisplayController {
      * @return number of players, when entry is valid.
      */
     public int getNumberPlayers() {
-        display.sendPromptNumPlayers();
-        String input = display.getUserInput();
-        checkForRequest(input);
-        //TODO need to take action if was request
+        String input =handleInput(display::sendPromptNumPlayers);
         try {
             int num = Integer.parseInt(input);
             if (num < 2 || num > 8) {
@@ -52,14 +49,10 @@ public class GameInitializer extends DisplayController {
     public Queue<Player> determinePlayerOrder(int numPlayers) {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
-            display.sendPromptName();
-            String playerName = display.getUserInput();
-            //TODO need to take action if was request
+            String playerName = handleInput(display::sendPromptName);
             while (containsName(players, playerName)) {
                 display.sendInvalidName(players);
-                display.sendPromptName();
-                playerName = display.getUserInput();
-                //TODO need to take action if was request
+                playerName = handleInput(display::sendPromptName);
             }
             players.add(createPlayer(numPlayers, playerName));
         }
