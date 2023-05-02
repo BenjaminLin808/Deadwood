@@ -4,7 +4,6 @@ import benlinkurgra.deadwood.CurrencyType;
 import benlinkurgra.deadwood.Player;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class CastingOffice extends Location {
@@ -33,6 +32,11 @@ public class CastingOffice extends Location {
         } else {
             return true;
         }
+    }
+
+    public boolean hasUpgrades(Player player) {
+        //TODO find if player has a valid upgrades
+        return false;
     }
 
     public String validUpgrades(Player player) {

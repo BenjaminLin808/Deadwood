@@ -6,10 +6,10 @@ import benlinkurgra.deadwood.location.Location;
 
 import java.util.*;
 
-public class GameInitializer {
-    private final Display display;
+public class GameInitializer extends DisplayController {
+
     public GameInitializer(Display display) {
-        this.display = display;
+        super(display);
     }
 
     /**
@@ -20,12 +20,27 @@ public class GameInitializer {
     }
 
     /**
-     * Signals UI to request number of players
+     * Signals UI to request number of players.
      *
-     * @return number of players
+     * @return number of players, when entry is valid.
      */
     public int getNumberPlayers() {
-        return display.promptNumPlayers();
+        display.sendPromptNumPlayers();
+        String input = display.getUserInput();
+        checkForRequest(input);
+        //TODO need to take action if was request
+        try {
+            int num = Integer.parseInt(input);
+            if (num < 2 || num > 8) {
+                display.displayInvalidNumPlayers(num);
+                return getNumberPlayers();
+            } else {
+                return num;
+            }
+        } catch (NumberFormatException e) {
+            display.displayNotANumber(input);
+            return getNumberPlayers();
+        }
     }
 
     /**
@@ -37,9 +52,14 @@ public class GameInitializer {
     public Queue<Player> determinePlayerOrder(int numPlayers) {
         List<Player> players = new ArrayList<>();
         for (int i = 0; i < numPlayers; i++) {
-            String playerName = display.promptName();
+            display.sendPromptName();
+            String playerName = display.getUserInput();
+            //TODO need to take action if was request
             while (containsName(players, playerName)) {
-                playerName = display.sendInvalidName(players);
+                display.sendInvalidName(players);
+                display.sendPromptName();
+                playerName = display.getUserInput();
+                //TODO need to take action if was request
             }
             players.add(createPlayer(numPlayers, playerName));
         }

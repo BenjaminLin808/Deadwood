@@ -3,7 +3,7 @@ package benlinkurgra.deadwood.location;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetLocation extends Location{
+public class SetLocation extends Location {
     private int currentShotTokens;
     private final int maxShotTokens;
     private final Roles roles;
@@ -46,6 +46,10 @@ public class SetLocation extends Location{
         resetShotTokens();
         setSceneStatus(SceneStatus.HIDDEN);
         this.scene = scene;
+    }
+
+    public int getSceneBudget() {
+        return scene.getBudget();
     }
 
     public List<Roles> getAllAvailableRoles() {

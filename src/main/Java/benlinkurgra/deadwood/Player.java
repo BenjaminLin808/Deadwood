@@ -1,7 +1,7 @@
 package benlinkurgra.deadwood;
 
 public class Player {
-    private String name = "player1";
+    private final String name;
     private String location = "trailer";
     private int credits = 0;
     private int dollars = 0;
@@ -14,10 +14,10 @@ public class Player {
         this.credits = credits;
         this.actingRank = actingRank;
     }
+
     public Player(String name){
         this.name = name;
     }
-
 
     public void move(String newLocation){
         this.location = newLocation;
@@ -46,10 +46,6 @@ public class Player {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getLocation() {

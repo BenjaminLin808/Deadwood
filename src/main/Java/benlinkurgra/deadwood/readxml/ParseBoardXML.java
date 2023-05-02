@@ -12,6 +12,18 @@ import org.w3c.dom.Element;
 import java.util.*;
 
 public class ParseBoardXML {
+    public Map<String, Location> getLocations(String filename) throws ParserConfigurationException {
+        Map<String, Location> locations = new HashMap<>();
+        try {
+            Document doc = getDocFromFile(filename);
+            //TODO decide who we want locations structured
+            return locations;
+        } catch (Exception e) {
+            System.out.println("Error = " + e);
+            throw e;
+        }
+    }
+
     public static void main(String[] args) {
         ParseBoardXML parsing = new ParseBoardXML();
         try {
@@ -28,7 +40,7 @@ public class ParseBoardXML {
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = null;
 
-            try{
+            try {
                 doc = db.parse(filename);
             } catch (Exception ex){
                 System.out.println("XML parse failure");
@@ -38,20 +50,21 @@ public class ParseBoardXML {
         } // exception handling
     }
 
-    public void readBoardData(Document d){
+    public Map<String, Location> readBoardData(Document d){
         Element root = d.getDocumentElement();
         NodeList sets = root.getElementsByTagName("set");
         NodeList trailers = root.getElementsByTagName("trailer");
         NodeList offices = root.getElementsByTagName("office");
 
-//        readBoardSets(sets);
-//        readTrailers(trailers);
-        readOffices(offices);
-
+        //TODO may want to change this from a string to something else
+        Map<String, Location> locations = readBoardSets(sets);
+        locations.put("office", readOffices(offices));
+        locations.put("trailer", readTrailers(trailers));
+        return locations;
     }
 
-    public Map<String, SetLocation> readBoardSets(NodeList sets) {
-        Map<String, SetLocation> setsData = new HashMap<>();
+    public Map<String, Location> readBoardSets(NodeList sets) {
+        Map<String, Location> setsData = new HashMap<>();
 
         for (int i = 0; i < sets.getLength(); i++){
             Element set = (Element) sets.item(i);
@@ -103,7 +116,10 @@ public class ParseBoardXML {
                 neighbors.add(neighborName);
             }
         }
-        return new Trailers("trailers", neighbors);
+
+        // trailer has no attribute name in XML but sticking with name convention
+        // used throughout file
+        return new Trailers("trailer", neighbors);
     }
 
     public CastingOffice readOffices(NodeList offices){
@@ -158,6 +174,8 @@ public class ParseBoardXML {
             }
         }
 
-        return new CastingOffice("CastingOffice", upgrades, neighbors);
+        // office has no attribute name in XML but sticking with name convention
+        // used throughout file
+        return new CastingOffice("office", upgrades, neighbors);
     }
 }

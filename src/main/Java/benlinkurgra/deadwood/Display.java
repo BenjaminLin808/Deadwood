@@ -1,6 +1,5 @@
 package benlinkurgra.deadwood;
 
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -34,29 +33,34 @@ public class Display {
                 <SOME DESCRIPTION HERE>""");
     }
 
-    public int promptNumPlayers() {
-        int numPlayers = 0;
-        Scanner playerNumScanner = new Scanner(System.in);
-        System.out.print("Enter number of players: ");
-        try {
-            numPlayers = playerNumScanner.nextInt();
-        } catch (InputMismatchException e) {
-            System.out.println(e);
-            return promptNumPlayers();
-        }
-        if (numPlayers < 2 || numPlayers > 8) {
-            System.out.printf("Invalid entry, %d is not valid, please enter a number from 2 to 8\n", numPlayers);
-            return promptNumPlayers();
-        } else {
-            return numPlayers;
-        }
+    public void endGame() {
+        System.out.println("Ending game, thanks for playing.");
     }
 
-    public String promptName() {
-        Scanner nameScanner = new Scanner(System.in);
+    public void displayHelp() {
+        //TODO add help display
+        System.out.println("HELP HERE");
+    }
+
+    public String getUserInput() {
+        Scanner inputScanner = new Scanner(System.in);
+        return inputScanner.nextLine();
+    }
+
+    public void sendPromptNumPlayers() {
+        System.out.print("Enter number of players: ");
+    }
+
+    public void displayNotANumber(String value) {
+        System.out.printf("Invalid input, %s is not a number\n", value);
+    }
+
+    public void displayInvalidNumPlayers(int num) {
+        System.out.printf("Invalid input, can not have %d players, please select a number from 2 up to 8\n", num);
+    }
+
+    public void sendPromptName() {
         System.out.print("Enter player name: ");
-        String name = nameScanner.next();
-        return name;
     }
 
     public void sendPlayers(List<Player> players) {
@@ -69,13 +73,24 @@ public class Display {
         System.out.println(buildNames);
     }
 
-    public String sendInvalidName(List<Player> players) {
-        System.out.println("""
-                Invalid entry, multiple players can not have the same name.
-                
-                Please enter a new name.
-                """);
+    public void sendInvalidName(List<Player> players) {
+        System.out.println("Invalid entry, multiple players can not have the same name.");
         sendPlayers(players);
-        return promptName();
+        System.out.println("Please enter a new unique name.");
+    }
+
+    public void sendActivePlayer(String name) {
+        System.out.printf("The current active player is %s\n", name);
+    }
+
+    public void sendActions() {
+        //TODO maybe add in a prompt to type help for more information
+        System.out.println("""
+                1. Move
+                2. Take a role
+                3. Act
+                4. Rehearse
+                5. Upgrade
+                6. End Turn""");
     }
 }
