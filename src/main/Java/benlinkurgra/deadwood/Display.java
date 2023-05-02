@@ -1,6 +1,7 @@
 package benlinkurgra.deadwood;
 
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class Display {
@@ -26,14 +27,11 @@ public class Display {
      * ...
      */
 
-    public int startingDisplay() {
+    public void startingDisplay() {
         System.out.println("""
                 Welcome to Deadwood
 
-                <SOME DESCRIPTION HERE>
-
-                To start please indicate how many players you have.""");
-        return promptNumPlayers();
+                <SOME DESCRIPTION HERE>""");
     }
 
     public int promptNumPlayers() {
@@ -53,10 +51,31 @@ public class Display {
             return numPlayers;
         }
     }
+
     public String promptName() {
         Scanner nameScanner = new Scanner(System.in);
         System.out.print("Enter player name: ");
         String name = nameScanner.next();
         return name;
+    }
+
+    public void sendPlayers(List<Player> players) {
+        StringBuilder buildNames = new StringBuilder();
+        buildNames.append("Players: ");
+        for (Player playerName : players) {
+            buildNames.append(playerName.getName());
+            buildNames.append(" ");
+        }
+        System.out.println(buildNames);
+    }
+
+    public String sendInvalidName(List<Player> players) {
+        System.out.println("""
+                Invalid entry, multiple players can not have the same name.
+                
+                Please enter a new name.
+                """);
+        sendPlayers(players);
+        return promptName();
     }
 }

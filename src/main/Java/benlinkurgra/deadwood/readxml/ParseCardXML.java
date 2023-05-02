@@ -23,28 +23,27 @@ public class ParseCardXML {
     }
     public Document getDocFromFile(String filename)
             throws ParserConfigurationException {
-        {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            Document doc = null;
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = null;
 
-            try{
-                doc = db.parse(filename);
-            } catch (Exception ex){
-                System.out.println("XML parse failure");
-                ex.printStackTrace();
-            }
-            return doc;
-        } // exception handling
-    }
-    public void readCardData(Document d){
+        try{
+            doc = db.parse(filename);
+        } catch (Exception ex){
+            System.out.println("XML parse failure");
+            ex.printStackTrace();
+        }
+        return doc;
+    } // exception handling
+
+    public void readCardData(Document d) {
         Element root = d.getDocumentElement();
         NodeList cards = root.getElementsByTagName("card");
 
         readCardRoles(cards);
 
     }
-    public Map readCardRoles(NodeList cards){
+    public Map<Integer, Scene> readCardRoles(NodeList cards) {
         Map<Integer, Scene> sceneCards = new HashMap<>();
         for(int i = 0; i < cards.getLength(); i++){
             List<RoleData> roleList = new ArrayList<>();
