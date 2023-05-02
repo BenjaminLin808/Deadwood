@@ -10,15 +10,14 @@ import benlinkurgra.deadwood.location.SetLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionProvider {
-    private final Display display;
+public class ActionProvider extends DisplayController {
     private Player activePlayer;
     private final Board board;
     private final GameState gameState;
 
     public ActionProvider(Display display, Player activePlayer, Board board, GameState gameState) {
+        super(display);
         this.activePlayer = activePlayer;
-        this.display = display;
         this.board = board;
         this.gameState = gameState;
     }

@@ -1,6 +1,13 @@
 package benlinkurgra.deadwood.controller;
 
-public class LocationProvider {
+import benlinkurgra.deadwood.Display;
+
+public class LocationProvider extends DisplayController {
+
+    public LocationProvider(Display display) {
+        super(display);
+    }
+
     public void updateSetLocationStatus(String location){
         System.out.println("update the location status to HIDDEN, COMPLETED, or REVEALED");
     }
