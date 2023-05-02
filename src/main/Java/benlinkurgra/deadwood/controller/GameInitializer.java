@@ -25,7 +25,7 @@ public class GameInitializer extends DisplayController {
      * @return number of players, when entry is valid.
      */
     public int getNumberPlayers() {
-        String input =handleInput(display::sendPromptNumPlayers);
+        String input = handleInput(display::sendPromptNumPlayers);
         try {
             int num = Integer.parseInt(input);
             if (num < 2 || num > 8) {
@@ -64,7 +64,7 @@ public class GameInitializer extends DisplayController {
      * checks that a player name is unique
      *
      * @param players list of entered player names
-     * @param name name of new player to be added to player list
+     * @param name    name of new player to be added to player list
      * @return true if player name is already in list, otherwise false
      */
     private boolean containsName(final List<Player> players, final String name) {
@@ -86,7 +86,7 @@ public class GameInitializer extends DisplayController {
         } else if (numPlayers == 6) {
             return new Player(playerName, 4, 0);
         } else { // numPlayers == 7 || numPlayers == 8
-             return new Player(playerName, 0, 2);
+            return new Player(playerName, 0, 2);
         }
     }
 
@@ -94,9 +94,11 @@ public class GameInitializer extends DisplayController {
         //TODO this will either need to be dropped or ignored considering we only have default XML
         System.out.println("based on the map from Board class, we will set up the board");
     }
+
     public void determineEndDay(int numPlayers) {
         System.out.println("determine the game time based on the player number");
     }
+
     public void determineSceneOrder() {
         System.out.println("determine what order the scenes would be placed");
     }
