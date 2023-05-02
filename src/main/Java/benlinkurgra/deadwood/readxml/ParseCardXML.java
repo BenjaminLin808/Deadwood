@@ -44,19 +44,19 @@ public class ParseCardXML {
         readCardRoles(cards);
 
     }
-    public Scene readCardRoles(NodeList cards){
-        List<RoleData> roleList = new ArrayList<>();
-        String cardName = "";
-        int budget = 0;
-        String sceneLine = "";
+    public Map readCardRoles(NodeList cards){
+        Map<Integer, Scene> sceneCards = new HashMap<>();
         for(int i = 0; i < cards.getLength(); i++){
+            List<RoleData> roleList = new ArrayList<>();
             Element card = (Element) cards.item(i);
             NodeList sceneElement = card.getElementsByTagName("scene");
-            cardName = card.getAttribute("name");
-            budget = Integer.parseInt(card.getAttribute("budget"));
+            String cardName = card.getAttribute("name");
+            int budget = Integer.parseInt(card.getAttribute("budget"));
+            int sceneNum = 0;
+            String sceneLine = "";
             for(int j = 0; j < sceneElement.getLength(); j++){
                 Element scene = (Element) sceneElement.item(j);
-                int sceneNum = Integer.parseInt(scene.getAttribute("number"));
+                sceneNum = Integer.parseInt(scene.getAttribute("number"));
                 sceneLine = scene.getTextContent();
                 System.out.println("sceneNum: " + sceneNum + " sceneLine: " + sceneLine);
             }
@@ -69,8 +69,8 @@ public class ParseCardXML {
                 System.out.println(partLevel + partName + partLine);
                 roleList.add(new RoleData(partLevel, partName, partLine, true));
             }
+            sceneCards.put(sceneNum, new Scene(cardName, budget, sceneLine, new Roles(roleList)));
         }
-        return new Scene(cardName, budget, sceneLine, new Roles(roleList));
-
+        return sceneCards;
     }
 }
