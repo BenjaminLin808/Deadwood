@@ -15,7 +15,7 @@ public class Main {
     private static void getGameComponents(String boardFilename, String cardFilename) {
         try {
             ParseBoardXML boardXML = new ParseBoardXML();
-            locations = boardXML.getLocations(boardFilename);
+//            locations = boardXML.getLocations(boardFilename);
             //TODO add cards
         } catch (Exception e) {
             System.exit(-1);
@@ -29,8 +29,10 @@ public class Main {
 
     public static void main(String[] args) {
         getGameComponents("src/main/resources/board.xml", "src/main/resources/cards.xml");
+
         Display display = new Display();
         GameInitializer gameInitializer = new GameInitializer(display);
+
         int numPlayers = gameInitializer.startGame();
     }
 }
