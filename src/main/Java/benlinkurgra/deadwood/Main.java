@@ -2,8 +2,9 @@ package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.controller.ActionProvider;
 import benlinkurgra.deadwood.controller.GameInitializer;
+import benlinkurgra.deadwood.model.Board;
+import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
-import benlinkurgra.deadwood.readxml.ParseCardXML;
 
 import java.util.Queue;
 

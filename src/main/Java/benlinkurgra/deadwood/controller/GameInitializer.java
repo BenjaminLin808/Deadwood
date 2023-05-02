@@ -1,7 +1,7 @@
 package benlinkurgra.deadwood.controller;
 
 import benlinkurgra.deadwood.Display;
-import benlinkurgra.deadwood.Player;
+import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.location.Location;
 
 import java.util.*;

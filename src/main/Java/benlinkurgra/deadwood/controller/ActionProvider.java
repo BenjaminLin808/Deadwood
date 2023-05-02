@@ -1,9 +1,9 @@
 package benlinkurgra.deadwood.controller;
 
-import benlinkurgra.deadwood.Board;
+import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.Display;
 import benlinkurgra.deadwood.GameState;
-import benlinkurgra.deadwood.Player;
+import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.location.CastingOffice;
 import benlinkurgra.deadwood.location.SetLocation;
 

@@ -1,5 +1,7 @@
 package benlinkurgra.deadwood;
 
+import benlinkurgra.deadwood.model.Player;
+
 public class testing {
     public static void main(String[] args) {
         int rank = 2;

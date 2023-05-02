@@ -1,7 +1,7 @@
 package benlinkurgra.deadwood.location;
 
 import benlinkurgra.deadwood.CurrencyType;
-import benlinkurgra.deadwood.Player;
+import benlinkurgra.deadwood.model.Player;
 
 import java.util.ArrayList;
 import java.util.Map;

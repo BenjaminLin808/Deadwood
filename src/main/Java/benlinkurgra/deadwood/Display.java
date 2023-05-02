@@ -1,5 +1,7 @@
 package benlinkurgra.deadwood;
 
+import benlinkurgra.deadwood.model.Player;
+
 import java.util.List;
 import java.util.Scanner;
 

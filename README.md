@@ -1,5 +1,5 @@
 # Deadwood
-Deadwood benlinkurgra.deadwood.Board Game
+Deadwood benlinkurgra.deadwood.model.Board Game
 
 Authors: Benjamin Lin, Kurt Graef
 

@@ -1,4 +1,4 @@
-package benlinkurgra.deadwood;
+package benlinkurgra.deadwood.model;
 
 import benlinkurgra.deadwood.location.Location;
 

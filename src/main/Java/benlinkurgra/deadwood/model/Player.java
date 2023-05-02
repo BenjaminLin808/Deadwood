@@ -1,4 +1,4 @@
-package benlinkurgra.deadwood;
+package benlinkurgra.deadwood.model;
 
 public class Player {
     private final String name;
@@ -23,12 +23,21 @@ public class Player {
         this.location = newLocation;
     }
 
-    public void upgrade(int newRank, String currencyType){
-        this.actingRank = newRank;
+    public void upgrade(int newRank, String currencyType, int amount){
+        if(currencyType.equals("credits")){
+            this.credits = this.credits - amount;
+            this.actingRank = newRank;
+        } else if (currencyType.equals("dollars")) {
+            this.dollars = this.dollars - amount;
+            this.actingRank = newRank;
+        }
+        else{
+            System.out.println("try again");
+        }
     }
 
-    public void takeRole(boolean roleName){
-        this.workingRole = roleName;
+    public void takeRole(boolean takingRole){
+        this.workingRole = takingRole;
     }
 
     public void act(){
