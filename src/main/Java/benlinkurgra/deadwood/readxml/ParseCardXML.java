@@ -6,12 +6,24 @@ import javax.xml.parsers.ParserConfigurationException;
 
 
 import benlinkurgra.deadwood.location.*;
+import benlinkurgra.deadwood.model.Player;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import java.util.*;
 
 public class ParseCardXML {
+
+    public Queue<Scene> getScenes(String filename) throws ParserConfigurationException {
+        try {
+            Document doc = getDocFromFile(filename);
+            return readCardData(doc);
+        } catch (Exception e) {
+            System.out.println("Error = " + e);
+            throw e;
+        }
+    }
+
     public static void main(String[] args) {
         ParseCardXML parsing = new ParseCardXML();
         try {
@@ -36,15 +48,14 @@ public class ParseCardXML {
         return doc;
     } // exception handling
 
-    public void readCardData(Document d) {
+    public Queue<Scene> readCardData(Document d) {
         Element root = d.getDocumentElement();
         NodeList cards = root.getElementsByTagName("card");
 
-        readCardRoles(cards);
-
+        return readCardRoles(cards);
     }
-    public Map<Integer, Scene> readCardRoles(NodeList cards) {
-        Map<Integer, Scene> sceneCards = new HashMap<>();
+    public Queue<Scene>  readCardRoles(NodeList cards) {
+        List<Scene> sceneCards = new ArrayList<>();
         for(int i = 0; i < cards.getLength(); i++){
             List<RoleData> roleList = new ArrayList<>();
             Element card = (Element) cards.item(i);
@@ -57,7 +68,6 @@ public class ParseCardXML {
                 Element scene = (Element) sceneElement.item(j);
                 sceneNum = Integer.parseInt(scene.getAttribute("number"));
                 sceneLine = scene.getTextContent();
-                System.out.println("sceneNum: " + sceneNum + " sceneLine: " + sceneLine);
             }
             NodeList partsElement = card.getElementsByTagName("part");
             for(int j = 0; j < partsElement.getLength(); j++){
@@ -68,8 +78,9 @@ public class ParseCardXML {
                 System.out.println(partLevel + partName + partLine);
                 roleList.add(new RoleData(partLevel, partName, partLine, true));
             }
-            sceneCards.put(sceneNum, new Scene(cardName, budget, sceneLine, new Roles(roleList)));
+            sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList)));
         }
-        return sceneCards;
+        Collections.shuffle(sceneCards);
+        return new LinkedList<>(sceneCards);
     }
 }

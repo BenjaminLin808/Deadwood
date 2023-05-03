@@ -17,6 +17,7 @@ public class ParseBoardXML {
         try {
             Document doc = getDocFromFile(filename);
             //TODO decide who we want locations structured
+            locations = readBoardData(doc);
             return locations;
         } catch (Exception e) {
             System.out.println("Error = " + e);
@@ -24,16 +25,7 @@ public class ParseBoardXML {
         }
     }
 
-    public static void main(String[] args) {
-        ParseBoardXML parsing = new ParseBoardXML();
-        try {
-            Document doc = parsing.getDocFromFile("src/main/resources/board.xml");
-            parsing.readBoardData(doc);
-        } catch (Exception e) {
-            System.out.println("Error = " + e);
-        }
-    }
-    public Document getDocFromFile(String filename)
+    private Document getDocFromFile(String filename)
             throws ParserConfigurationException{
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -50,7 +42,7 @@ public class ParseBoardXML {
         } // exception handling
     }
 
-    public Map<String, Location> readBoardData(Document d){
+    private Map<String, Location> readBoardData(Document d){
         Element root = d.getDocumentElement();
         NodeList sets = root.getElementsByTagName("set");
         NodeList trailers = root.getElementsByTagName("trailer");
@@ -63,7 +55,7 @@ public class ParseBoardXML {
         return locations;
     }
 
-    public Map<String, Location> readBoardSets(NodeList sets) {
+    private Map<String, Location> readBoardSets(NodeList sets) {
         Map<String, Location> setsData = new HashMap<>();
 
         for (int i = 0; i < sets.getLength(); i++){
@@ -105,7 +97,7 @@ public class ParseBoardXML {
         return setsData;
     }
 
-    public Trailers readTrailers(NodeList trailers){
+    private Trailers readTrailers(NodeList trailers){
         ArrayList<String> neighbors = new ArrayList<>();
         for(int i = 0; i < trailers.getLength(); i++){
             Element trailer = (Element) trailers.item(i);
@@ -122,7 +114,7 @@ public class ParseBoardXML {
         return new Trailers("trailer", neighbors);
     }
 
-    public CastingOffice readOffices(NodeList offices){
+    private CastingOffice readOffices(NodeList offices){
         ArrayList<String> neighbors = new ArrayList<>();
         Map<Integer, UpgradeCost> upgrades = new HashMap<>();
 

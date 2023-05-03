@@ -17,6 +17,7 @@ public class Board {
         return locations.get(locationName);
     }
 
+
     /**
      * Determines if a move from a current location to a new location is possible.
      *

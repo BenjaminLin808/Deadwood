@@ -89,18 +89,4 @@ public class GameInitializer extends DisplayController {
             return new Player(playerName, 0, 2);
         }
     }
-
-    public void configureBoard(Map<Location, List<Location>> layout) {
-        //TODO this will either need to be dropped or ignored considering we only have default XML
-        System.out.println("based on the map from Board class, we will set up the board");
-    }
-
-    public void determineEndDay(int numPlayers) {
-        System.out.println("determine the game time based on the player number");
-    }
-
-    public void determineSceneOrder() {
-        System.out.println("determine what order the scenes would be placed");
-    }
-
 }

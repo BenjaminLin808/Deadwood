@@ -40,14 +40,6 @@ public class GameState {
     }
 
 
-    public int getNumPlayers() {
-        return numPlayers;
-    }
-
-    public void setNumPlayers(int numPlayers) {
-        this.numPlayers = numPlayers;
-    }
-
     public int getCurrDay() {
         return currDay;
     }
@@ -58,10 +50,6 @@ public class GameState {
 
     public int getEndDay() {
         return endDay;
-    }
-
-    public void setEndDay(int endDay) {
-        this.endDay = endDay;
     }
 
     public int getActiveScenes() {

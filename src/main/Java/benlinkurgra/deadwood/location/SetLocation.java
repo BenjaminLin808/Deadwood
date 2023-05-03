@@ -7,6 +7,7 @@ public class SetLocation extends Location {
     private int currentShotTokens;
     private final int maxShotTokens;
     private final Roles roles;
+
     private Scene scene;
     private SceneStatus sceneStatus;
 
@@ -57,6 +58,13 @@ public class SetLocation extends Location {
         allRoles.add(roles);
         allRoles.add(scene.getRoles());
         return allRoles;
+    }
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 
     public void finishScene() {

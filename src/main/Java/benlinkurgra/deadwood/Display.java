@@ -95,4 +95,31 @@ public class Display {
                 5. Upgrade
                 6. End Turn""");
     }
+
+    public void displayCanNotMoveActing(String playerName) {
+        System.out.printf("%s can not move, currently acting on role.\n", playerName);
+    }
+
+    public void displayCanNotMoveDone(String playerName) {
+        System.out.printf("%s can not move, action already performed.\n", playerName);
+    }
+
+    public void displayNeighbors(List<String> locations) {
+        StringBuilder outputLocations = new StringBuilder();
+        outputLocations.append("You can move to the following locations: \n");
+        for (int i = 0; i < locations.size(); i++) {
+            outputLocations.append(i);
+            outputLocations.append(". ");
+            outputLocations.append(locations.get(i));
+            outputLocations.append("\n");
+        }
+        outputLocations.append("Please enter either the location number or name of");
+        outputLocations.append(" the location you wish to move to.\n");
+        System.out.println(outputLocations);
+    }
+
+    public void sendPromptEnterLocation() {
+        System.out.print("Select new location: ");
+    }
+
 }

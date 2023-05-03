@@ -8,6 +8,8 @@ public class Scene {
     private final String description;
     private final Roles roles;
 
+    private SceneStatus sceneStatus = SceneStatus.HIDDEN;
+
     public Scene(String name, int budget, String description, Roles roles) {
         this.name = name;
         this.budget = budget;
