@@ -56,12 +56,12 @@ public class LocationProvider extends DisplayController {
     }
 
     /**
-     * Updating the roles at a location
-     * @param roles
+     * Get current locations available roles
      * @param setLocation
+     * @return
      */
-    public void provideRolesAtLocation(Roles roles, SetLocation setLocation){
+    public Roles provideRolesAtLocation(SetLocation setLocation){
         System.out.println("return the roles available at this location");
-        setLocation.setRoles(roles);
+        return setLocation.getRoles();
     }
 }
