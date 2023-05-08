@@ -6,8 +6,7 @@ import java.util.List;
 public class SetLocation extends Location {
     private int currentShotTokens;
     private final int maxShotTokens;
-    private final Roles roles;
-
+    private Roles roles;
     private Scene scene;
     private SceneStatus sceneStatus;
 
@@ -17,6 +16,14 @@ public class SetLocation extends Location {
         this.currentShotTokens = maxShotTokens;
         this.roles = roles;
         this.sceneStatus = SceneStatus.HIDDEN;
+    }
+
+    public Roles getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Roles roles) {
+        this.roles = roles;
     }
 
     public int getCurrentShotTokens() {
@@ -66,6 +73,7 @@ public class SetLocation extends Location {
     public void setScene(Scene scene) {
         this.scene = scene;
     }
+
 
     public void finishScene() {
         //TODO

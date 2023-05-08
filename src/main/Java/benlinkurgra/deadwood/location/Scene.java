@@ -33,7 +33,9 @@ public class Scene {
         return roles;
     }
 
+
     public List<String> playersActingOnScene() {
         return roles.playersOnRoles();
     }
+
 }

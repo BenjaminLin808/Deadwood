@@ -41,6 +41,7 @@ public class Player {
     }
 
     public void act(){
+
         System.out.println("Rolling the dice for act");
     }
 
