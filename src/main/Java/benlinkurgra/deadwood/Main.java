@@ -24,16 +24,15 @@ public class Main {
             ParseBoardXML boardXML = new ParseBoardXML();
             Map<String, Location>  locations = boardXML.getLocations(boardFilename);
             board = new Board(locations);
-
         } catch (Exception e) {
             System.exit(-1);
         }
     }
+
     private static Queue<Scene> getSceneComponents(String cardFilename){
         try {
             ParseCardXML cardXML = new ParseCardXML();
-            Queue<Scene> cardScene = cardXML.getScenes(cardFilename);
-            return cardScene;
+            return cardXML.getScenes(cardFilename);
         }catch (Exception e){
             System.exit(-1);
         }
@@ -46,12 +45,21 @@ public class Main {
         gameInitializer.startGame();
         int numPlayers = gameInitializer.getNumberPlayers();
         Queue<Player> players = gameInitializer.determinePlayerOrder(numPlayers);
-        //GET SCENE ORDER
-        //SET gameState
+        Queue<Scene> scenes = getSceneComponents("src/main/resources/cards.xml");
+        gameState = new GameState(numPlayers, scenes, players);
+        getBoardComponents("src/main/resources/board.xml");
+        Player activePlayer = gameState.getActivePlayer();
+        actionProvider = new ActionProvider(display, activePlayer, board, gameState);
+    }
+
+    private static void takeTurn() {
+        actionProvider.provideActivePlayer();
+        actionProvider.provideActionsWithHighlighting();
+        actionProvider.parseTurnAction();
     }
 
     public static void main(String[] args) {
         startGame();
-
+        takeTurn();
     }
 }

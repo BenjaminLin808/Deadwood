@@ -60,11 +60,10 @@ public class SetLocation extends Location {
         return scene.getBudget();
     }
 
-    public List<Roles> getAllAvailableRoles() {
-        List<Roles> allRoles = new ArrayList<>();
-        allRoles.add(roles);
-        allRoles.add(scene.getRoles());
-        return allRoles;
+    public List<RoleData> getAllAvailableRoles(int playerRank) {
+        List<RoleData> availableRoles = new ArrayList<>(roles.availableRoles(playerRank));
+        availableRoles.addAll(scene.getRoles().availableRoles(playerRank));
+        return availableRoles;
     }
     public Scene getScene() {
         return scene;
@@ -73,7 +72,6 @@ public class SetLocation extends Location {
     public void setScene(Scene scene) {
         this.scene = scene;
     }
-
 
     public void finishScene() {
         //TODO

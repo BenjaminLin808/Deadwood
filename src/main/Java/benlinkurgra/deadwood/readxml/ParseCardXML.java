@@ -75,7 +75,6 @@ public class ParseCardXML {
                 String partName = part.getAttribute("name");
                 int partLevel = Integer.parseInt(part.getAttribute("level"));
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
-                System.out.println(partLevel + partName + partLine);
                 roleList.add(new RoleData(partLevel, partName, partLine, true));
             }
             sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList)));

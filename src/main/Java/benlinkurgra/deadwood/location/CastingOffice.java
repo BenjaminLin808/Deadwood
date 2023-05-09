@@ -34,8 +34,22 @@ public class CastingOffice extends Location {
         }
     }
 
+    /**
+     * Determines if a player has any available upgrades
+     *
+     * @param player player seeking upgrade
+     * @return true if the player has an available upgrade, otherwise false
+     */
     public boolean hasUpgrades(Player player) {
-        //TODO find if player has a valid upgrades
+        for (int key : upgrades.keySet()) {
+            if (key > player.getActingRank()) {
+                UpgradeCost upgradeCost = upgrades.get(key);
+                if (upgradeCost.getCreditsCost() <= player.getCredits() ||
+                upgradeCost.getDollarCost() <= player.getDollars()) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 

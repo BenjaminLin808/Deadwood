@@ -15,7 +15,7 @@ public class Roles {
     public List<RoleData> availableRoles(int playerRank) {
         List<RoleData> returnList = new ArrayList<>();
         for (RoleData role: roleList) {
-            if (role.getRank() <= playerRank) {
+            if (role.getRank() <= playerRank && role.isAvailable()) {
                 returnList.add(role);
             }
         }

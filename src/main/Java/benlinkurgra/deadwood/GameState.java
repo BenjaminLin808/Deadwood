@@ -39,7 +39,6 @@ public class GameState {
         System.out.println("get players scores");
     }
 
-
     public int getCurrDay() {
         return currDay;
     }
@@ -84,8 +83,9 @@ public class GameState {
         this.playerOrder = playerOrder;
     }
 
-
-
+    public Player getActivePlayer() {
+        return playerOrder.peek();
+    }
 
 
 
