@@ -18,6 +18,10 @@ public class SetLocation extends Location {
         this.sceneStatus = SceneStatus.HIDDEN;
     }
 
+    public List<String> playersActingOnScene() {
+        return scene.playersActingOnScene();
+    }
+
     public Roles getRoles() {
         return roles;
     }
