@@ -17,24 +17,24 @@ public class Scene {
         this.roles = roles;
     }
 
-    public String getName() {
+    protected String getName() {
         return name;
     }
 
-    public int getBudget() {
+    protected int getBudget() {
         return budget;
     }
 
-    public String getDescription() {
+    protected String getDescription() {
         return description;
     }
 
-    public Roles getRoles() {
+    protected Roles getRoles() {
         return roles;
     }
 
 
-    public List<String> playersActingOnScene() {
+    protected List<String> playersActingOnScene() {
         return roles.playersOnRoles();
     }
 

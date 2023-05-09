@@ -60,17 +60,31 @@ public class Player {
 
     /**
      * Acting on the role
-     * @param budget
      * @param setLocation
      */
-    public void act(int budget, SetLocation setLocation){
+    public boolean act(SetLocation setLocation){
         Dice dice = new Dice();
+        int budget = setLocation.getSceneBudget();
         if(dice.roll() + this.practiceToken >= budget){
             setLocation.removeShotToken();
+            if(budget == 0){
+                this.credits += 2;
+            }
+            else{
+                this.credits += 1;
+                this.dollars += 1;
+            }
             if(setLocation.getCurrentShotTokens() == 0){
                 setLocation.setSceneStatus(SceneStatus.COMPLETED);
                 this.practiceToken = 0;
             }
+            return true;
+        }
+        else{
+            if(budget != 0){
+                this.credits += 1;
+            }
+            return false;
         }
     }
 
@@ -79,12 +93,13 @@ public class Player {
      * @param budget
      * @param setLocation
      */
-    public void rehearse(int budget, SetLocation setLocation){
+    public boolean rehearse(int budget, SetLocation setLocation){
         // if practice token is equal to budget minus one that means it is guarantee success
         if(practiceToken == budget-1){
-            act(budget, setLocation);
+            return false;
         }else {
             this.practiceToken += 1;
+            return true;
         }
     }
 
