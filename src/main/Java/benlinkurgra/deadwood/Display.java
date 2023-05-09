@@ -1,5 +1,6 @@
 package benlinkurgra.deadwood;
 
+import benlinkurgra.deadwood.controller.Action;
 import benlinkurgra.deadwood.model.Player;
 
 import java.util.List;
@@ -208,6 +209,10 @@ public class Display {
      */
     public void displayCanNotPerformAction(String playerName, String action, String reason) {
         System.out.printf("%s can not %s, %s.\n", playerName, action, reason);
+    }
+
+    public void displaySomethingWentWrong() {
+        System.out.println("Sorry, something went wrong.");
     }
 
     //---------------------------------------------------------------------------------------

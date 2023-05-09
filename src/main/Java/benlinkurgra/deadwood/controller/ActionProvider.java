@@ -32,38 +32,42 @@ public class ActionProvider extends DisplayController {
         this.activePlayer = activePlayer;
     }
 
-    public void parseTurnAction() {
+    public Action parseActionRequest() {
         String input = handleInput(display::sendPromptSelectAction);
         try {
-            int action = Integer.parseInt(input);
-            if (!validateActionSelection(action)) {
-                parseTurnAction();
+            int actionNumber = Integer.parseInt(input);
+            if (actionNumber < 1 || actionNumber > 6) {
+                display.sendInvalidActionSelection(actionNumber);
+                return parseActionRequest();
+            }
+            Action action = Action.valueOf(actionNumber);
+            if (validateActionSelection(action)) {
+                return action;
             } else {
-                //TODO
-                System.out.println("Not yet implemented");
+                return parseActionRequest();
             }
         } catch (NumberFormatException e) {
             display.displayNotANumber(input);
-            parseTurnAction();
+            return parseActionRequest();
         }
     }
 
-    private boolean validateActionSelection(int action) {
+    private boolean validateActionSelection(Action action) {
         switch (action) {
-            case 1:
+            case MOVE:
                 return canMove(true);
-            case 2:
+            case TAKE_ROLE:
                 return canTakeRole(true);
-            case 3:
+            case ACT:
                 return canAct(true);
-            case 4:
+            case REHEARSE:
                 return canRehearse(true);
-            case 5:
+            case UPGRADE:
                 return canUpgrade(true);
-            case 6:
+            case END_TURN:
                 return canEndTurn(true);
             default:
-                display.sendInvalidActionSelection(action);
+                display.displaySomethingWentWrong();
                 return false;
         }
     }
@@ -267,7 +271,8 @@ public class ActionProvider extends DisplayController {
         List<String> actions = new ArrayList<>();
     }
 
-    public void movePlayer(Player player, String newLocation){
+    public void movePlayer() {
+
         System.out.println("this should invoke some function to update the player location");
     }
 
