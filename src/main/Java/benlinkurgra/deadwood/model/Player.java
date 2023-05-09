@@ -1,5 +1,9 @@
 package benlinkurgra.deadwood.model;
 
+import benlinkurgra.deadwood.Dice;
+import benlinkurgra.deadwood.location.SceneStatus;
+import benlinkurgra.deadwood.location.SetLocation;
+
 public class Player {
     private final String name;
     private String location = "trailer";
@@ -19,10 +23,20 @@ public class Player {
         this.name = name;
     }
 
+    /**
+     * Update player location
+     * @param newLocation
+     */
     public void move(String newLocation){
         this.location = newLocation;
     }
 
+    /**
+     * Update player rank
+     * @param newRank
+     * @param currencyType
+     * @param amount
+     */
     public void upgrade(int newRank, String currencyType, int amount){
         if(currencyType.equals("credits")){
             this.credits = this.credits - amount;
@@ -36,18 +50,42 @@ public class Player {
         }
     }
 
+    /**
+     * Update player takingRole
+     * @param takingRole
+     */
     public void takeRole(boolean takingRole){
         this.workingRole = takingRole;
     }
 
-    public void act(){
-
-        System.out.println("Rolling the dice for act");
+    /**
+     * Acting on the role
+     * @param budget
+     * @param setLocation
+     */
+    public void act(int budget, SetLocation setLocation){
+        Dice dice = new Dice();
+        if(dice.roll() + this.practiceToken >= budget){
+            setLocation.removeShotToken();
+            if(setLocation.getCurrentShotTokens() == 0){
+                setLocation.setSceneStatus(SceneStatus.COMPLETED);
+                this.practiceToken = 0;
+            }
+        }
     }
 
-    public void rehearse(){
-        this.practiceToken += 1;
-        System.out.println("rehearsing add one practice chip");
+    /**
+     * Increase practice tokens
+     * @param budget
+     * @param setLocation
+     */
+    public void rehearse(int budget, SetLocation setLocation){
+        // if practice token is equal to budget minus one that means it is guarantee success
+        if(practiceToken == budget-1){
+            act(budget, setLocation);
+        }else {
+            this.practiceToken += 1;
+        }
     }
 
     public void score(){

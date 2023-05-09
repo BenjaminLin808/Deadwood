@@ -1,13 +1,10 @@
 package benlinkurgra.deadwood;
 
 public class Dice {
-    private int outcome;
 
-    public void roll() {
-        this.outcome = (int) (Math.random() * 6) + 1;
+    public int roll() {
+        int num = (int) (Math.random() * 6) + 1;
+        return num;
     }
 
-    public int getOutcome() {
-        return outcome;
-    }
 }
