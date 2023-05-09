@@ -4,6 +4,8 @@ import benlinkurgra.deadwood.Dice;
 import benlinkurgra.deadwood.location.SceneStatus;
 import benlinkurgra.deadwood.location.SetLocation;
 
+import java.util.ArrayList;
+
 public class Player {
     private final String name;
     private String location = "trailer";
@@ -21,14 +23,6 @@ public class Player {
 
     public Player(String name){
         this.name = name;
-    }
-
-    /**
-     * Update player location
-     * @param newLocation
-     */
-    public void move(String newLocation) {
-        this.location = newLocation;
     }
 
     /**
@@ -51,40 +45,69 @@ public class Player {
     }
 
     /**
-     * Update player takingRole
-     * @param takingRole
+     * pass in player's move location and board data to check if the new location can be reached
+     * @param newLocation
+     * @param boardData
+     * @return  boolean
      */
-    public void takeRole(boolean takingRole){
-        this.workingRole = takingRole;
+    public boolean move(String newLocation, Board boardData){
+        ArrayList<String> neighbors = boardData.getLocation(this.location).getNeighbors();
+        if(neighbors.contains(newLocation)){
+            this.location = newLocation;
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
+
     /**
-     * Acting on the role
-     * @param budget
+     * check whether the player act is successful or not, and payout
      * @param setLocation
+     * @return
      */
-    public void act(int budget, SetLocation setLocation){
+    public boolean act(SetLocation setLocation){
         Dice dice = new Dice();
+        int budget = setLocation.getSceneBudget();
         if(dice.roll() + this.practiceToken >= budget){
             setLocation.removeShotToken();
+            // TODO check if the player role is oncard or not
+            if(budget == 0){
+                this.credits += 2;
+            }
+            else{
+                this.credits += 1;
+                this.dollars += 1;
+            }
             if(setLocation.getCurrentShotTokens() == 0){
                 setLocation.setSceneStatus(SceneStatus.COMPLETED);
                 this.practiceToken = 0;
             }
+            return true;
+        }
+        else{
+            if(budget != 0){
+                this.credits += 1;
+            }
+            return false;
         }
     }
 
+
     /**
-     * Increase practice tokens
+     * rehearse
      * @param budget
      * @param setLocation
+     * @return
      */
-    public void rehearse(int budget, SetLocation setLocation){
+    public boolean rehearse(int budget, SetLocation setLocation){
         // if practice token is equal to budget minus one that means it is guarantee success
         if(practiceToken == budget-1){
-            act(budget, setLocation);
+            return false;
         }else {
             this.practiceToken += 1;
+            return true;
         }
     }
 
