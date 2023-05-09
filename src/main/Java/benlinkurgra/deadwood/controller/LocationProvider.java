@@ -19,9 +19,9 @@ public class LocationProvider extends DisplayController {
         this.boardData = boardData;
     }
 
-    public ArrayList<String> locationNeighbors(String location)  {
-        return boardData.getLocation(location).getNeighbors();
-    }
+//    public ArrayList<String> locationNeighbors(String location)  {
+//        return boardData.getLocation(location).getNeighbors();
+//    }
 
     public Roles locationRoles(SetLocation setLocation){
         System.out.println("return the roles available at this location");

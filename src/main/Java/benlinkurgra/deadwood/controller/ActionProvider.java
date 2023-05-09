@@ -10,6 +10,7 @@ import benlinkurgra.deadwood.location.SetLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ActionProvider extends DisplayController {
     private Player activePlayer;
@@ -69,6 +70,32 @@ public class ActionProvider extends DisplayController {
             default:
                 display.displaySomethingWentWrong();
                 return false;
+        }
+    }
+
+    public void attemptAction(Action action) {
+        switch (action) {
+            case MOVE:
+                executeMove();
+                break;
+            case TAKE_ROLE:
+                System.out.println("take role not yet implemented");
+                break;
+            case ACT:
+                System.out.println("act not yet implemented");
+                break;
+            case REHEARSE:
+                System.out.println("rehearse yet implemented");
+                break;
+            case UPGRADE:
+                System.out.println("upgrade not yet implemented");
+                break;
+            case END_TURN:
+                System.out.println("end turn not yet implemented");
+                break;
+            default:
+                display.displaySomethingWentWrong();
+                parseActionRequest();
         }
     }
 
@@ -271,9 +298,26 @@ public class ActionProvider extends DisplayController {
         List<String> actions = new ArrayList<>();
     }
 
-    public void movePlayer() {
-
-        System.out.println("this should invoke some function to update the player location");
+    public void executeMove() {
+        List<String> neighbors = locationNeighbors(activePlayer.getLocation());
+        display.displayNeighbors(neighbors);
+        String input = handleInput(display::sendPromptSelectLocation);
+        if (neighbors.stream().anyMatch(input::equalsIgnoreCase)) {
+            //TODO change active player location
+            // use value from neighbors to ensure correct case
+        } else {
+            try {
+                int locationNumber = Integer.parseInt(input);
+                if (locationNumber < 0 || locationNumber > neighbors.size() - 1) {
+                    throw new IllegalArgumentException("Input out of range");
+                } else {
+                    //TODO change active player location
+                }
+            } catch (Exception e) {
+                display.displayInvalidMoveLocation(input);
+                executeMove();
+            }
+        }
     }
 
     public void takeRole(Player player, String role){
@@ -298,6 +342,10 @@ public class ActionProvider extends DisplayController {
 
     public void rehearse(Player player){
 
+    }
+
+    public ArrayList<String> locationNeighbors(String location)  {
+        return board.getLocation(location).getNeighbors();
     }
 
 }

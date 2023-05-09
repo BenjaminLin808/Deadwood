@@ -27,7 +27,7 @@ public class Player {
      * Update player location
      * @param newLocation
      */
-    public void move(String newLocation){
+    public void move(String newLocation) {
         this.location = newLocation;
     }
 

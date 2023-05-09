@@ -153,8 +153,12 @@ public class Display {
             outputLocations.append("\n");
         }
         outputLocations.append("Please enter either the location number or name of");
-        outputLocations.append(" the location you wish to move to.\n");
+        outputLocations.append(" the location you wish to move to.");
         System.out.println(outputLocations);
+    }
+
+    public void displayMoveSuccess(String playerName, String oldLocation, String newLocation) {
+        System.out.printf("Move successful, %s has moved from %s to %s\n", playerName, oldLocation, newLocation);
     }
     //---------------------------------------------------------------------------------------
     //endregion
@@ -211,6 +215,10 @@ public class Display {
         System.out.printf("%s can not %s, %s.\n", playerName, action, reason);
     }
 
+    public void displayInvalidMoveLocation(String input) {
+        System.out.printf("Invalid input, %s is not a valid selection for a move\n", input);
+    }
+
     public void displaySomethingWentWrong() {
         System.out.println("Sorry, something went wrong.");
     }
@@ -246,6 +254,10 @@ public class Display {
     public void sendPromptSelectAction() {
         System.out.println("To select an action, enter the number corresponding to the action.");
         System.out.print("Enter action: ");
+    }
+
+    public void sendPromptSelectLocation() {
+        System.out.print("Select location: ");
     }
     //---------------------------------------------------------------------------------------
     //endregion
