@@ -63,55 +63,6 @@ public class Player {
     }
 
 
-    /**
-     * check whether the player act is successful or not, and payout
-     * @param setLocation
-     * @return
-     */
-    public boolean act(SetLocation setLocation){
-        Dice dice = new Dice();
-        int budget = setLocation.getSceneBudget();
-        if(dice.roll() + this.practiceToken >= budget){
-            setLocation.removeShotToken();
-            // TODO check if the player role is oncard or not
-            if(budget == 0){
-                this.credits += 2;
-            }
-            else{
-                this.credits += 1;
-                this.dollars += 1;
-            }
-            if(setLocation.getCurrentShotTokens() == 0){
-                setLocation.setSceneStatus(SceneStatus.COMPLETED);
-                this.practiceToken = 0;
-            }
-            return true;
-        }
-        else{
-            if(budget != 0){
-                this.credits += 1;
-            }
-            return false;
-        }
-    }
-
-
-    /**
-     * rehearse
-     * @param budget
-     * @param setLocation
-     * @return
-     */
-    public boolean rehearse(int budget, SetLocation setLocation){
-        // if practice token is equal to budget minus one that means it is guarantee success
-        if(practiceToken == budget-1){
-            return false;
-        }else {
-            this.practiceToken += 1;
-            return true;
-        }
-    }
-
     public void score(){
         System.out.println("calculating player score");
     }

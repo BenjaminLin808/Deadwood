@@ -1,6 +1,8 @@
 package benlinkurgra.deadwood.controller;
 
 import benlinkurgra.deadwood.CurrencyType;
+import benlinkurgra.deadwood.Dice;
+import benlinkurgra.deadwood.location.RoleData;
 import benlinkurgra.deadwood.location.SceneStatus;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.Display;
@@ -86,11 +88,11 @@ public class ActionProvider extends DisplayController {
                 gameState.setCurrentPlayerDone();
                 break;
             case ACT:
-                System.out.println("act not yet implemented");
+                act();
                 gameState.setCurrentPlayerDone();
                 break;
             case REHEARSE:
-                System.out.println("rehearse yet implemented");
+                rehearse();
                 gameState.setCurrentPlayerDone();
                 break;
             case UPGRADE:
@@ -380,14 +382,51 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public void updatePlayerRank(Player player) {
+    public void updatePlayerRank() {
     }
 
-    public void act(Player player) {
+    public void act() {
+        Dice dice = new Dice();
+        SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
+        List<RoleData> roles = playerLocation.getRoles().getRoleList();
+        boolean onCard = false;
+        for(int i = 0; i < roles.size(); i++) {
+            if (roles.get(i).getName().equals(activePlayer.getName())) {
+                onCard = roles.get(i).isOnCard();
+            }
+        }
+
+        if(onCard){
+            if(dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()){
+                playerLocation.removeShotToken();
+                activePlayer.setCredits(activePlayer.getCredits()+1);
+                activePlayer.setDollars(activePlayer.getDollars()+1);
+                display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+            }else{
+                activePlayer.setCredits(activePlayer.getCredits()+1);
+                display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+            }
+        }else{
+            if(dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
+                playerLocation.removeShotToken();
+                activePlayer.setCredits(activePlayer.getCredits() + 2);
+                display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+            }
+            else{
+                display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+            }
+        }
     }
 
-    public void rehearse(Player player) {
-
+    public void rehearse() {
+        SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
+        int budget = playerLocation.getSceneBudget();
+        if(activePlayer.getPracticeToken() == budget-1){
+            display.rehearseFail(activePlayer.getName(), activePlayer.getPracticeToken());
+        }else {
+            activePlayer.setPracticeToken(activePlayer.getPracticeToken()+1);
+            display.rehearseSuccess(activePlayer.getName(), activePlayer.getPracticeToken());
+        }
     }
 
     public ArrayList<String> locationNeighbors(String location) {

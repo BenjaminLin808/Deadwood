@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Roles {
+
     // roleData is a map where keys are the rank of roles, values are
     // a map where keys are the scene name and values are role information
     private final List<RoleData> roleList;
@@ -40,5 +41,9 @@ public class Roles {
             }
         }
         return playerList;
+    }
+
+    public List<RoleData> getRoleList() {
+        return roleList;
     }
 }

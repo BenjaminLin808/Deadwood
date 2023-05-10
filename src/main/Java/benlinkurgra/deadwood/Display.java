@@ -210,6 +210,22 @@ public class Display {
     public void upgradeSuccess(String playerName, int rank) {
         System.out.printf("Upgrade successful, %s has upgraded to rank %d\n", playerName, rank);
     }
+
+    public void actSuccess(String playerName, int credits, int dollars){
+        System.out.printf("Act successful, %s has %d credits and %d dollars\n", playerName, credits, dollars);
+    }
+
+    public void rehearseSuccess(String playerName, int practiceTokens){
+        System.out.printf("Rehearse successful, %s has %d practice tokens\n", playerName, practiceTokens);
+    }
+
+    public void actFail(String playerName, int credits, int dollars){
+        System.out.printf("Act failed, %s has %d credits and %d dollars\n", playerName, credits, dollars);
+    }
+
+    public void rehearseFail(String playerName, int practiceTokens){
+        System.out.printf("Rehearse failed, %s has %d \n", playerName, practiceTokens);
+    }
     //---------------------------------------------------------------------------------------
     //endregion
 
