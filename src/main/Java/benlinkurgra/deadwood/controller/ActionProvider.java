@@ -1,5 +1,6 @@
 package benlinkurgra.deadwood.controller;
 
+import benlinkurgra.deadwood.CurrencyType;
 import benlinkurgra.deadwood.location.SceneStatus;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.Display;
@@ -10,7 +11,8 @@ import benlinkurgra.deadwood.location.SetLocation;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 public class ActionProvider extends DisplayController {
     private Player activePlayer;
@@ -77,21 +79,27 @@ public class ActionProvider extends DisplayController {
         switch (action) {
             case MOVE:
                 executeMove();
+                gameState.setCurrentPlayerDone();
                 break;
             case TAKE_ROLE:
                 System.out.println("take role not yet implemented");
+                gameState.setCurrentPlayerDone();
                 break;
             case ACT:
                 System.out.println("act not yet implemented");
+                gameState.setCurrentPlayerDone();
                 break;
             case REHEARSE:
                 System.out.println("rehearse yet implemented");
+                gameState.setCurrentPlayerDone();
                 break;
             case UPGRADE:
-                System.out.println("upgrade not yet implemented");
+                //TODO how to handle being able to upgrade before a move?
+                upgradePlayer();
                 break;
             case END_TURN:
                 System.out.println("end turn not yet implemented");
+                gameState.setCurrentPlayerDone();
                 break;
             default:
                 display.displaySomethingWentWrong();
@@ -145,12 +153,7 @@ public class ActionProvider extends DisplayController {
         String playerName = activePlayer.getName();
         String action = "take a role";
         String locationName = activePlayer.getLocation();
-        if (gameState.isCurrentPlayerDone()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "action already performed");
-            }
-            return false;
-        } else if (!board.isSetLocation(locationName)) {
+        if (!board.isSetLocation(locationName)) {
             if (withPrint) {
                 display.displayCanNotPerformAction(playerName, action, "must be at a set location");
             }
@@ -245,12 +248,7 @@ public class ActionProvider extends DisplayController {
     private boolean canUpgrade(boolean withPrint) {
         String playerName = activePlayer.getName();
         String action = "upgrade";
-        if (gameState.isCurrentPlayerDone()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "action already performed");
-            }
-            return false;
-        } else if (!activePlayer.getLocation().equals("office")) {
+        if (!activePlayer.getLocation().equals("office")) {
             if (withPrint) {
                 display.displayCanNotPerformAction(playerName, action, "must be at casting office");
             }
@@ -294,24 +292,29 @@ public class ActionProvider extends DisplayController {
         display.sendActivePlayer(activePlayer.getName());
     }
 
-    public void provideAvailableActions() {
-        List<String> actions = new ArrayList<>();
-    }
-
     public void executeMove() {
         List<String> neighbors = locationNeighbors(activePlayer.getLocation());
         display.displayNeighbors(neighbors);
-        String input = handleInput(display::sendPromptSelectLocation);
-        if (neighbors.stream().anyMatch(input::equalsIgnoreCase)) {
-            //TODO change active player location
-            // use value from neighbors to ensure correct case
+        String input = handleInput(display::sendPromptEnterLocation);
+
+        OptionalInt index = IntStream.range(0, neighbors.size())
+                .filter(i -> neighbors.get(i).equalsIgnoreCase(input))
+                .findFirst();
+
+        if (index.isPresent()) {
+            int matchIndex = index.getAsInt();
+            String newLocation = neighbors.get(matchIndex);
+            display.displayMoveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
+            activePlayer.setLocation(newLocation);
         } else {
             try {
                 int locationNumber = Integer.parseInt(input);
                 if (locationNumber < 0 || locationNumber > neighbors.size() - 1) {
                     throw new IllegalArgumentException("Input out of range");
                 } else {
-                    //TODO change active player location
+                    String newLocation = neighbors.get(locationNumber);
+                    display.displayMoveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
+                    activePlayer.setLocation(newLocation);
                 }
             } catch (Exception e) {
                 display.displayInvalidMoveLocation(input);
@@ -320,31 +323,74 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public void takeRole(Player player, String role){
+    public void takeRole(Player player, String role) {
         System.out.println("should update the role of this player");
     }
 
-    public void updatePlayerLocation(Player player){
+    public void upgradePlayer() {
+        CastingOffice office = (CastingOffice) board.getLocation("office");
+        display.displayValidUpgrades(activePlayer, office.getUpgrades());
+        String input = handleInput(display::sendPromptSelectUpgrade);
+        try {
+            int rankNumber = Integer.parseInt(input);
+            if (rankNumber < 2 || rankNumber > 6) {
+                display.displayInvalidRankSelection(input);
+                upgradePlayer();
+            } else {
+                CurrencyType currencyType = getCurrencyType();
+                if (office.isValidUpgrade(activePlayer, rankNumber, currencyType)) {
+                    int cost = office.getCost(rankNumber, currencyType);
+                    activePlayer.upgrade(rankNumber, currencyType, cost);
+                    display.upgradeSuccess(activePlayer.getName(), rankNumber);
+                } else {
+                    display.displayCanNotPerformAction(activePlayer.getName(),
+                            "upgrade to rank " +
+                                    rankNumber + " with " +
+                                    ((currencyType == CurrencyType.DOLLARS) ? "dollars" : "credits"),
+                            "they do not meet the requirements");
+                    upgradePlayer();
+                }
+            }
+        } catch (NumberFormatException e) {
+            display.displayNotANumber(input);
+            upgradePlayer();
+        }
+    }
+
+    private CurrencyType getCurrencyType() {
+        String input = handleInput(display::sendPromptSelectCurrency);
+        if (input.equalsIgnoreCase("credits")) {
+            return CurrencyType.CREDITS;
+        } else if (input.equalsIgnoreCase("dollars")) {
+            return CurrencyType.DOLLARS;
+        } else {
+            try {
+                int type = Integer.parseInt(input);
+                if (type == 1) {
+                    return CurrencyType.DOLLARS;
+                } else if (type == 2) {
+                    return CurrencyType.CREDITS;
+                } else {
+                    throw new IllegalArgumentException("Not a valid currency input");
+                }
+            } catch (Exception e) {
+                display.invalidCurrency(input);
+                return getCurrencyType();
+            }
+        }
+    }
+
+    public void updatePlayerRank(Player player) {
+    }
+
+    public void act(Player player) {
+    }
+
+    public void rehearse(Player player) {
 
     }
 
-    public void updatePlayerLocation(Player player, String role){
-    }
-
-    public void upgradePlayer(Player player, int newRank){
-    }
-
-    public void updatePlayerRank(Player player){
-    }
-
-    public void act(Player player){
-    }
-
-    public void rehearse(Player player){
-
-    }
-
-    public ArrayList<String> locationNeighbors(String location)  {
+    public ArrayList<String> locationNeighbors(String location) {
         return board.getLocation(location).getNeighbors();
     }
 

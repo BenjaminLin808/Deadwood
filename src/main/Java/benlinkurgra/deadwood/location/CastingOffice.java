@@ -23,7 +23,7 @@ public class CastingOffice extends Location {
      */
     public boolean isValidUpgrade(Player player, int newRank, CurrencyType currency) {
         UpgradeCost rankCost = upgrades.get(newRank);
-        if (player.getActingRank() <= newRank) {
+        if (player.getActingRank() >= newRank) {
             return false;
         } else if (currency == CurrencyType.CREDITS && player.getCredits() < rankCost.getCreditsCost()) {
             return false;
@@ -53,30 +53,12 @@ public class CastingOffice extends Location {
         return false;
     }
 
-    public String validUpgrades(Player player) {
-        StringBuilder upgradesString = new StringBuilder();
-        upgradesString.append("Here is a list of all rank upgrades. All ");
-        upgradesString.append("\033[31m");
-        upgradesString.append("red colored ");
-        upgradesString.append("\033[0m");
-        upgradesString.append("text are invalid upgrades.\n");
+    public int getCost(int rank, CurrencyType currencyType) {
+        return upgrades.get(rank).getCostByType(currencyType);
+    }
 
-        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
-            if (upgrade.getKey() <= player.getActingRank()) {
-                upgradesString.append("\033[31m");
-                upgradesString.append("Rank ");
-                upgradesString.append(upgrade.getKey());
-                upgradesString.append(": ");
-                upgradesString.append(upgrade.getValue());
-                upgradesString.append("\033[0m");
-            } else {
-                upgradesString.append("Rank ");
-                upgradesString.append(upgrade.getKey());
-                upgradesString.append(": ");
-                upgradesString.append(upgrade.getValue());
-            }
-        }
-        return upgradesString.toString();
+    public Map<Integer, UpgradeCost> getUpgrades() {
+        return upgrades;
     }
 
 }

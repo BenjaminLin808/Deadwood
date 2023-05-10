@@ -1,9 +1,11 @@
 package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.controller.Action;
+import benlinkurgra.deadwood.location.UpgradeCost;
 import benlinkurgra.deadwood.model.Player;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Display {
@@ -138,6 +140,50 @@ public class Display {
         System.out.println(actions);
     }
 
+    public void displayValidUpgrades(Player player, Map<Integer, UpgradeCost> upgrades) {
+        String yellowText = "\u001B[33m";
+        String resetTextColor = "\u001B[0m";
+        String format = "|%1$-10s|%2$-13s|%3$-11s|\n";
+        String rankFormat = "%1$-10s";
+        String dollarFormat = "%1$-13s";
+        String creditFormat = "%1$-11s";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here is a list of all rank upgrades. Invalid upgrades highlighted in ");
+        sb.append(yellowText);
+        sb.append("yellow");
+        sb.append(resetTextColor);
+        sb.append(":\n");
+        sb.append("+----------+-------------+-----------+\n");
+        sb.append("|   RANK   |   DOLLARS   |  CREDITS  |\n");
+        sb.append("+----------+-------------+-----------+\n");
+
+        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
+            UpgradeCost upgradeCost = upgrade.getValue();
+            int dollarCost = upgradeCost.getDollarCost();
+            int creditCost = upgradeCost.getCreditsCost();
+
+            if (upgrade.getKey() <= player.getActingRank()) {
+                sb.append("|" + yellowText + String.format(rankFormat, upgrade.getKey()) + resetTextColor +
+                        "|" + yellowText + String.format(dollarFormat, dollarCost) + resetTextColor +
+                        "|" + yellowText + String.format(creditFormat, creditCost) + resetTextColor +
+                        "|\n");
+            } else {
+                String dollarColor = ((player.getDollars() < dollarCost)
+                        ? yellowText : resetTextColor);
+                String creditColor = ((player.getCredits() < creditCost)
+                        ? yellowText : resetTextColor);
+
+                sb.append("|" + String.format(rankFormat, upgrade.getKey())  +
+                        "|" + dollarColor + String.format(dollarFormat, dollarCost) + resetTextColor +
+                        "|" + creditColor + String.format(creditFormat, creditCost) + resetTextColor +
+                        "|\n");
+            }
+        }
+        sb.append("+----------+-------------+-----------+");
+        System.out.println(sb);
+    }
+
     /**
      * Displays neighboring location for a given location
      *
@@ -159,6 +205,10 @@ public class Display {
 
     public void displayMoveSuccess(String playerName, String oldLocation, String newLocation) {
         System.out.printf("Move successful, %s has moved from %s to %s\n", playerName, oldLocation, newLocation);
+    }
+
+    public void upgradeSuccess(String playerName, int rank) {
+        System.out.printf("Upgrade successful, %s has upgraded to rank %d\n", playerName, rank);
     }
     //---------------------------------------------------------------------------------------
     //endregion
@@ -216,7 +266,15 @@ public class Display {
     }
 
     public void displayInvalidMoveLocation(String input) {
-        System.out.printf("Invalid input, %s is not a valid selection for a move\n", input);
+        System.out.printf("Invalid input, %s is not a valid selection for a move.\n", input);
+    }
+
+    public void displayInvalidRankSelection(String input) {
+        System.out.printf("Invalid input, %s is not a valid rank number, please select a number from 2 up to 6.\n", input);
+    }
+
+    public void invalidCurrency(String input) {
+        System.out.printf("Invalid input, %s is not a valid currency.\n", input);
     }
 
     public void displaySomethingWentWrong() {
@@ -256,8 +314,17 @@ public class Display {
         System.out.print("Enter action: ");
     }
 
-    public void sendPromptSelectLocation() {
-        System.out.print("Select location: ");
+    public void sendPromptSelectUpgrade() {
+        System.out.println("To select a new rank enter the number of the rank.");
+        System.out.print("Enter rank: ");
+    }
+
+    public void sendPromptSelectCurrency() {
+        System.out.println("""
+                Select a currency type by typing the currency name or it's corresponding number.
+                1. Dollars
+                2. Credits""");
+        System.out.print("Select Currency: ");
     }
     //---------------------------------------------------------------------------------------
     //endregion

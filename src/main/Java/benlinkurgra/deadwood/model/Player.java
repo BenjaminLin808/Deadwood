@@ -1,5 +1,6 @@
 package benlinkurgra.deadwood.model;
 
+import benlinkurgra.deadwood.CurrencyType;
 import benlinkurgra.deadwood.Dice;
 import benlinkurgra.deadwood.location.SceneStatus;
 import benlinkurgra.deadwood.location.SetLocation;
@@ -31,11 +32,11 @@ public class Player {
      * @param currencyType
      * @param amount
      */
-    public void upgrade(int newRank, String currencyType, int amount){
-        if(currencyType.equals("credits")){
+    public void upgrade(int newRank, CurrencyType currencyType, int amount){
+        if(currencyType == CurrencyType.CREDITS){
             this.credits = this.credits - amount;
             this.actingRank = newRank;
-        } else if (currencyType.equals("dollars")) {
+        } else if (currencyType == CurrencyType.DOLLARS) {
             this.dollars = this.dollars - amount;
             this.actingRank = newRank;
         }

@@ -63,8 +63,8 @@ public class GameState {
         return currentPlayerDone;
     }
 
-    public void setCurrentPlayerDone(boolean currentPlayerDone) {
-        this.currentPlayerDone = currentPlayerDone;
+    public void setCurrentPlayerDone() {
+        this.currentPlayerDone = !this.currentPlayerDone;
     }
 
     public Queue<Scene> getSceneOrder() {
