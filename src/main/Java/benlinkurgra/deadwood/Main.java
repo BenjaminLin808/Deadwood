@@ -63,10 +63,10 @@ public class Main {
     }
 
 
-
     public static void main(String[] args) {
         startGame();
         Action action = getAction();
         actionProvider.attemptAction(action);
+
     }
 }

@@ -1,6 +1,7 @@
 package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.location.Scene;
+import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
 import java.util.PriorityQueue;
@@ -31,7 +32,22 @@ public class GameState {
     }
 
 
-    public void endDay(){
+    public void endDay(Board board){
+        boolean playersOnRole = false;
+        for (Player player : playerOrder) {
+            if(player.isWorkingRole()){
+                playersOnRole = true;
+            }
+        }
+        if( !playersOnRole){
+            for (Player player : playerOrder){
+                player.setLocation("trailer");
+            }
+
+            for (int i = 0; i < sceneOrder.size(); i++){
+
+            }
+        }
         System.out.println("Current day is over, resetting the board");
     }
 

@@ -2,18 +2,13 @@ package benlinkurgra.deadwood.controller;
 
 import benlinkurgra.deadwood.CurrencyType;
 import benlinkurgra.deadwood.Dice;
-import benlinkurgra.deadwood.location.RoleData;
-import benlinkurgra.deadwood.location.SceneStatus;
+import benlinkurgra.deadwood.location.*;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.Display;
 import benlinkurgra.deadwood.GameState;
 import benlinkurgra.deadwood.model.Player;
-import benlinkurgra.deadwood.location.CastingOffice;
-import benlinkurgra.deadwood.location.SetLocation;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalInt;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class ActionProvider extends DisplayController {
@@ -416,6 +411,33 @@ public class ActionProvider extends DisplayController {
                 display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
             }
         }
+    }
+
+    // TODO don't know how to find the players on the card and add bonus to it
+    private void wrappedScene(){
+        SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
+        Dice dice = new Dice();
+        Queue<Integer> bonus = new PriorityQueue<>();
+        for(int i = 0; i < playerLocation.getSceneBudget(); i++){
+            bonus.add(dice.roll());
+        }
+        List<RoleData> roles = playerLocation.getRoles().getRoleList();
+        Queue<Player> playerOrder = gameState.getPlayerOrder();
+        Queue<Player> playersOnCard = new PriorityQueue<>();
+        Queue<Player> playersOffCard = new PriorityQueue<>();
+        for(Player player : playerOrder){
+            for(RoleData role : roles){
+                if(player.getName().equals(role.getPlayerOnRole())){
+                    if(role.isOnCard()){
+                        playersOnCard.add(player);
+                    }
+                    else{
+                        playersOffCard.add(player);
+                    }
+                }
+            }
+        }
+
     }
 
     public void rehearse() {
