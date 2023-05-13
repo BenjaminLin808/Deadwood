@@ -413,17 +413,17 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    // TODO don't know how to find the players on the card and add bonus to it
+    // TODO need to revise this method
     private void wrappedScene(){
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         Dice dice = new Dice();
-        Queue<Integer> bonus = new PriorityQueue<>();
+        Queue<Integer> bonus = new PriorityQueue<>(Collections.reverseOrder());
         for(int i = 0; i < playerLocation.getSceneBudget(); i++){
             bonus.add(dice.roll());
         }
         List<RoleData> roles = playerLocation.getRoles().getRoleList();
         Queue<Player> playerOrder = gameState.getPlayerOrder();
-        Queue<Player> playersOnCard = new PriorityQueue<>();
+        Queue<Player> playersOnCard = new PriorityQueue<>(Comparator.comparingInt(Player::getActingRank).reversed());
         Queue<Player> playersOffCard = new PriorityQueue<>();
         for(Player player : playerOrder){
             for(RoleData role : roles){
@@ -438,6 +438,16 @@ public class ActionProvider extends DisplayController {
             }
         }
 
+        while (bonus.size() != 0){
+            for(Player playerOnCard : playersOnCard ){
+                playerOnCard.setDollars(playerOnCard.getDollars() + bonus.poll());
+            }
+        }
+        if(playersOnCard.size() >= 1){
+            for(Player playerOffCard : playersOffCard){
+                playerOffCard.setDollars(playerOffCard.getDollars() + playerOffCard.getActingRank());
+            }
+        }
     }
 
     public void rehearse() {
