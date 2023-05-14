@@ -3,15 +3,8 @@ package benlinkurgra.deadwood.controller;
 import benlinkurgra.deadwood.Display;
 import benlinkurgra.deadwood.location.*;
 import benlinkurgra.deadwood.model.Board;
-import benlinkurgra.deadwood.readxml.ParseBoardXML;
-
-import javax.xml.parsers.ParserConfigurationException;
-import java.util.ArrayList;
-import java.util.Map;
 
 public class LocationProvider extends DisplayController {
-
-
     Board boardData;
 
     public LocationProvider(Display display, Board boardData) {
@@ -25,7 +18,7 @@ public class LocationProvider extends DisplayController {
 
     public Roles locationRoles(SetLocation setLocation){
         System.out.println("return the roles available at this location");
-        return setLocation.getRoles();
+        return setLocation.getRolesOnLocation();
     }
 
     public Scene locationScene(SetLocation setLocation){

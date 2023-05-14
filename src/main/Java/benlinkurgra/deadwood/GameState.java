@@ -4,54 +4,57 @@ import benlinkurgra.deadwood.location.Scene;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class GameState {
-    int currDay;
-    int endDay;
-    int activeScenes;
-    int numPlayers;
-    boolean currentPlayerDone;
-    Queue<Scene> sceneOrder = new PriorityQueue<Scene>();
-    Queue<Player> playerOrder = new PriorityQueue<Player>();
+    private int currDay = 1;
+    private final int endDay;
+    private int activeScenes = 10;
+    private boolean currentPlayerDone;
+    private Queue<Scene> sceneOrder;
+    private Queue<Player> playerOrder;
 
 
-    public GameState(int numPlayers, Queue<Scene> sceneOrder, Queue<Player> playerOrder) {
-        this.numPlayers = numPlayers;
+    public GameState(Queue<Scene> sceneOrder, Queue<Player> playerOrder) {
+        this.endDay = 4;
+        this.currentPlayerDone = false;
         this.sceneOrder = sceneOrder;
         this.playerOrder = playerOrder;
     }
 
-    public void distributedScenes(){
-        System.out.println("Distrubuting scenes");
+    public GameState(int endDay, Queue<Scene> sceneOrder, Queue<Player> playerOrder) {
+        this.endDay = endDay;
+        this.sceneOrder = sceneOrder;
+        this.playerOrder = playerOrder;
     }
 
-    public void endTurn(){
-        System.out.println("Current player's turn is over");
+    public Player endTurn() {
+        playerOrder.add(playerOrder.remove());
+        currentPlayerDone = false;
+        return playerOrder.peek();
     }
 
-
-    public void endDay(Board board){
+    public void endDay(Board board) {
+        //TODO if the day is ending everyone goes back to trailers???
         boolean playersOnRole = false;
         for (Player player : playerOrder) {
-            if(player.isWorkingRole()){
+            if (player.isWorkingRole()) {
                 playersOnRole = true;
             }
         }
-        if( !playersOnRole){
-            for (Player player : playerOrder){
+        if (!playersOnRole) {
+            for (Player player : playerOrder) {
                 player.setLocation("trailer");
             }
 
-            for (int i = 0; i < sceneOrder.size(); i++){
+            for (int i = 0; i < sceneOrder.size(); i++) {
 
             }
         }
         System.out.println("Current day is over, resetting the board");
     }
 
-    public void scoreGame(){
+    public void scoreGame() {
         System.out.println("get players scores");
     }
 
@@ -59,8 +62,8 @@ public class GameState {
         return currDay;
     }
 
-    public void setCurrDay(int currDay) {
-        this.currDay = currDay;
+    public void incrementCurrDay() {
+        ++this.currDay;
     }
 
     public int getEndDay() {
@@ -71,40 +74,33 @@ public class GameState {
         return activeScenes;
     }
 
-    public void setActiveScenes(int activeScenes) {
-        this.activeScenes = activeScenes;
+    public void decrementActiveScenes() {
+        --this.activeScenes;
+    }
+
+    public void resetActiveScenes() {
+        this.activeScenes = 10;
     }
 
     public boolean isCurrentPlayerDone() {
         return currentPlayerDone;
     }
 
-    public void setCurrentPlayerDone() {
-        this.currentPlayerDone = !this.currentPlayerDone;
+    public void setCurrentPlayerDoneTrue() {
+        this.currentPlayerDone = true;
     }
 
     public Queue<Scene> getSceneOrder() {
         return sceneOrder;
     }
 
-    public void setSceneOrder(Queue<Scene> sceneOrder) {
-        this.sceneOrder = sceneOrder;
-    }
-
     public Queue<Player> getPlayerOrder() {
         return playerOrder;
-    }
-
-    public void setPlayerOrder(Queue<Player> playerOrder) {
-        this.playerOrder = playerOrder;
     }
 
     public Player getActivePlayer() {
         return playerOrder.peek();
     }
-
-
-
 }
 
 

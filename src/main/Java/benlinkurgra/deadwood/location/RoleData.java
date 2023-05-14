@@ -42,4 +42,33 @@ public class RoleData {
     public boolean isOnCard() {
         return onCard;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name);
+        sb.append(", Rank: ");
+        sb.append(rank);
+        if (!isAvailable()) {
+            sb.append(", Player working Role: ");
+            sb.append(playerOnRole);
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+
+    public String toStringWithHighlight(int playerRank) {
+        String yellowText = "\u001B[33m";
+        String resetTextColor = "\u001B[0m";
+        boolean roleUnavailable = !isAvailable() || playerRank < rank;
+        StringBuilder sb = new StringBuilder();
+        if (roleUnavailable) {
+            sb.append(yellowText);
+        }
+        sb.append(this);
+        if (roleUnavailable) {
+            sb.append(resetTextColor);
+        }
+        return sb.toString();
+    }
 }

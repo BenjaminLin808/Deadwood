@@ -34,7 +34,7 @@ public class GameInitializer extends DisplayController {
                 return num;
             }
         } catch (NumberFormatException e) {
-            display.displayNotANumber(input);
+            display.notANumber(input);
             return getNumberPlayers();
         }
     }

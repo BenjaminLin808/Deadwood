@@ -13,7 +13,7 @@ public class Roles {
         this.roleList = roles;
     }
 
-    public List<RoleData> availableRoles(int playerRank) {
+    protected List<RoleData> availableRoles(int playerRank) {
         List<RoleData> returnList = new ArrayList<>();
         for (RoleData role: roleList) {
             if (role.getRank() <= playerRank && role.isAvailable()) {
@@ -23,17 +23,31 @@ public class Roles {
         return returnList;
     }
 
-    public boolean fillRole(String playerName, int playerRank, String roleName) {
+    /**
+     * Attempts to fill a role
+     *
+     * @param playerName name of player taking role
+     * @param playerRank rank of player taking role
+     * @param roleName name of the role
+     * @return returns true if player can take the role, otherwise returns false
+     */
+    protected boolean fillRole(String playerName, int playerRank, String roleName) {
         for (RoleData role : roleList) {
-            if (role.getName().equals(playerName) && role.isAvailable()) {
-                role.setPlayerOnRole(playerName);
-                return true;
+            if (role.getName().equals(roleName)) {
+                // check if player can take role
+                if (role.isAvailable() && role.getRank() <= playerRank) {
+                    role.setPlayerOnRole(playerName);
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+        // roleName not a role
         return false;
     }
 
-    public List<String> playersOnRoles() {
+    protected List<String> playersOnRoles() {
         List<String> playerList = new ArrayList<>();
         for(RoleData role : roleList) {
             if (!role.isAvailable()) {
@@ -45,5 +59,33 @@ public class Roles {
 
     public List<RoleData> getRoleList() {
         return roleList;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < roleList.size(); i++) {
+            sb.append(i + 1);
+            sb.append(". ");
+            sb.append(roleList.get(i));
+        }
+        return sb.toString();
+    }
+
+    public String toStringWithHighlight(int playerRank) {
+        String yellowText = "\u001B[33m";
+        String resetTextColor = "\u001B[0m";
+        StringBuilder sb = new StringBuilder();
+        sb.append("Unavailable roles highlighted in");
+        sb.append(yellowText);
+        sb.append(" yellow");
+        sb.append(resetTextColor);
+        sb.append(".\n");
+        for (int i = 0; i < roleList.size(); i++) {
+            sb.append(i + 1);
+            sb.append(". ");
+            sb.append(roleList.get(i).toStringWithHighlight(playerRank));
+        }
+        return sb.toString();
     }
 }

@@ -1,23 +1,25 @@
 package benlinkurgra.deadwood.model;
 
 import benlinkurgra.deadwood.location.Location;
+import benlinkurgra.deadwood.location.Scene;
 import benlinkurgra.deadwood.location.SetLocation;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 public class Board {
     private final Map<String, Location> locations;
 
-    public Board(Map<String, Location> locations) {
+    public Board(Map<String, Location> locations, Queue<Scene> scenes) {
         this.locations = locations;
+        dealNewScenes(scenes);
     }
 
     public Location getLocation(String locationName) {
         return locations.get(locationName);
     }
-
 
     /**
      * Determines if a move from a current location to a new location is possible.
@@ -40,5 +42,17 @@ public class Board {
     public boolean isSetLocation(String locationName) {
         Location  location = locations.get(locationName);
         return location instanceof SetLocation;
+    }
+
+    public boolean isSetLocation(Location location) {
+        return location instanceof SetLocation;
+    }
+
+    public void dealNewScenes(Queue<Scene> scenes) {
+        for (Location location : locations.values()) {
+            if (isSetLocation(location)) {
+                ((SetLocation)location).setNewScene(scenes.remove());
+            }
+        }
     }
 }

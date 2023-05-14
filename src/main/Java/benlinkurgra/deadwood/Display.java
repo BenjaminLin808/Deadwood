@@ -1,6 +1,5 @@
 package benlinkurgra.deadwood;
 
-import benlinkurgra.deadwood.controller.Action;
 import benlinkurgra.deadwood.location.UpgradeCost;
 import benlinkurgra.deadwood.model.Player;
 
@@ -143,7 +142,6 @@ public class Display {
     public void displayValidUpgrades(Player player, Map<Integer, UpgradeCost> upgrades) {
         String yellowText = "\u001B[33m";
         String resetTextColor = "\u001B[0m";
-        String format = "|%1$-10s|%2$-13s|%3$-11s|\n";
         String rankFormat = "%1$-10s";
         String dollarFormat = "%1$-13s";
         String creditFormat = "%1$-11s";
@@ -203,7 +201,11 @@ public class Display {
         System.out.println(outputLocations);
     }
 
-    public void displayMoveSuccess(String playerName, String oldLocation, String newLocation) {
+    public void rolesAtLocation(String locationString) {
+        System.out.print(locationString);
+    }
+
+    public void moveSuccess(String playerName, String oldLocation, String newLocation) {
         System.out.printf("Move successful, %s has moved from %s to %s\n", playerName, oldLocation, newLocation);
     }
 
@@ -226,6 +228,14 @@ public class Display {
     public void rehearseFail(String playerName, int practiceTokens){
         System.out.printf("Rehearse failed, %s has %d \n", playerName, practiceTokens);
     }
+
+    public void roleTaken(String playerName, String locationName, String roleName) {
+        System.out.printf("Player %s, at Location %s, has taken the role: %s.\n", playerName, locationName, roleName);
+    }
+
+    public void playerDone(String playerName) {
+        System.out.printf("Ending player %s's turn.\n", playerName);
+    }
     //---------------------------------------------------------------------------------------
     //endregion
 
@@ -238,7 +248,7 @@ public class Display {
      *
      * @param value invalid input provided
      */
-    public void displayNotANumber(String value) {
+    public void notANumber(String value) {
         System.out.printf("Invalid input, %s is not a number\n", value);
     }
 
@@ -248,7 +258,7 @@ public class Display {
      * @param num invalid number entered
      */
     public void displayInvalidNumPlayers(int num) {
-        System.out.printf("Invalid input, can not have %d players, please select a number from 2 up to 8\n", num);
+        System.out.printf("Invalid input, can not have %d players, please select a number from 2 to 8\n", num);
     }
 
     /**
@@ -264,7 +274,7 @@ public class Display {
 
     public void sendInvalidActionSelection(int num) {
         System.out.printf("Invalid input, %d is not a valid selection for an action. " +
-                "Please enter a number from 1 up to 6.\n", num);
+                "Please enter a number from 1 to 6.\n", num);
     }
 
     /**
@@ -286,11 +296,19 @@ public class Display {
     }
 
     public void displayInvalidRankSelection(String input) {
-        System.out.printf("Invalid input, %s is not a valid rank number, please select a number from 2 up to 6.\n", input);
+        System.out.printf("Invalid input, %s is not a valid rank number, please select a number from 2 to 6.\n", input);
+    }
+    
+    public void invalidRoleType(String input) {
+        System.out.printf("Invalid input, %s is not valid role type.\n", input);
     }
 
     public void invalidCurrency(String input) {
         System.out.printf("Invalid input, %s is not a valid currency.\n", input);
+    }
+
+    public void invalidRoleSelection(int input, int numRoles) {
+        System.out.printf("Invalid input, %d is out of range please select a number from 1 to %d.\n", input, numRoles);
     }
 
     public void displaySomethingWentWrong() {
@@ -342,6 +360,21 @@ public class Display {
                 2. Credits""");
         System.out.print("Select Currency: ");
     }
+
+    public void promptRoleType() {
+        System.out.println("""
+                Would you like to take a role as an extra on location, or a starring role, on scene?
+                Enter the name of your selection or the corresponding number.
+                1. Extra
+                2. Starring""");
+        System.out.print("Select Role Type: ");
+    }
+
+    public void promptRole() {
+        System.out.println("Enter the number of the role you would like to select.");
+        System.out.print("Select Role: ");
+    }
+
     //---------------------------------------------------------------------------------------
     //endregion
 

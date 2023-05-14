@@ -6,7 +6,7 @@ import java.util.List;
 public class SetLocation extends Location {
     private int currentShotTokens;
     private final int maxShotTokens;
-    private Roles roles;
+    private final Roles roles;
     private Scene scene;
     private SceneStatus sceneStatus;
 
@@ -16,18 +16,6 @@ public class SetLocation extends Location {
         this.currentShotTokens = maxShotTokens;
         this.roles = roles;
         this.sceneStatus = SceneStatus.HIDDEN;
-    }
-
-    public List<String> playersActingOnScene() {
-        return scene.playersActingOnScene();
-    }
-
-    public Roles getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Roles roles) {
-        this.roles = roles;
     }
 
     public int getCurrentShotTokens() {
@@ -64,20 +52,81 @@ public class SetLocation extends Location {
         return scene.getBudget();
     }
 
+    public String getSceneName() {
+        return scene.getName();
+    }
+
+    public Roles getRolesOnLocation() {
+        return roles;
+    }
+
+    public Roles getRolesOnScene() {
+        return scene.getRoles();
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    public int getNumRolesOnLocation() {
+        return roles.getRoleList().size();
+    }
+
+    public int getNumRolesOnScene() {
+        return scene.getRoles().getRoleList().size();
+    }
+
+
+    public boolean fillRoleOnScene(String playerName, int playerRank, String roleName) {
+        return scene.getRoles().fillRole(playerName, playerRank, roleName);
+    }
+
+    public boolean fillRoleOnLocation(String playerName, int playerRank, String roleName) {
+        return roles.fillRole(playerName, playerRank, roleName);
+    }
+
+
+
+
+
+
     public List<RoleData> getAllAvailableRoles(int playerRank) {
         List<RoleData> availableRoles = new ArrayList<>(roles.availableRoles(playerRank));
         availableRoles.addAll(scene.getRoles().availableRoles(playerRank));
         return availableRoles;
     }
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
 
     public void finishScene() {
+        setSceneStatus(SceneStatus.COMPLETED);
         //TODO
+    }
+
+    public List<String> playersActingOnScene() {
+        return scene.playersActingOnScene();
+    }
+
+    @Override
+    public String toString() {
+        return this.getName() +
+                "\nRoles on Location:\n" +
+                roles +
+                "Scene: " +
+                getSceneName() +
+                ", Budget: " +
+                getSceneBudget() +
+                "\nRoles on Scene:\n" +
+                getRolesOnScene();
+    }
+
+    public String toStringWithHighlight(int playerRank) {
+        return this.getName() +
+                "\nRoles on Location:\n" +
+                roles.toStringWithHighlight(playerRank) +
+                "Scene: " +
+                getSceneName() +
+                ", Budget: " +
+                getSceneBudget() +
+                "\nRoles on Scene:\n" +
+                getRolesOnScene().toStringWithHighlight(playerRank);
     }
 }

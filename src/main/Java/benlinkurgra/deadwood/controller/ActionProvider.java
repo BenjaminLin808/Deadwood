@@ -23,15 +23,6 @@ public class ActionProvider extends DisplayController {
         this.gameState = gameState;
     }
 
-    /**
-     * change the current active player
-     *
-     * @param activePlayer new active player
-     */
-    public void setActivePlayer(Player activePlayer) {
-        this.activePlayer = activePlayer;
-    }
-
     public Action parseActionRequest() {
         String input = handleInput(display::sendPromptSelectAction);
         try {
@@ -47,7 +38,7 @@ public class ActionProvider extends DisplayController {
                 return parseActionRequest();
             }
         } catch (NumberFormatException e) {
-            display.displayNotANumber(input);
+            display.notANumber(input);
             return parseActionRequest();
         }
     }
@@ -76,27 +67,26 @@ public class ActionProvider extends DisplayController {
         switch (action) {
             case MOVE:
                 executeMove();
-                gameState.setCurrentPlayerDone();
+                gameState.setCurrentPlayerDoneTrue();
                 break;
             case TAKE_ROLE:
-                System.out.println("take role not yet implemented");
-                gameState.setCurrentPlayerDone();
+                takeRole();
+                gameState.setCurrentPlayerDoneTrue();
                 break;
             case ACT:
                 act();
-                gameState.setCurrentPlayerDone();
+                gameState.setCurrentPlayerDoneTrue();
                 break;
             case REHEARSE:
                 rehearse();
-                gameState.setCurrentPlayerDone();
+                gameState.setCurrentPlayerDoneTrue();
                 break;
             case UPGRADE:
                 //TODO how to handle being able to upgrade before a move?
                 upgradePlayer();
                 break;
             case END_TURN:
-                System.out.println("end turn not yet implemented");
-                gameState.setCurrentPlayerDone();
+                endTurn();
                 break;
             default:
                 display.displaySomethingWentWrong();
@@ -162,7 +152,7 @@ public class ActionProvider extends DisplayController {
             return false;
         } else {
             SetLocation location = (SetLocation) board.getLocation(locationName);
-            boolean hasRoles = location.getAllAvailableRoles(activePlayer.getActingRank()).size() > 0;
+            boolean hasRoles = !(location.getAllAvailableRoles(activePlayer.getActingRank()).size() > 0);
             if (location.getSceneStatus() == SceneStatus.COMPLETED) {
                 if (withPrint) {
                     display.displayCanNotPerformAction(playerName, action, "scene at location already completed");
@@ -301,7 +291,7 @@ public class ActionProvider extends DisplayController {
         if (index.isPresent()) {
             int matchIndex = index.getAsInt();
             String newLocation = neighbors.get(matchIndex);
-            display.displayMoveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
+            display.moveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
             activePlayer.setLocation(newLocation);
         } else {
             try {
@@ -310,7 +300,7 @@ public class ActionProvider extends DisplayController {
                     throw new IllegalArgumentException("Input out of range");
                 } else {
                     String newLocation = neighbors.get(locationNumber);
-                    display.displayMoveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
+                    display.moveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
                     activePlayer.setLocation(newLocation);
                 }
             } catch (Exception e) {
@@ -320,8 +310,96 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public void takeRole(Player player, String role) {
-        System.out.println("should update the role of this player");
+    public void takeRole() {
+        SetLocation location = (SetLocation) board.getLocation(activePlayer.getLocation());
+        display.rolesAtLocation(location.toStringWithHighlight(activePlayer.getActingRank()));
+        String input = handleInput(display::promptRoleType);
+        if (input.equalsIgnoreCase("extra") || input.equals("1")) {
+            //TODO check that can take role as extra
+            takeExtraRole(location);
+        } else if (input.equalsIgnoreCase("starring") || input.equals("2")) {
+            //TODO check that can take starring role
+            takeStarringRole(location);
+        } else {
+            display.invalidRoleType(input);
+            takeRole();
+        }
+    }
+
+    private void takeExtraRole(SetLocation location) {
+        Roles roles = location.getRolesOnLocation();
+        display.rolesAtLocation(roles.toStringWithHighlight(activePlayer.getActingRank()));
+        String input = handleInput(display::promptRole);
+        try {
+            int roleNum = Integer.parseInt(input) - 1;
+            if (roleNum < 0 || roleNum > location.getNumRolesOnLocation() - 1) {
+                display.invalidRoleSelection(roleNum + 1, location.getNumRolesOnLocation());
+                takeExtraRole(location);
+            } else {
+                String roleName = roles.getRoleList().get(roleNum).getName();
+                boolean roleFilled = location.fillRoleOnLocation(activePlayer.getName(),
+                        activePlayer.getActingRank(),
+                        roleName);
+                if (roleFilled) {
+                    activePlayer.setWorkingRole(true);
+                    display.roleTaken(activePlayer.getName(), location.getName(), roleName);
+                } else {
+                    String reason = "";
+                    if (!roles.getRoleList().get(roleNum).isAvailable()) {
+                        reason = "role already filled by " + roles.getRoleList().get(roleNum).getPlayerOnRole();
+                    } else if (roles.getRoleList().get(roleNum).getRank() > activePlayer.getActingRank()) {
+                        reason = "player must be rank " + roles.getRoleList().get(roleNum).getRank() + " or higher";
+                    } else {
+                        reason = "could not find role";
+                    }
+                    display.displayCanNotPerformAction(activePlayer.getName(),
+                            "take role" + roleName,
+                            reason);
+                    takeExtraRole(location);
+                }
+            }
+        } catch (NumberFormatException e) {
+            display.notANumber(input);
+            takeExtraRole(location);
+        }
+    }
+
+    private void takeStarringRole(SetLocation location) {
+        Roles roles = location.getRolesOnScene();
+        display.rolesAtLocation(roles.toStringWithHighlight(activePlayer.getActingRank()));
+        String input = handleInput(display::promptRole);
+        try {
+            int roleNum = Integer.parseInt(input) - 1;
+            if (roleNum < 0 || roleNum > location.getNumRolesOnScene() - 1) {
+                display.invalidRoleSelection(roleNum + 1, location.getNumRolesOnScene());
+                takeStarringRole(location);
+            } else {
+                String roleName = roles.getRoleList().get(roleNum).getName();
+                boolean roleFilled = location.fillRoleOnScene(activePlayer.getName(),
+                        activePlayer.getActingRank(),
+                        roleName);
+                if (roleFilled) {
+                    activePlayer.setWorkingRole(true);
+                    display.roleTaken(activePlayer.getName(), location.getName(), roleName);
+                } else {
+                    String reason = "";
+                    if (!roles.getRoleList().get(roleNum).isAvailable()) {
+                        reason = "role alrady filled by " + roles.getRoleList().get(roleNum).getPlayerOnRole();
+                    } else if (roles.getRoleList().get(roleNum).getRank() > activePlayer.getActingRank()) {
+                        reason = "player must be rank " + roles.getRoleList().get(roleNum).getRank() + " or higher";
+                    } else {
+                        reason = "could not find role";
+                    }
+                    display.displayCanNotPerformAction(activePlayer.getName(),
+                            "take role" + roleName,
+                            reason);
+                    takeStarringRole(location);
+                }
+            }
+        } catch (NumberFormatException e) {
+            display.notANumber(input);
+            takeStarringRole(location);
+        }
     }
 
     public void upgradePlayer() {
@@ -349,7 +427,7 @@ public class ActionProvider extends DisplayController {
                 }
             }
         } catch (NumberFormatException e) {
-            display.displayNotANumber(input);
+            display.notANumber(input);
             upgradePlayer();
         }
     }
@@ -377,74 +455,69 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public void updatePlayerRank() {
-    }
-
     public void act() {
         Dice dice = new Dice();
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
-        List<RoleData> roles = playerLocation.getRoles().getRoleList();
+        List<RoleData> roles = playerLocation.getRolesOnLocation().getRoleList();
         boolean onCard = false;
-        for(int i = 0; i < roles.size(); i++) {
+        for (int i = 0; i < roles.size(); i++) {
             if (roles.get(i).getName().equals(activePlayer.getName())) {
                 onCard = roles.get(i).isOnCard();
             }
         }
 
-        if(onCard){
-            if(dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()){
+        if (onCard) {
+            if (dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
                 playerLocation.removeShotToken();
-                activePlayer.setCredits(activePlayer.getCredits()+1);
-                activePlayer.setDollars(activePlayer.getDollars()+1);
+                activePlayer.setCredits(activePlayer.getCredits() + 1);
+                activePlayer.setDollars(activePlayer.getDollars() + 1);
                 display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
-            }else{
-                activePlayer.setCredits(activePlayer.getCredits()+1);
+            } else {
+                activePlayer.setCredits(activePlayer.getCredits() + 1);
                 display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
             }
-        }else{
-            if(dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
+        } else {
+            if (dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
                 playerLocation.removeShotToken();
                 activePlayer.setCredits(activePlayer.getCredits() + 2);
                 display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
-            }
-            else{
+            } else {
                 display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
             }
         }
     }
 
     // TODO need to revise this method
-    private void wrappedScene(){
+    private void wrappedScene() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         Dice dice = new Dice();
         Queue<Integer> bonus = new PriorityQueue<>(Collections.reverseOrder());
-        for(int i = 0; i < playerLocation.getSceneBudget(); i++){
+        for (int i = 0; i < playerLocation.getSceneBudget(); i++) {
             bonus.add(dice.roll());
         }
-        List<RoleData> roles = playerLocation.getRoles().getRoleList();
+        List<RoleData> roles = playerLocation.getRolesOnLocation().getRoleList();
         Queue<Player> playerOrder = gameState.getPlayerOrder();
         Queue<Player> playersOnCard = new PriorityQueue<>(Comparator.comparingInt(Player::getActingRank).reversed());
         Queue<Player> playersOffCard = new PriorityQueue<>();
-        for(Player player : playerOrder){
-            for(RoleData role : roles){
-                if(player.getName().equals(role.getPlayerOnRole())){
-                    if(role.isOnCard()){
+        for (Player player : playerOrder) {
+            for (RoleData role : roles) {
+                if (player.getName().equals(role.getPlayerOnRole())) {
+                    if (role.isOnCard()) {
                         playersOnCard.add(player);
-                    }
-                    else{
+                    } else {
                         playersOffCard.add(player);
                     }
                 }
             }
         }
 
-        while (bonus.size() != 0){
-            for(Player playerOnCard : playersOnCard ){
+        while (bonus.size() != 0) {
+            for (Player playerOnCard : playersOnCard) {
                 playerOnCard.setDollars(playerOnCard.getDollars() + bonus.poll());
             }
         }
-        if(playersOnCard.size() >= 1){
-            for(Player playerOffCard : playersOffCard){
+        if (playersOnCard.size() >= 1) {
+            for (Player playerOffCard : playersOffCard) {
                 playerOffCard.setDollars(playerOffCard.getDollars() + playerOffCard.getActingRank());
             }
         }
@@ -453,12 +526,17 @@ public class ActionProvider extends DisplayController {
     public void rehearse() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         int budget = playerLocation.getSceneBudget();
-        if(activePlayer.getPracticeToken() == budget-1){
+        if (activePlayer.getPracticeToken() == budget - 1) {
             display.rehearseFail(activePlayer.getName(), activePlayer.getPracticeToken());
-        }else {
-            activePlayer.setPracticeToken(activePlayer.getPracticeToken()+1);
+        } else {
+            activePlayer.setPracticeToken(activePlayer.getPracticeToken() + 1);
             display.rehearseSuccess(activePlayer.getName(), activePlayer.getPracticeToken());
         }
+    }
+
+    public void endTurn() {
+        display.playerDone(activePlayer.getName());
+        activePlayer = gameState.endTurn();
     }
 
     public ArrayList<String> locationNeighbors(String location) {
