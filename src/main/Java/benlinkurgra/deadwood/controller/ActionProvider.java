@@ -509,12 +509,12 @@ public class ActionProvider extends DisplayController {
 
         while (bonus.size() != 0) {
             for (Player playerOnCard : playersOnCard) {
-                playerOnCard.setDollars(playerOnCard.getDollars() + bonus.poll());
+                playerOnCard.addDollars(bonus.poll());
             }
         }
         if (playersOnCard.size() >= 1) {
             for (Player playerOffCard : playersOffCard) {
-                playerOffCard.setDollars(playerOffCard.getDollars() + playerOffCard.getActingRank());
+                playerOffCard.addDollars(playerOffCard.getActingRank());
             }
         }
     }

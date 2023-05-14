@@ -1,6 +1,7 @@
 package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.location.Scene;
+import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
@@ -42,16 +43,15 @@ public class GameState {
                 playersOnRole = true;
             }
         }
-        if (!playersOnRole) {
+
+
+        if (!playersOnRole && board.canEndDay()) {
             for (Player player : playerOrder) {
                 player.setLocation("trailer");
             }
-
-            for (int i = 0; i < sceneOrder.size(); i++) {
-
-            }
+            System.out.println("Current day is over, resetting the board");
+            board.dealNewScenes(sceneOrder);
         }
-        System.out.println("Current day is over, resetting the board");
     }
 
     public void scoreGame() {
