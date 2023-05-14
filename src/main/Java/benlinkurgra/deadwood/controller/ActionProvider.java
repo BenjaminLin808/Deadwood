@@ -473,9 +473,11 @@ public class ActionProvider extends DisplayController {
                 display.actSuccess(playerName);
             }
         } else {
-            if (!onCard) {
+            if (onCard) {
+                display.actFail(playerName);
+            } else {
                 activePlayer.addDollars(1);
-                display.actSuccess(playerName, "dollar", 2);
+                display.actFail(playerName, 1);
             }
         }
         if (playerLocation.getCurrentShotTokens() == 0) {

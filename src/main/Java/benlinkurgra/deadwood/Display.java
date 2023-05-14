@@ -225,8 +225,13 @@ public class Display {
         System.out.printf("Rehearse successful, %s has %d practice tokens\n", playerName, practiceTokens);
     }
 
-    public void actFail(String playerName, int credits, int dollars) {
-        System.out.printf("Act failed, %s has %d credits and %d dollars\n", playerName, credits, dollars);
+    public void actFail(String playerName, int dollars) {
+        System.out.printf("Act failed, %s has earned %d dollar\n", playerName, dollars);
+    }
+
+    public void actFail(String playerName) {
+        System.out.printf("Act failed, %s receives nothing.\n", playerName);
+
     }
 
     public void rehearseFail(String playerName, int practiceTokens) {
