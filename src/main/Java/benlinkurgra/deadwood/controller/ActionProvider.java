@@ -488,37 +488,39 @@ public class ActionProvider extends DisplayController {
     // TODO need to revise this method
     private void wrappedScene() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
-        Dice dice = new Dice();
-        Queue<Integer> bonus = new PriorityQueue<>(Collections.reverseOrder());
-        for (int i = 0; i < playerLocation.getSceneBudget(); i++) {
-            bonus.add(dice.roll());
-        }
-        List<RoleData> roles = playerLocation.getRolesOnLocation().getRoleList();
-        Queue<Player> playerOrder = gameState.getPlayerOrder();
-        Queue<Player> playersOnCard = new PriorityQueue<>(Comparator.comparingInt(Player::getActingRank).reversed());
-        Queue<Player> playersOffCard = new PriorityQueue<>();
-        for (Player player : playerOrder) {
-            for (RoleData role : roles) {
-                if (player.getName().equals(role.getPlayerOnRole())) {
-                    if (role.isOnCard()) {
-                        playersOnCard.add(player);
-                    } else {
-                        playersOffCard.add(player);
-                    }
-                }
+        List<String> playersOnCard = playerLocation.playersActingOnScene();
+        List<Player> playersOffCard = gameState.getPlayers(playerLocation.playersActingOnLocation());
+
+        // If players are working on scene payout bonus
+        if (playersOnCard.size() != 0) {
+            Dice dice = new Dice();
+            int budget = playerLocation.getSceneBudget();
+            Queue<Player> orderedPlayersOnCard = gameState.getPlayersInOrder(playersOnCard);
+            for (int i = 0; i < budget; i++) {
+                int diceOutcome = dice.roll();
+                assert orderedPlayersOnCard.peek() != null;
+                orderedPlayersOnCard.peek().addDollars(diceOutcome);
+                orderedPlayersOnCard.add(orderedPlayersOnCard.remove());
             }
+            for (Player player : playersOffCard) {
+                int roleRank = playerLocation.getLocationRoleRank(player.getName());
+                player.addDollars(roleRank);
+            }
+
+            for (Player player : orderedPlayersOnCard) {
+                player.setWorkingRole(false);
+                player.resetPracticeTokens();
+            }
+
         }
 
-        while (bonus.size() != 0) {
-            for (Player playerOnCard : playersOnCard) {
-                playerOnCard.addDollars(bonus.poll());
-            }
+        for (Player player : playersOffCard) {
+            player.setWorkingRole(false);
+            player.resetPracticeTokens();
         }
-        if (playersOnCard.size() >= 1) {
-            for (Player playerOffCard : playersOffCard) {
-                playerOffCard.addDollars(playerOffCard.getActingRank());
-            }
-        }
+
+        playerLocation.setSceneStatus(SceneStatus.COMPLETED);
+        gameState.decrementActiveScenes();
     }
 
     public void rehearse() {
@@ -527,7 +529,7 @@ public class ActionProvider extends DisplayController {
         if (activePlayer.getPracticeToken() == budget - 1) {
             display.rehearseFail(activePlayer.getName(), activePlayer.getPracticeToken());
         } else {
-            activePlayer.setPracticeToken(activePlayer.getPracticeToken() + 1);
+            activePlayer.addPracticeToken();
             display.rehearseSuccess(activePlayer.getName(), activePlayer.getPracticeToken());
         }
     }
@@ -535,6 +537,11 @@ public class ActionProvider extends DisplayController {
     public void endTurn() {
         display.playerDone(activePlayer.getName());
         activePlayer = gameState.endTurn();
+        if (gameState.getActiveScenes() == 1) {
+            if (!gameState.endDay(board)) {
+                //SCORE
+            }
+        }
     }
 
     public ArrayList<String> locationNeighbors(String location) {

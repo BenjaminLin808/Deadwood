@@ -1,7 +1,11 @@
 package benlinkurgra.deadwood.location;
 
+import benlinkurgra.deadwood.Dice;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SetLocation extends Location {
     private int currentShotTokens;
@@ -89,20 +93,25 @@ public class SetLocation extends Location {
         return scene.isActingOnScene(playerName);
     }
 
+    public int getLocationRoleRank(String playerName) {
+        return roles.getRoleRank(playerName);
+    }
+
     public List<RoleData> getAllAvailableRoles(int playerRank) {
         List<RoleData> availableRoles = new ArrayList<>(roles.availableRoles(playerRank));
         availableRoles.addAll(scene.getRoles().availableRoles(playerRank));
         return availableRoles;
     }
 
-    public void finishScene() {
-        setSceneStatus(SceneStatus.COMPLETED);
-        //TODO
+    public List<String> playersActingOnLocation() {
+        return roles.playersOnRoles();
     }
 
     public List<String> playersActingOnScene() {
         return scene.playersActingOnScene();
     }
+
+
 
     @Override
     public String toString() {

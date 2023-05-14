@@ -119,7 +119,11 @@ public class Player {
         return practiceToken;
     }
 
-    public void setPracticeToken(int practiceToken) {
-        this.practiceToken = practiceToken;
+    public void resetPracticeTokens() {
+        this.practiceToken = 0;
+    }
+
+    public void addPracticeToken() {
+        ++this.practiceToken;
     }
 }

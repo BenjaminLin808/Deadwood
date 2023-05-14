@@ -5,7 +5,7 @@ import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
-import java.util.Queue;
+import java.util.*;
 
 public class GameState {
     private int currDay = 1;
@@ -35,22 +35,27 @@ public class GameState {
         return playerOrder.peek();
     }
 
-    public void endDay(Board board) {
-        //TODO if the day is ending everyone goes back to trailers???
-        boolean playersOnRole = false;
-        for (Player player : playerOrder) {
-            if (player.isWorkingRole()) {
-                playersOnRole = true;
-            }
-        }
-
-
-        if (!playersOnRole && board.canEndDay()) {
+    public boolean endDay(Board board) {
+        if (currDay == endDay) {
+            return false;
+        } else {
+            boolean playersOnRole = false;
+            //TODO if the day is ending everyone goes back to trailers???
             for (Player player : playerOrder) {
-                player.setLocation("trailer");
+                if (player.isWorkingRole()) {
+                    playersOnRole = true;
+                }
             }
-            System.out.println("Current day is over, resetting the board");
-            board.dealNewScenes(sceneOrder);
+
+
+            if (!playersOnRole && board.canEndDay()) {
+                for (Player player : playerOrder) {
+                    player.setLocation("trailer");
+                }
+                System.out.println("Current day is over, resetting the board");
+                board.dealNewScenes(sceneOrder);
+            }
+            return true;
         }
     }
 
@@ -100,6 +105,28 @@ public class GameState {
 
     public Player getActivePlayer() {
         return playerOrder.peek();
+    }
+
+    public List<Player> getPlayers(List<String> playerNames) {
+        List<Player> selectedPlayers = new ArrayList<>();
+
+        // Iterate over the playerOrder queue to find players with names in the provided list
+        for (Player player : playerOrder) {
+            if (playerNames.contains(player.getName())) {
+                selectedPlayers.add(player);
+            }
+        }
+        return selectedPlayers;
+    }
+
+    public Queue<Player> getPlayersInOrder(List<String> playerNames) {
+        List<Player> selectedPlayers = getPlayers(playerNames);
+
+        // Sort the selected players by rank using a comparator
+        selectedPlayers.sort(Comparator.comparingInt(Player::getActingRank).reversed());
+
+        // Create a new queue with the sorted players and return it
+        return new LinkedList<>(selectedPlayers);
     }
 }
 

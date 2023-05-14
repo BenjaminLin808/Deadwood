@@ -70,6 +70,15 @@ public class Roles {
         return false;
     }
 
+    protected int getRoleRank(String playerName) {
+        for(RoleData role : roleList) {
+            if (role.getPlayerOnRole().equals(playerName)) {
+                return role.getRank();
+            }
+        }
+        return 0;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
