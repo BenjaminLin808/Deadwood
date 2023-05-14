@@ -469,9 +469,14 @@ public class ActionProvider extends DisplayController {
         if (onCard) {
             if (dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
                 playerLocation.removeShotToken();
-                activePlayer.setCredits(activePlayer.getCredits() + 1);
-                activePlayer.setDollars(activePlayer.getDollars() + 1);
-                display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+                if(playerLocation.getCurrentShotTokens() == 0){
+                    wrappedScene();
+                }
+                else{
+                    activePlayer.setCredits(activePlayer.getCredits() + 1);
+                    activePlayer.setDollars(activePlayer.getDollars() + 1);
+                    display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+                }
             } else {
                 activePlayer.setCredits(activePlayer.getCredits() + 1);
                 display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
@@ -479,8 +484,13 @@ public class ActionProvider extends DisplayController {
         } else {
             if (dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
                 playerLocation.removeShotToken();
-                activePlayer.setCredits(activePlayer.getCredits() + 2);
-                display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+                if(playerLocation.getCurrentShotTokens() == 0){
+                    wrappedScene();
+                }
+                else{
+                    activePlayer.setCredits(activePlayer.getCredits() + 2);
+                    display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+                }
             } else {
                 display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
             }
