@@ -1,9 +1,6 @@
 package benlinkurgra.deadwood.model;
 
 import benlinkurgra.deadwood.CurrencyType;
-import benlinkurgra.deadwood.Dice;
-import benlinkurgra.deadwood.location.SceneStatus;
-import benlinkurgra.deadwood.location.SetLocation;
 
 import java.util.ArrayList;
 
@@ -22,48 +19,47 @@ public class Player {
         this.actingRank = actingRank;
     }
 
-    public Player(String name){
+    public Player(String name) {
         this.name = name;
     }
 
     /**
      * Update player rank
+     *
      * @param newRank
      * @param currencyType
      * @param amount
      */
-    public void upgrade(int newRank, CurrencyType currencyType, int amount){
-        if(currencyType == CurrencyType.CREDITS){
+    public void upgrade(int newRank, CurrencyType currencyType, int amount) {
+        if (currencyType == CurrencyType.CREDITS) {
             this.credits = this.credits - amount;
             this.actingRank = newRank;
         } else if (currencyType == CurrencyType.DOLLARS) {
             this.dollars = this.dollars - amount;
             this.actingRank = newRank;
-        }
-        else{
+        } else {
             System.out.println("try again");
         }
     }
 
     /**
      * pass in player's move location and board data to check if the new location can be reached
+     *
      * @param newLocation
      * @param boardData
-     * @return  boolean
+     * @return boolean
      */
-    public boolean move(String newLocation, Board boardData){
+    public boolean move(String newLocation, Board boardData) {
         ArrayList<String> neighbors = boardData.getLocation(this.location).getNeighbors();
-        if(neighbors.contains(newLocation)){
+        if (neighbors.contains(newLocation)) {
             this.location = newLocation;
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
 
-
-    public void score(){
+    public void score() {
         System.out.println("calculating player score");
     }
 
@@ -83,16 +79,24 @@ public class Player {
         return credits;
     }
 
-    public void setCredits(int credits) {
-        this.credits = credits;
+    public void addCredits(int credits) {
+        this.credits += credits;
+    }
+
+    public void decreaseCredits(int credits) {
+        this.credits -= credits;
     }
 
     public int getDollars() {
         return dollars;
     }
 
-    public void setDollars(int dollars) {
-        this.dollars = dollars;
+    public void addDollars(int dollars) {
+        this.dollars += dollars;
+    }
+
+    public void decreaseDollars(int dollar) {
+        this.dollars -= dollar;
     }
 
     public int getActingRank() {

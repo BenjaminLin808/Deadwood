@@ -85,10 +85,9 @@ public class SetLocation extends Location {
         return roles.fillRole(playerName, playerRank, roleName);
     }
 
-
-
-
-
+    public boolean isActingOnScene(String playerName) {
+        return scene.isActingOnScene(playerName);
+    }
 
     public List<RoleData> getAllAvailableRoles(int playerRank) {
         List<RoleData> availableRoles = new ArrayList<>(roles.availableRoles(playerRank));

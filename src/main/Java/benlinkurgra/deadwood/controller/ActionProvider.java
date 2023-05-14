@@ -456,34 +456,30 @@ public class ActionProvider extends DisplayController {
     }
 
     public void act() {
+        String playerName = activePlayer.getName();
         Dice dice = new Dice();
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
-        List<RoleData> roles = playerLocation.getRolesOnLocation().getRoleList();
-        boolean onCard = false;
-        for (int i = 0; i < roles.size(); i++) {
-            if (roles.get(i).getName().equals(activePlayer.getName())) {
-                onCard = roles.get(i).isOnCard();
-            }
-        }
+        boolean onCard = playerLocation.isActingOnScene(playerName);
 
-        if (onCard) {
-            if (dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
-                playerLocation.removeShotToken();
-                activePlayer.setCredits(activePlayer.getCredits() + 1);
-                activePlayer.setDollars(activePlayer.getDollars() + 1);
-                display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+        boolean success = dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget();
+        if (success) {
+            playerLocation.removeShotToken();
+            if (onCard) {
+                activePlayer.addCredits(2);
+                display.actSuccess(playerName, "credits", 2);
             } else {
-                activePlayer.setCredits(activePlayer.getCredits() + 1);
-                display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+                activePlayer.addCredits(1);
+                activePlayer.addDollars(1);
+                display.actSuccess(playerName);
             }
         } else {
-            if (dice.roll() + activePlayer.getPracticeToken() >= playerLocation.getSceneBudget()) {
-                playerLocation.removeShotToken();
-                activePlayer.setCredits(activePlayer.getCredits() + 2);
-                display.actSuccess(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
-            } else {
-                display.actFail(activePlayer.getName(), activePlayer.getCredits(), activePlayer.getDollars());
+            if (!onCard) {
+                activePlayer.addDollars(1);
+                display.actSuccess(playerName, "dollar", 2);
             }
+        }
+        if (playerLocation.getCurrentShotTokens() == 0) {
+            wrappedScene();
         }
     }
 

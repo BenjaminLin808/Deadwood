@@ -61,6 +61,15 @@ public class Roles {
         return roleList;
     }
 
+    protected boolean isActingOn(String playerName) {
+        for(RoleData role : roleList) {
+            if (role.getPlayerOnRole().equals(playerName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

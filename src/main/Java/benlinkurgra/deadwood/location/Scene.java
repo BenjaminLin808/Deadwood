@@ -35,4 +35,8 @@ public class Scene {
         return roles.playersOnRoles();
     }
 
+    protected boolean isActingOnScene(String playerName) {
+        return roles.isActingOn(playerName);
+    }
+
 }

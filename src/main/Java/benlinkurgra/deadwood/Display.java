@@ -172,7 +172,7 @@ public class Display {
                 String creditColor = ((player.getCredits() < creditCost)
                         ? yellowText : resetTextColor);
 
-                sb.append("|" + String.format(rankFormat, upgrade.getKey())  +
+                sb.append("|" + String.format(rankFormat, upgrade.getKey()) +
                         "|" + dollarColor + String.format(dollarFormat, dollarCost) + resetTextColor +
                         "|" + creditColor + String.format(creditFormat, creditCost) + resetTextColor +
                         "|\n");
@@ -213,19 +213,23 @@ public class Display {
         System.out.printf("Upgrade successful, %s has upgraded to rank %d\n", playerName, rank);
     }
 
-    public void actSuccess(String playerName, int credits, int dollars){
-        System.out.printf("Act successful, %s has %d credits and %d dollars\n", playerName, credits, dollars);
+    public void actSuccess(String playerName) {
+        System.out.printf("Act successful, %s has earned 1 credit and 1 dollar.\n", playerName);
     }
 
-    public void rehearseSuccess(String playerName, int practiceTokens){
+    public void actSuccess(String playerName, String currencyType, int currencyIncrease) {
+        System.out.printf("Act successful, %s has earned %d %s.\n", playerName, currencyIncrease, currencyType);
+    }
+
+    public void rehearseSuccess(String playerName, int practiceTokens) {
         System.out.printf("Rehearse successful, %s has %d practice tokens\n", playerName, practiceTokens);
     }
 
-    public void actFail(String playerName, int credits, int dollars){
+    public void actFail(String playerName, int credits, int dollars) {
         System.out.printf("Act failed, %s has %d credits and %d dollars\n", playerName, credits, dollars);
     }
 
-    public void rehearseFail(String playerName, int practiceTokens){
+    public void rehearseFail(String playerName, int practiceTokens) {
         System.out.printf("Rehearse failed, %s has %d \n", playerName, practiceTokens);
     }
 
@@ -284,8 +288,8 @@ public class Display {
      * </p>
      *
      * @param playerName name of player attempting action
-     * @param action action attempted
-     * @param reason reason can not perform action
+     * @param action     action attempted
+     * @param reason     reason can not perform action
      */
     public void displayCanNotPerformAction(String playerName, String action, String reason) {
         System.out.printf("%s can not %s, %s.\n", playerName, action, reason);
@@ -298,7 +302,7 @@ public class Display {
     public void displayInvalidRankSelection(String input) {
         System.out.printf("Invalid input, %s is not a valid rank number, please select a number from 2 to 6.\n", input);
     }
-    
+
     public void invalidRoleType(String input) {
         System.out.printf("Invalid input, %s is not valid role type.\n", input);
     }
