@@ -19,6 +19,6 @@ build.dependsOn(shadowJar)
 
 jar {
     manifest {
-        attributes["Main-Class"] = 'org.pcr_wa_015.vango.Main'
+        attributes["Main-Class"] = 'benlinkurgra.deadwood.Main'
     }
 }
