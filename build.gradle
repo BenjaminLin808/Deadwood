@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group 'benlinkurgra.deadwood'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'junit:junit:4.12'
+}
+
+jar.enabled = false
+build.dependsOn(shadowJar)
+
+jar {
+    manifest {
+        attributes["Main-Class"] = 'org.pcr_wa_015.vango.Main'
+    }
+}

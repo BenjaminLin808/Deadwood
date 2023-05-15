@@ -24,15 +24,15 @@ public class ParseCardXML {
         }
     }
 
-    public static void main(String[] args) {
-        ParseCardXML parsing = new ParseCardXML();
-        try {
-            Document doc = parsing.getDocFromFile("src/main/resources/cards.xml");
-            parsing.readCardData(doc);
-        } catch (Exception e) {
-            System.out.println("Error = " + e);
-        }
-    }
+//    public static void main(String[] args) {
+//        ParseCardXML parsing = new ParseCardXML();
+//        try {
+//            Document doc = parsing.getDocFromFile("src/main/resources/cards.xml");
+//            parsing.readCardData(doc);
+//        } catch (Exception e) {
+//            System.out.println("Error = " + e);
+//        }
+//    }
     public Document getDocFromFile(String filename)
             throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
