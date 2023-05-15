@@ -24,18 +24,18 @@ public class Player {
     }
 
     /**
-     * Update player rank
+     * Update player rank, assumes player meets requirements for upgrade
      *
-     * @param newRank
-     * @param currencyType
-     * @param amount
+     * @param newRank rank to upgrade player to
+     * @param currencyType currency to spend on upgrade
+     * @param amount cost of upgrade
      */
     public void upgrade(int newRank, CurrencyType currencyType, int amount) {
         if (currencyType == CurrencyType.CREDITS) {
-            this.credits = this.credits - amount;
+            decreaseCredits(amount);
             this.actingRank = newRank;
         } else if (currencyType == CurrencyType.DOLLARS) {
-            this.dollars = this.dollars - amount;
+            decreaseDollars(amount);
             this.actingRank = newRank;
         } else {
             System.out.println("try again");
@@ -43,7 +43,7 @@ public class Player {
     }
 
     /**
-     * pass in player's move location and board data to check if the new location can be reached
+     * Pass in player's move location and board data to check if the new location can be reached
      *
      * @param newLocation
      * @param boardData

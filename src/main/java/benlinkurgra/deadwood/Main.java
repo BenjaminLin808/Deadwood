@@ -6,7 +6,6 @@ import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.LocationProvider;
 import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.Scene;
-import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
@@ -26,9 +25,8 @@ public class Main {
     private static Map<String, Location> getBoardComponents() {
         try {
             ParseBoardXML boardXML = new ParseBoardXML();
-            Map<String, Location> locations = boardXML.getLocations("src/main/resources/board.xml");
+            Map<String, Location> locations = boardXML.getLocations("src/main/Java/resources/board.xml");
             return locations;
-//            board = new Board(locations);
         } catch (Exception e) {
             System.exit(-1);
             return null;
@@ -38,7 +36,7 @@ public class Main {
     private static Queue<Scene> getSceneComponents() {
         try {
             ParseCardXML cardXML = new ParseCardXML();
-            return cardXML.getScenes("src/main/resources/cards.xml");
+            return cardXML.getScenes("src/main/Java/resources/cards.xml");
         } catch (Exception e) {
             System.exit(-1);
         }

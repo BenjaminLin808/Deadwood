@@ -539,7 +539,7 @@ public class ActionProvider extends DisplayController {
         activePlayer = gameState.endTurn();
         if (gameState.getActiveScenes() == 1) {
             if (!gameState.endDay(board)) {
-                //SCORE
+                gameState.scoreGame();
             }
         }
     }

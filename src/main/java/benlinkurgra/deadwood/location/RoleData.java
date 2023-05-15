@@ -5,14 +5,14 @@ public class RoleData {
     private final String name;
     private final String roleDescription;
     private String playerOnRole;
-    private final boolean onCard;
+//    private final boolean onCard;
 
 
     public RoleData(int rank, String name, String description, boolean onCard) {
         this.rank = rank;
         this.name = name;
         this.roleDescription = description;
-        this.onCard = onCard;
+//        this.onCard = onCard;
         playerOnRole = "";
     }
 
@@ -39,9 +39,9 @@ public class RoleData {
         return playerOnRole.isEmpty();
     }
 
-    public boolean isOnCard() {
-        return onCard;
-    }
+//    public boolean isOnCard() {
+//        return onCard;
+//    }
 
     @Override
     public String toString() {
