@@ -26,6 +26,7 @@ out/
 bin/
 build/
 .gradle
+gradle
 .gradletasknamecache
 gradle-app.setting
 !gradle-wrapper.jar
