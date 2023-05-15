@@ -25,6 +25,10 @@ public abstract class DisplayController {
                 display.sendActions();
                 return true;
             }
+            case "map" -> {
+                display.displayMap();
+                return true;
+            }
         }
         return false;
     }
