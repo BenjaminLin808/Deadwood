@@ -48,7 +48,7 @@ public class GameState {
             }
 
 
-            if (!playersOnRole && board.canEndDay()) {
+            if (!playersOnRole && activeScenes <= 1) {
                 for (Player player : playerOrder) {
                     player.setLocation("trailer");
                 }

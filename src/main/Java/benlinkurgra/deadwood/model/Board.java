@@ -55,22 +55,4 @@ public class Board {
             }
         }
     }
-
-    public boolean canEndDay(){
-        int count = 0;
-        for (Location location : locations.values()){
-            if(isSetLocation(location)){
-                if(((SetLocation)location).getCurrentShotTokens() != 0){
-                    count++;
-                }
-            }
-        }
-
-        if(count == 1){
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
 }
