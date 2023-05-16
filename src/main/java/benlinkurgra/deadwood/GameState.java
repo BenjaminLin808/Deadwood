@@ -1,7 +1,6 @@
 package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.location.Scene;
-import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
@@ -29,38 +28,33 @@ public class GameState {
         this.playerOrder = playerOrder;
     }
 
-    public Player endTurn() {
+    /**
+     * Transitions to next active player
+     *
+     * @return new active player
+     */
+    public Player changeActivePlayer() {
         playerOrder.add(playerOrder.remove());
         currentPlayerDone = false;
         return playerOrder.peek();
     }
 
-    public boolean endDay(Board board) {
+    /**
+     * Attempts to end the current day
+     *
+     * @return if day was last day returns true, otherwise returns false
+     */
+    public boolean endDay() {
         if (currDay == endDay) {
-            return false;
-        } else {
-            boolean playersOnRole = false;
-            //TODO if the day is ending everyone goes back to trailers???
-            for (Player player : playerOrder) {
-                if (player.isWorkingRole()) {
-                    playersOnRole = true;
-                }
-            }
-
-
-            if (!playersOnRole && activeScenes <= 1) {
-                for (Player player : playerOrder) {
-                    player.setLocation("trailer");
-                }
-                System.out.println("Current day is over, resetting the board");
-                board.dealNewScenes(sceneOrder);
-            }
             return true;
+        } else {
+            incrementCurrDay();
+            resetActiveScenes();
+            for (Player player : playerOrder) {
+                player.startNewDay();
+            }
+            return false;
         }
-    }
-
-    public void scoreGame() {
-        System.out.println("get players scores");
     }
 
     public int getCurrDay() {

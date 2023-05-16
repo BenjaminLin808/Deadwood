@@ -43,8 +43,14 @@ public class Roles {
                 }
             }
         }
-        // roleName not a role
+        // return false if roleName not a role (this should never happen
         return false;
+    }
+
+    protected void emptyRoles() {
+        for(RoleData role : roleList) {
+            role.setPlayerOnRole("");
+        }
     }
 
     protected List<String> playersOnRoles() {

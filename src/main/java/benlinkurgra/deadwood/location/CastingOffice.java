@@ -61,4 +61,71 @@ public class CastingOffice extends Location {
         return upgrades;
     }
 
+    @Override
+    public String toString() {
+        String rankFormat = "%1$-10s";
+        String dollarFormat = "%1$-13s";
+        String creditFormat = "%1$-11s";
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.append("Here is a list of all rank upgrades.\n");
+        sb.append("+----------+-------------+-----------+\n");
+        sb.append("|   RANK   |   DOLLARS   |  CREDITS  |\n");
+        sb.append("+----------+-------------+-----------+\n");
+
+        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
+            UpgradeCost upgradeCost = upgrade.getValue();
+            int dollarCost = upgradeCost.getDollarCost();
+            int creditCost = upgradeCost.getCreditsCost();
+
+            sb.append("|" + String.format(rankFormat, upgrade.getKey()) +
+                    "|" + String.format(dollarFormat, dollarCost) +
+                    "|" + String.format(creditFormat, creditCost) +
+                    "|\n");
+        }
+        sb.append("+----------+-------------+-----------+");
+        return sb.toString();
+    }
+
+    public String toStringWithHighlight(int playerActingRank, int playerCredits, int playerDollars) {
+        String yellowText = "\u001B[33m";
+        String resetTextColor = "\u001B[0m";
+        String rankFormat = "%1$-10s";
+        String dollarFormat = "%1$-13s";
+        String creditFormat = "%1$-11s";
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Here is a list of all rank upgrades. Invalid upgrades highlighted in ");
+        sb.append(yellowText);
+        sb.append("yellow");
+        sb.append(resetTextColor);
+        sb.append(":\n");
+        sb.append("+----------+-------------+-----------+\n");
+        sb.append("|   RANK   |   DOLLARS   |  CREDITS  |\n");
+        sb.append("+----------+-------------+-----------+\n");
+
+        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
+            UpgradeCost upgradeCost = upgrade.getValue();
+            int dollarCost = upgradeCost.getDollarCost();
+            int creditCost = upgradeCost.getCreditsCost();
+
+            if (upgrade.getKey() <= playerActingRank) {
+                sb.append("|" + yellowText + String.format(rankFormat, upgrade.getKey()) + resetTextColor +
+                        "|" + yellowText + String.format(dollarFormat, dollarCost) + resetTextColor +
+                        "|" + yellowText + String.format(creditFormat, creditCost) + resetTextColor +
+                        "|\n");
+            } else {
+                String dollarColor = ((playerDollars < dollarCost)
+                        ? yellowText : resetTextColor);
+                String creditColor = ((playerCredits < creditCost)
+                        ? yellowText : resetTextColor);
+
+                sb.append("|" + String.format(rankFormat, upgrade.getKey()) +
+                        "|" + dollarColor + String.format(dollarFormat, dollarCost) + resetTextColor +
+                        "|" + creditColor + String.format(creditFormat, creditCost) + resetTextColor +
+                        "|\n");
+            }
+        }
+        sb.append("+----------+-------------+-----------+");
+        return sb.toString();
+    }
 }

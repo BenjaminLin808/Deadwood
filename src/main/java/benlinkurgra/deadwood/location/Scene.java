@@ -35,6 +35,10 @@ public class Scene {
         return roles.playersOnRoles();
     }
 
+    protected boolean canTakeRole(int playerRank) {
+        return roles.availableRoles(playerRank).size() != 0;
+    }
+
     protected boolean isActingOnScene(String playerName) {
         return roles.isActingOn(playerName);
     }

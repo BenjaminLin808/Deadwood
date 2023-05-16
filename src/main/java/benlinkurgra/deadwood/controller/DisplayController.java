@@ -11,7 +11,7 @@ public abstract class DisplayController {
         this.display = display;
     }
 
-    private boolean checkForRequest(String input) {
+    protected boolean checkForRequest(String input) {
         switch (input) {
             case "quit" -> {
                 display.endGame();

@@ -1,11 +1,7 @@
 package benlinkurgra.deadwood.location;
 
-import benlinkurgra.deadwood.Dice;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class SetLocation extends Location {
     private int currentShotTokens;
@@ -49,7 +45,12 @@ public class SetLocation extends Location {
     public void setNewScene(Scene scene) {
         resetShotTokens();
         setSceneStatus(SceneStatus.HIDDEN);
+        emptyLocationRoles();
         this.scene = scene;
+    }
+
+    public void emptyLocationRoles() {
+        roles.emptyRoles();
     }
 
     public int getSceneBudget() {
@@ -80,6 +81,13 @@ public class SetLocation extends Location {
         return scene.getRoles().getRoleList().size();
     }
 
+    public boolean canTakeLocationRole(int playerRank) {
+        return roles.availableRoles(playerRank).size() != 0;
+    }
+
+    public boolean canTakeSceneRole(int playerRank) {
+        return scene.canTakeRole(playerRank);
+    }
 
     public boolean fillRoleOnScene(String playerName, int playerRank, String roleName) {
         return scene.getRoles().fillRole(playerName, playerRank, roleName);
@@ -111,11 +119,13 @@ public class SetLocation extends Location {
         return scene.playersActingOnScene();
     }
 
-
-
     @Override
     public String toString() {
         return this.getName() +
+                ", Shot tokens: " +
+                currentShotTokens +
+                "/" +
+                maxShotTokens +
                 "\nRoles on Location:\n" +
                 roles +
                 "Scene: " +
@@ -128,6 +138,10 @@ public class SetLocation extends Location {
 
     public String toStringWithHighlight(int playerRank) {
         return this.getName() +
+                ", Shot tokens: " +
+                currentShotTokens +
+                "/" +
+                maxShotTokens +
                 "\nRoles on Location:\n" +
                 roles.toStringWithHighlight(playerRank) +
                 "Scene: " +

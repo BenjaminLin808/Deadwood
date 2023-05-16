@@ -50,7 +50,9 @@ public class GameInitializer extends DisplayController {
         for (int i = 0; i < numPlayers; i++) {
             String playerName = handleInput(display::sendPromptName);
             while (containsName(players, playerName)) {
-                display.sendInvalidName(players);
+                display.sendInvalidName(players.stream()
+                        .map(Player::getName)
+                        .toList());
                 playerName = handleInput(display::sendPromptName);
             }
             players.add(createPlayer(numPlayers, playerName));

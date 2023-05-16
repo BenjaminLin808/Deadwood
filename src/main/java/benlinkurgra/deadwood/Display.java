@@ -1,35 +1,9 @@
 package benlinkurgra.deadwood;
 
-import benlinkurgra.deadwood.location.UpgradeCost;
-import benlinkurgra.deadwood.model.Player;
-
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Display {
-    /*
-     * Mockup of game
-     * <game is started>
-     * console: Welcome to Deadwood
-     * console: Please enter the number of users
-     * user: <playerNum>
-     * (loop)
-     * console: enter name of nth player
-     * user: playerName
-     * (end)
-     * console: <playerName> is active player
-     * console: available moves are as follows <1. <action 1> \n <2. <action 2>>...
-     * user: <input number of name of move>... assume selection is move
-     * console: <you have selected move>
-     * console: available locations are <list locations>
-     * user: selects location
-     * console list available moves... assume end turn
-     * console: <playerName> has completed turn
-     * (repeat from) console: <playerName> is active player
-     * ...
-     */
-
     /**
      * display opening game message
      */
@@ -37,7 +11,11 @@ public class Display {
         System.out.println("""
                 Welcome to Deadwood
 
-                <SOME DESCRIPTION HERE>""");
+                Deadwood is a fast-paced board game about actors, acting, and
+                the thrill-filled life of a wandering bit player. It’s perfect for 2 to
+                6 players, still decent with 7 or 8. Play time is about 60 minutes.
+                
+                If in need of help enter \"help\" at any time.""");
     }
 
     /**
@@ -52,7 +30,16 @@ public class Display {
      */
     public void displayHelp() {
         //TODO add help display
-        System.out.println("HELP HERE");
+        System.out.println("""
+                Available commands:
+                help             display this help
+                actions          display list of actions
+                map              display game map
+                quit             immediately ends game
+                player info      display information of current player
+                location info    display information for current players location
+                cancel           used when performing an action will cancel action
+                """);
     }
 
     public void displayMap() {
@@ -77,6 +64,13 @@ public class Display {
         System.out.println(map);
     }
 
+    public void playerInfo(String player) {
+        System.out.println(player);
+    }
+
+    public void locationInfo(String location) {
+        System.out.println(location);
+    }
 
     /**
      * Allows for player input
@@ -85,7 +79,17 @@ public class Display {
      */
     public String getUserInput() {
         Scanner inputScanner = new Scanner(System.in);
-        return inputScanner.nextLine();
+        String input = inputScanner.nextLine();
+        while (input.isEmpty()) {
+            input = inputScanner.nextLine();
+        }
+        return input;
+    }
+
+    public String colorizeName(String playerName) {
+        String greenText = "\u001B[32m";
+        String resetText = "\u001B[0m";
+        return greenText + playerName + resetText;
     }
 
     //region Print statements for player information
@@ -94,14 +98,16 @@ public class Display {
     /**
      * Display the names of all currently entered player names
      *
-     * @param players list of players
+     * @param playerNames list of player names
      */
-    public void sendPlayers(List<Player> players) {
+    public void sendPlayers(List<String> playerNames) {
         StringBuilder buildNames = new StringBuilder();
         buildNames.append("Players: ");
-        for (Player playerName : players) {
-            buildNames.append(playerName.getName());
-            buildNames.append(" ");
+        for (int i = 0; i < playerNames.size(); i++) {
+            buildNames.append(colorizeName(playerNames.get(i)));
+            if (i < playerNames.size() - 1) {
+                buildNames.append(", ");
+            }
         }
         System.out.println(buildNames);
     }
@@ -112,14 +118,13 @@ public class Display {
      * @param name active players name
      */
     public void sendActivePlayer(String name) {
-        System.out.printf("The current active player is %s\n", name);
+        System.out.printf("The current active player is %s\n", colorizeName(name));
     }
 
     /**
      * List of actions a player can perform
      */
     public void sendActions() {
-        //TODO maybe add in a prompt to type help for more information
         System.out.println("""
                 1. Move
                 2. Take a role
@@ -162,47 +167,48 @@ public class Display {
         System.out.println(actions);
     }
 
-    public void displayValidUpgrades(Player player, Map<Integer, UpgradeCost> upgrades) {
-        String yellowText = "\u001B[33m";
-        String resetTextColor = "\u001B[0m";
-        String rankFormat = "%1$-10s";
-        String dollarFormat = "%1$-13s";
-        String creditFormat = "%1$-11s";
-
-        StringBuilder sb = new StringBuilder();
-        sb.append("Here is a list of all rank upgrades. Invalid upgrades highlighted in ");
-        sb.append(yellowText);
-        sb.append("yellow");
-        sb.append(resetTextColor);
-        sb.append(":\n");
-        sb.append("+----------+-------------+-----------+\n");
-        sb.append("|   RANK   |   DOLLARS   |  CREDITS  |\n");
-        sb.append("+----------+-------------+-----------+\n");
-
-        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
-            UpgradeCost upgradeCost = upgrade.getValue();
-            int dollarCost = upgradeCost.getDollarCost();
-            int creditCost = upgradeCost.getCreditsCost();
-
-            if (upgrade.getKey() <= player.getActingRank()) {
-                sb.append("|" + yellowText + String.format(rankFormat, upgrade.getKey()) + resetTextColor +
-                        "|" + yellowText + String.format(dollarFormat, dollarCost) + resetTextColor +
-                        "|" + yellowText + String.format(creditFormat, creditCost) + resetTextColor +
-                        "|\n");
-            } else {
-                String dollarColor = ((player.getDollars() < dollarCost)
-                        ? yellowText : resetTextColor);
-                String creditColor = ((player.getCredits() < creditCost)
-                        ? yellowText : resetTextColor);
-
-                sb.append("|" + String.format(rankFormat, upgrade.getKey()) +
-                        "|" + dollarColor + String.format(dollarFormat, dollarCost) + resetTextColor +
-                        "|" + creditColor + String.format(creditFormat, creditCost) + resetTextColor +
-                        "|\n");
-            }
-        }
-        sb.append("+----------+-------------+-----------+");
-        System.out.println(sb);
+    public void displayValidUpgrades(String castingOffice) {
+        System.out.println(castingOffice);
+//        String yellowText = "\u001B[33m";
+//        String resetTextColor = "\u001B[0m";
+//        String rankFormat = "%1$-10s";
+//        String dollarFormat = "%1$-13s";
+//        String creditFormat = "%1$-11s";
+//
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("Here is a list of all rank upgrades. Invalid upgrades highlighted in ");
+//        sb.append(yellowText);
+//        sb.append("yellow");
+//        sb.append(resetTextColor);
+//        sb.append(":\n");
+//        sb.append("+----------+-------------+-----------+\n");
+//        sb.append("|   RANK   |   DOLLARS   |  CREDITS  |\n");
+//        sb.append("+----------+-------------+-----------+\n");
+//
+//        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
+//            UpgradeCost upgradeCost = upgrade.getValue();
+//            int dollarCost = upgradeCost.getDollarCost();
+//            int creditCost = upgradeCost.getCreditsCost();
+//
+//            if (upgrade.getKey() <= player.getActingRank()) {
+//                sb.append("|" + yellowText + String.format(rankFormat, upgrade.getKey()) + resetTextColor +
+//                        "|" + yellowText + String.format(dollarFormat, dollarCost) + resetTextColor +
+//                        "|" + yellowText + String.format(creditFormat, creditCost) + resetTextColor +
+//                        "|\n");
+//            } else {
+//                String dollarColor = ((player.getDollars() < dollarCost)
+//                        ? yellowText : resetTextColor);
+//                String creditColor = ((player.getCredits() < creditCost)
+//                        ? yellowText : resetTextColor);
+//
+//                sb.append("|" + String.format(rankFormat, upgrade.getKey()) +
+//                        "|" + dollarColor + String.format(dollarFormat, dollarCost) + resetTextColor +
+//                        "|" + creditColor + String.format(creditFormat, creditCost) + resetTextColor +
+//                        "|\n");
+//            }
+//        }
+//        sb.append("+----------+-------------+-----------+");
+//        System.out.println(sb);
     }
 
     /**
@@ -214,7 +220,7 @@ public class Display {
         StringBuilder outputLocations = new StringBuilder();
         outputLocations.append("You can move to the following locations: \n");
         for (int i = 0; i < locations.size(); i++) {
-            outputLocations.append(i);
+            outputLocations.append(i + 1);
             outputLocations.append(". ");
             outputLocations.append(locations.get(i));
             outputLocations.append("\n");
@@ -229,44 +235,106 @@ public class Display {
     }
 
     public void moveSuccess(String playerName, String oldLocation, String newLocation) {
-        System.out.printf("Move successful, %s has moved from %s to %s\n", playerName, oldLocation, newLocation);
+        System.out.printf("Move successful, %s has moved from %s to %s\n",
+                colorizeName(playerName),
+                oldLocation,
+                newLocation);
     }
 
     public void upgradeSuccess(String playerName, int rank) {
-        System.out.printf("Upgrade successful, %s has upgraded to rank %d\n", playerName, rank);
+        System.out.printf("Upgrade successful, %s has upgraded to rank %d\n",
+                colorizeName(playerName),
+                rank);
     }
 
     public void actSuccess(String playerName) {
-        System.out.printf("Act successful, %s has earned 1 credit and 1 dollar.\n", playerName);
+        System.out.printf("Act successful, %s has earned 1 credit and 1 dollar.\n",
+                colorizeName(playerName));
     }
 
     public void actSuccess(String playerName, String currencyType, int currencyIncrease) {
-        System.out.printf("Act successful, %s has earned %d %s.\n", playerName, currencyIncrease, currencyType);
+        System.out.printf("Act successful, %s has earned %d %s.\n",
+                colorizeName(playerName),
+                currencyIncrease,
+                currencyType);
     }
 
     public void rehearseSuccess(String playerName, int practiceTokens) {
-        System.out.printf("Rehearse successful, %s has %d practice tokens\n", playerName, practiceTokens);
+        System.out.printf("Rehearse successful, %s has %d practice tokens\n",
+                colorizeName(playerName),
+                practiceTokens);
     }
 
     public void actFail(String playerName, int dollars) {
-        System.out.printf("Act failed, %s has earned %d dollar\n", playerName, dollars);
+        System.out.printf("Act failed, %s has earned %d dollar\n",
+                colorizeName(playerName),
+                dollars);
     }
 
     public void actFail(String playerName) {
-        System.out.printf("Act failed, %s receives nothing.\n", playerName);
+        System.out.printf("Act failed, %s receives nothing.\n", colorizeName(playerName));
 
     }
 
     public void rehearseFail(String playerName, int practiceTokens) {
-        System.out.printf("Rehearse failed, %s has %d \n", playerName, practiceTokens);
+        System.out.printf("Rehearse failed, %s has %d \n", colorizeName(playerName), practiceTokens);
+    }
+
+    public void diceOutcome(String playerName, int outcome, int practiceTokens, int budget) {
+        System.out.printf("Player %s rolled %d.\n" +
+                "They have %d practice token(s) and the scene budget is %d.\n",
+                colorizeName(playerName),
+                outcome,
+                practiceTokens,
+                budget);
+    }
+
+    public void sceneFinished(String locationName, String sceneName) {
+        System.out.printf("Scene %s has finished at location %s.\n", locationName, sceneName);
+    }
+
+    public void earnBonus(String playerName, int bonusAmount) {
+        System.out.printf("Player %s has earned a %d dollar bonus.\n",
+                colorizeName(playerName),
+                bonusAmount);
     }
 
     public void roleTaken(String playerName, String locationName, String roleName) {
-        System.out.printf("Player %s, at Location %s, has taken the role: %s.\n", playerName, locationName, roleName);
+        System.out.printf("Player %s, at Location %s, has taken the role: %s.\n",
+                colorizeName(playerName),
+                locationName, roleName);
     }
 
     public void playerDone(String playerName) {
-        System.out.printf("Ending player %s's turn.\n", playerName);
+        System.out.printf("Ending player %s's turn.\n", colorizeName(playerName));
+    }
+
+    public void endDay(int currDay, int lastDay) {
+        System.out.printf("Day %d of %d is ending.\n", currDay, lastDay);
+    }
+
+    public void score(String playerName, int score) {
+        System.out.printf("Player %s scored %d.\n", colorizeName(playerName), score);
+    }
+
+    public void winners(String playerName, int score) {
+        System.out.printf("Player %s has won the game with a score of %d.",
+                colorizeName(playerName),
+                score);
+    }
+
+    public void winners(List<String> winners, int score) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Game is a tie. Winners are ");
+        for (int i = 0; i < winners.size(); i++) {
+            sb.append(colorizeName(winners.get(i)));
+            if (i < winners.size() - 1) {
+                sb.append(", ");
+            }
+        }
+        sb.append(" with a score of ");
+        sb.append(score);
+        System.out.println(sb);
     }
     //---------------------------------------------------------------------------------------
     //endregion
@@ -296,11 +364,11 @@ public class Display {
     /**
      * Informs players that name entry is invalid and must be unique
      *
-     * @param players list of currently entered player names
+     * @param playerNames list of currently entered player names
      */
-    public void sendInvalidName(List<Player> players) {
+    public void sendInvalidName(List<String> playerNames) {
         System.out.println("Invalid entry, multiple players can not have the same name.");
-        sendPlayers(players);
+        sendPlayers(playerNames);
         System.out.println("Please enter a new unique name.");
     }
 
@@ -320,7 +388,7 @@ public class Display {
      * @param reason     reason can not perform action
      */
     public void displayCanNotPerformAction(String playerName, String action, String reason) {
-        System.out.printf("%s can not %s, %s.\n", playerName, action, reason);
+        System.out.printf("%s can not %s, %s.\n", colorizeName(playerName), action, reason);
     }
 
     public void displayInvalidMoveLocation(String input) {
@@ -395,7 +463,7 @@ public class Display {
 
     public void promptRoleType() {
         System.out.println("""
-                Would you like to take a role as an extra on location, or a starring role, on scene?
+                Would you like to take a role as an extra on location, or a starring role on scene?
                 Enter the name of your selection or the corresponding number.
                 1. Extra
                 2. Starring""");
@@ -403,7 +471,8 @@ public class Display {
     }
 
     public void promptRole() {
-        System.out.println("Enter the number of the role you would like to select.");
+        System.out.println("Enter the number of the role you would like to select " +
+                "or type \"back\" to select another role type.");
         System.out.print("Select Role: ");
     }
 

@@ -11,7 +11,10 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation group: "org.mockito", name: "mockito-core", version: "5.3.1"
+    testImplementation group: "org.mockito", name: "mockito-junit-jupiter", version: "5.3.1"
 }
 
 jar.enabled = false
@@ -21,4 +24,8 @@ jar {
     manifest {
         attributes["Main-Class"] = 'benlinkurgra.deadwood.Main'
     }
+}
+
+test {
+    useJUnitPlatform()
 }

@@ -25,6 +25,7 @@ public enum Action {
                 return action;
             }
         }
+        System.out.println("\n\n\nValue: " + value);
         return INVALID;
     }
 }

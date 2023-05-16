@@ -33,34 +33,14 @@ public class Player {
     public void upgrade(int newRank, CurrencyType currencyType, int amount) {
         if (currencyType == CurrencyType.CREDITS) {
             decreaseCredits(amount);
-            this.actingRank = newRank;
-        } else if (currencyType == CurrencyType.DOLLARS) {
+        } else { // if (currencyType == CurrencyType.DOLLARS) {
             decreaseDollars(amount);
-            this.actingRank = newRank;
-        } else {
-            System.out.println("try again");
         }
+        this.actingRank = newRank;
     }
 
-    /**
-     * Pass in player's move location and board data to check if the new location can be reached
-     *
-     * @param newLocation
-     * @param boardData
-     * @return boolean
-     */
-    public boolean move(String newLocation, Board boardData) {
-        ArrayList<String> neighbors = boardData.getLocation(this.location).getNeighbors();
-        if (neighbors.contains(newLocation)) {
-            this.location = newLocation;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void score() {
-        System.out.println("calculating player score");
+    public int score() {
+        return credits + dollars + (5 * actingRank);
     }
 
     public String getName() {
@@ -103,10 +83,6 @@ public class Player {
         return actingRank;
     }
 
-    public void setActingRank(int actingRank) {
-        this.actingRank = actingRank;
-    }
-
     public boolean isWorkingRole() {
         return workingRole;
     }
@@ -125,5 +101,39 @@ public class Player {
 
     public void addPracticeToken() {
         ++this.practiceToken;
+    }
+
+    public void startNewDay() {
+        this.location = "trailer";
+        this.workingRole = false;
+        resetPracticeTokens();
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("PLAYER INFO:\n");
+        sb.append("Name: ");
+        sb.append(name);
+        sb.append("\n");
+
+        sb.append("Location: ");
+        sb.append(location);
+        sb.append(",");
+        if (!workingRole) {
+            sb.append(" not");
+        }
+        sb.append(" currently working a role");
+        if (workingRole) {
+            sb.append(" and has ");
+            sb.append(practiceToken);
+            sb.append(" practice tokens");
+        }
+        sb.append("\nActing Rank: ");
+        sb.append(actingRank);
+        sb.append(", Credits: ");
+        sb.append(credits);
+        sb.append(", Dollars: ");
+        sb.append(dollars);
+        return sb.toString();
     }
 }

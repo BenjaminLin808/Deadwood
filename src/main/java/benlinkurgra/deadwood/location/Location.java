@@ -17,4 +17,9 @@ public abstract class Location {
     public ArrayList<String> getNeighbors() {
         return neighbors;
     }
+
+    @Override
+    public String toString() {
+        return name + '\n';
+    }
 }

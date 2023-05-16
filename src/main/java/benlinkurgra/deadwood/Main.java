@@ -3,7 +3,6 @@ package benlinkurgra.deadwood;
 import benlinkurgra.deadwood.controller.Action;
 import benlinkurgra.deadwood.controller.ActionProvider;
 import benlinkurgra.deadwood.controller.GameInitializer;
-import benlinkurgra.deadwood.controller.LocationProvider;
 import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.Scene;
 import benlinkurgra.deadwood.model.Board;
@@ -11,13 +10,13 @@ import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
 import benlinkurgra.deadwood.readxml.ParseCardXML;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
 public class Main {
 
     private static ActionProvider actionProvider;
-    private static LocationProvider locationProvider;
     private static Board board;
     private static GameState gameState;
     private static Display display;
@@ -63,7 +62,6 @@ public class Main {
 
         Player activePlayer = gameState.getActivePlayer();
         actionProvider = new ActionProvider(display, activePlayer, board, gameState);
-//        locationProvider = new LocationProvider(display, board);
     }
 
     private static Action getAction() {
@@ -72,12 +70,38 @@ public class Main {
         return actionProvider.parseActionRequest();
     }
 
+    private static void takeTurn() {
+        boolean turnNoOver = true;
+        while (turnNoOver) {
+            Action action = getAction();
+            actionProvider.performAction(action);
+            if (action == Action.END_TURN) {
+                turnNoOver = false;
+            }
+        }
+    }
+
+    private static boolean endDay() {
+        actionProvider.endDay();
+        boolean lastDayEnded = gameState.endDay();
+        if (!lastDayEnded) {
+            board.dealNewScenes(gameState.getSceneOrder());
+        }
+        return lastDayEnded;
+    }
 
     public static void main(String[] args) {
         startGame();
-        while (true) {
-            Action action = getAction();
-            actionProvider.attemptAction(action);
+        boolean gameNotOver = true;
+        while (gameNotOver) {
+            takeTurn();
+            if (gameState.getActiveScenes() == 1) {
+                boolean lastDay = endDay();
+                if (lastDay) {
+                    gameNotOver = false;
+                }
+            }
         }
+        actionProvider.endGame();
     }
 }
