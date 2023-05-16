@@ -301,7 +301,7 @@ public class ActionProvider extends DisplayController {
         display.sendActivePlayer(activePlayer.getName());
     }
 
-    public boolean executeMove() {
+    private boolean executeMove() {
         List<String> neighbors = locationNeighbors(activePlayer.getLocation());
         display.displayNeighbors(neighbors);
         String input = handleInput(display::sendPromptEnterLocation);
@@ -337,7 +337,7 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public boolean takeRole() {
+    private boolean takeRole() {
         SetLocation location = (SetLocation) board.getLocation(activePlayer.getLocation());
         display.rolesAtLocation(location.toStringWithHighlight(activePlayer.getActingRank()));
         String input = handleInput(display::promptRoleType);
@@ -460,7 +460,7 @@ public class ActionProvider extends DisplayController {
 
     }
 
-    public void upgradePlayer() {
+    private void upgradePlayer() {
         CastingOffice office = (CastingOffice) board.getLocation("office");
         display.displayValidUpgrades(office
                 .toStringWithHighlight(activePlayer.getActingRank(),
@@ -526,7 +526,7 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public void act() {
+    private void act() {
         String playerName = activePlayer.getName();
         Dice dice = new Dice();
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
@@ -601,7 +601,7 @@ public class ActionProvider extends DisplayController {
         gameState.decrementActiveScenes();
     }
 
-    public void rehearse() {
+    private void rehearse() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         int budget = playerLocation.getSceneBudget();
         if (activePlayer.getPracticeToken() == budget - 1) {
@@ -644,7 +644,7 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    public ArrayList<String> locationNeighbors(String location) {
+    private ArrayList<String> locationNeighbors(String location) {
         return board.getLocation(location).getNeighbors();
     }
 
