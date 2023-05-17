@@ -5,14 +5,12 @@ public class RoleData {
     private final String name;
     private final String roleDescription;
     private String playerOnRole;
-//    private final boolean onCard;
 
 
-    public RoleData(int rank, String name, String description, boolean onCard) {
+    public RoleData(int rank, String name, String description) {
         this.rank = rank;
         this.name = name;
         this.roleDescription = description;
-//        this.onCard = onCard;
         playerOnRole = "";
     }
 
@@ -39,10 +37,6 @@ public class RoleData {
         return playerOnRole.isEmpty();
     }
 
-//    public boolean isOnCard() {
-//        return onCard;
-//    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -57,6 +51,12 @@ public class RoleData {
         return sb.toString();
     }
 
+    /**
+     * converts this object to a string, invalid roles are highlighted in yellow
+     *
+     * @param playerRank rank of player
+     * @return string with invalid role highlighted in yellow
+     */
     public String toStringWithHighlight(int playerRank) {
         String yellowText = "\u001B[33m";
         String resetTextColor = "\u001B[0m";

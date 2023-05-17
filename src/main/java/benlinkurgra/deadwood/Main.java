@@ -10,7 +10,6 @@ import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
 import benlinkurgra.deadwood.readxml.ParseCardXML;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
@@ -19,8 +18,12 @@ public class Main {
     private static ActionProvider actionProvider;
     private static Board board;
     private static GameState gameState;
-    private static Display display;
 
+    /**
+     * Get XML board componenets
+     *
+     * @return Map of locations where keys are location name and values are location
+     */
     private static Map<String, Location> getBoardComponents() {
         try {
             ParseBoardXML boardXML = new ParseBoardXML();
@@ -32,6 +35,11 @@ public class Main {
         }
     }
 
+    /**
+     * Get XML scene components
+     *
+     * @return shuffled Queue of scenes
+     */
     private static Queue<Scene> getSceneComponents() {
         try {
             ParseCardXML cardXML = new ParseCardXML();
@@ -42,9 +50,12 @@ public class Main {
         return null;
     }
 
+    /**
+     * executes commands for starting game
+     */
     private static void startGame() {
         // setup components that don't require player interaction
-        display = new Display();
+        Display display = new Display();
         GameInitializer gameInitializer = new GameInitializer(display);
         Map<String, Location> locations = getBoardComponents();
         Queue<Scene> scenes = getSceneComponents();
@@ -64,12 +75,20 @@ public class Main {
         actionProvider = new ActionProvider(display, activePlayer, board, gameState);
     }
 
+    /**
+     * executes commands to get an action from a player
+     *
+     * @return action performed
+     */
     private static Action getAction() {
         actionProvider.provideActivePlayer();
         actionProvider.provideActionsWithHighlighting();
         return actionProvider.parseActionRequest();
     }
 
+    /**
+     * executes commands needed for player to take a turn
+     */
     private static void takeTurn() {
         boolean turnNoOver = true;
         while (turnNoOver) {
@@ -81,6 +100,11 @@ public class Main {
         }
     }
 
+    /**
+     * executes commands to end a day
+     *
+     * @return return true if day was last day, otherwise false
+     */
     private static boolean endDay() {
         actionProvider.endDay();
         boolean lastDayEnded = gameState.endDay();
@@ -90,6 +114,11 @@ public class Main {
         return lastDayEnded;
     }
 
+    /**
+     * play a game of deadwood
+     *
+     * @param args arguments, NONE EXPECTED
+     */
     public static void main(String[] args) {
         startGame();
         boolean gameNotOver = true;

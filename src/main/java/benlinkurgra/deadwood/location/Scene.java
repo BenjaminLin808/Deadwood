@@ -31,14 +31,31 @@ public class Scene {
         return roles;
     }
 
+    /**
+     * get list of all player acting on the scene
+     *
+     * @return list player names who are acting on scene
+     */
     protected List<String> playersActingOnScene() {
         return roles.playersOnRoles();
     }
 
+    /**
+     * determines of a player can take a role
+     *
+     * @param playerRank rank of player
+     * @return true if player can take role, otherwise false
+     */
     protected boolean canTakeRole(int playerRank) {
         return roles.availableRoles(playerRank).size() != 0;
     }
 
+    /**
+     * determines if a player is acting on the scene
+     *
+     * @param playerName name of player
+     * @return true if player is acting on scene, otherwise false
+     */
     protected boolean isActingOnScene(String playerName) {
         return roles.isActingOn(playerName);
     }

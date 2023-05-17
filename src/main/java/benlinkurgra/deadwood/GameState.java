@@ -1,20 +1,25 @@
 package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.location.Scene;
-import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
 import java.util.*;
 
 public class GameState {
-    private int currDay = 1;
     private final int endDay;
+    private int currDay = 1;
     private int activeScenes = 10;
     private boolean currentPlayerDone;
     private Queue<Scene> sceneOrder;
     private Queue<Player> playerOrder;
 
 
+    /**
+     * GameState constructor for default starting days,to be used when player number is greater than 3
+     *
+     * @param sceneOrder  Queue of scenes
+     * @param playerOrder Queue of players, represents turn order
+     */
     public GameState(Queue<Scene> sceneOrder, Queue<Player> playerOrder) {
         this.endDay = 4;
         this.currentPlayerDone = false;
@@ -22,10 +27,41 @@ public class GameState {
         this.playerOrder = playerOrder;
     }
 
+    /**
+     * GameState constructor for unique number of days
+     *
+     * @param endDay      ending day
+     * @param sceneOrder  Queue of scenes
+     * @param playerOrder Queue of players, represents turn order
+     */
     public GameState(int endDay, Queue<Scene> sceneOrder, Queue<Player> playerOrder) {
         this.endDay = endDay;
         this.sceneOrder = sceneOrder;
         this.playerOrder = playerOrder;
+    }
+
+    public int getCurrDay() {
+        return currDay;
+    }
+
+    public int getEndDay() {
+        return endDay;
+    }
+
+    public int getActiveScenes() {
+        return activeScenes;
+    }
+
+    public boolean isCurrentPlayerDone() {
+        return currentPlayerDone;
+    }
+
+    public Queue<Scene> getSceneOrder() {
+        return sceneOrder;
+    }
+
+    public Queue<Player> getPlayerOrder() {
+        return playerOrder;
     }
 
     /**
@@ -57,50 +93,48 @@ public class GameState {
         }
     }
 
-    public int getCurrDay() {
-        return currDay;
-    }
-
+    /**
+     * increase current day by 1
+     */
     public void incrementCurrDay() {
         ++this.currDay;
     }
 
-    public int getEndDay() {
-        return endDay;
-    }
-
-    public int getActiveScenes() {
-        return activeScenes;
-    }
-
+    /**
+     * decrease number of active scenes by 1
+     */
     public void decrementActiveScenes() {
         --this.activeScenes;
     }
-
-    public void resetActiveScenes() {
+    /**
+     * resets active scenes
+     */
+    private void resetActiveScenes() {
         this.activeScenes = 10;
     }
 
-    public boolean isCurrentPlayerDone() {
-        return currentPlayerDone;
-    }
-
+    /**
+     * change current player state to done
+     */
     public void setCurrentPlayerDoneTrue() {
         this.currentPlayerDone = true;
     }
 
-    public Queue<Scene> getSceneOrder() {
-        return sceneOrder;
-    }
-
-    public Queue<Player> getPlayerOrder() {
-        return playerOrder;
-    }
-
+    /**
+     * find the player whose turn it is
+     *
+     * @return current active player
+     */
     public Player getActivePlayer() {
         return playerOrder.peek();
     }
 
+    /**
+     * get a list of player objects related to list of names provided
+     *
+     * @param playerNames list of player names to find
+     * @return Players related to provided names
+     */
     public List<Player> getPlayers(List<String> playerNames) {
         List<Player> selectedPlayers = new ArrayList<>();
 
@@ -113,6 +147,12 @@ public class GameState {
         return selectedPlayers;
     }
 
+    /**
+     * get a list of players in order of player rank
+     *
+     * @param playerNames list of player names to find
+     * @return Players related to provided names, ordered by rank
+     */
     public Queue<Player> getPlayersInOrder(List<String> playerNames) {
         List<Player> selectedPlayers = getPlayers(playerNames);
 

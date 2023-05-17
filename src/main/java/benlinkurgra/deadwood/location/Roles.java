@@ -13,6 +13,12 @@ public class Roles {
         this.roleList = roles;
     }
 
+    /**
+     * list of all available roles for player
+     *
+     * @param playerRank rank of player
+     * @return list of avaiable roles
+     */
     protected List<RoleData> availableRoles(int playerRank) {
         List<RoleData> returnList = new ArrayList<>();
         for (RoleData role: roleList) {
@@ -47,12 +53,20 @@ public class Roles {
         return false;
     }
 
+    /**
+     * removes players for all roles
+     */
     protected void emptyRoles() {
         for(RoleData role : roleList) {
             role.setPlayerOnRole("");
         }
     }
 
+    /**
+     * gets a list of player names for all players who are currently working on one of these roles
+     *
+     * @return list of player names who are working on role
+     */
     protected List<String> playersOnRoles() {
         List<String> playerList = new ArrayList<>();
         for(RoleData role : roleList) {
@@ -63,6 +77,11 @@ public class Roles {
         return playerList;
     }
 
+    /**
+     * list of all roles
+     *
+     * @return list of roles
+     */
     public List<RoleData> getRoleList() {
         return roleList;
     }
@@ -76,6 +95,12 @@ public class Roles {
         return false;
     }
 
+    /**
+     * find the rank of the role a player is working
+     *
+     * @param playerName name of player
+     * @return if player is working the role returns role rank, otherwise 0
+     */
     protected int getRoleRank(String playerName) {
         for(RoleData role : roleList) {
             if (role.getPlayerOnRole().equals(playerName)) {
@@ -96,6 +121,12 @@ public class Roles {
         return sb.toString();
     }
 
+    /**
+     * converts this object to a string, highlights invalid roles
+     *
+     * @param playerRank rank of player
+     * @return string with invalid roles highlighted
+     */
     public String toStringWithHighlight(int playerRank) {
         String yellowText = "\u001B[33m";
         String resetTextColor = "\u001B[0m";

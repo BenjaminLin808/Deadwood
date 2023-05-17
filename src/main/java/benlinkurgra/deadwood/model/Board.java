@@ -43,6 +43,12 @@ public class Board {
         return location instanceof SetLocation;
     }
 
+    /**
+     * Determines if a location is a setLocation or not
+     *
+     * @param location location object to check
+     * @return true of location is a setLocation, false otherwise
+     */
     public boolean isSetLocation(Location location) {
         return location instanceof SetLocation;
     }

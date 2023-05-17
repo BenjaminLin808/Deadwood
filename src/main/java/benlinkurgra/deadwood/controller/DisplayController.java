@@ -11,6 +11,12 @@ public abstract class DisplayController {
         this.display = display;
     }
 
+    /**
+     * checks if input was a request and performs request action
+     *
+     * @param input user input
+     * @return if was request true, otherwise false
+     */
     protected boolean checkForRequest(String input) {
         switch (input) {
             case "quit" -> {
@@ -33,6 +39,12 @@ public abstract class DisplayController {
         return false;
     }
 
+    /**
+     * handles user input, continues to prompt user until input is not a request
+     *
+     * @param userPrompt prompt to display to user
+     * @return input given by user
+     */
     protected String handleInput(Runnable userPrompt) {
         userPrompt.run();
         String input = display.getUserInput();

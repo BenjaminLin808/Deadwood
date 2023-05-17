@@ -24,16 +24,7 @@ public class ParseCardXML {
         }
     }
 
-//    public static void main(String[] args) {
-//        ParseCardXML parsing = new ParseCardXML();
-//        try {
-//            Document doc = parsing.getDocFromFile("src/main/resources/cards.xml");
-//            parsing.readCardData(doc);
-//        } catch (Exception e) {
-//            System.out.println("Error = " + e);
-//        }
-//    }
-    public Document getDocFromFile(String filename)
+    private Document getDocFromFile(String filename)
             throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
@@ -48,13 +39,13 @@ public class ParseCardXML {
         return doc;
     } // exception handling
 
-    public Queue<Scene> readCardData(Document d) {
+    private Queue<Scene> readCardData(Document d) {
         Element root = d.getDocumentElement();
         NodeList cards = root.getElementsByTagName("card");
 
         return readCardRoles(cards);
     }
-    public Queue<Scene>  readCardRoles(NodeList cards) {
+    private Queue<Scene>  readCardRoles(NodeList cards) {
         List<Scene> sceneCards = new ArrayList<>();
         for(int i = 0; i < cards.getLength(); i++){
             List<RoleData> roleList = new ArrayList<>();
@@ -75,7 +66,7 @@ public class ParseCardXML {
                 String partName = part.getAttribute("name");
                 int partLevel = Integer.parseInt(part.getAttribute("level"));
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
-                roleList.add(new RoleData(partLevel, partName, partLine, true));
+                roleList.add(new RoleData(partLevel, partName, partLine));
             }
             sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList)));
         }

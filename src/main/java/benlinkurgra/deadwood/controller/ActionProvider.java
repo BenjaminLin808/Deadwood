@@ -23,6 +23,12 @@ public class ActionProvider extends DisplayController {
         this.gameState = gameState;
     }
 
+    /**
+     * handles input and checks for additional action request
+     *
+     * @param userPrompt prompt to display to user
+     * @return input provided by user
+     */
     @Override
     protected String handleInput(Runnable userPrompt) {
         boolean processing = true;
@@ -42,6 +48,11 @@ public class ActionProvider extends DisplayController {
         return input;
     }
 
+    /**
+     * prompts a user for an action
+     *
+     * @return action user selected
+     */
     public Action parseActionRequest() {
         String input = handleInput(display::sendPromptSelectAction);
         try {
@@ -62,6 +73,12 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * determines of user selected action is possible
+     *
+     * @param action action user selected
+     * @return true if user can perform action, otherwise false
+     */
     private boolean validateActionSelection(Action action) {
         switch (action) {
             case MOVE:
@@ -83,6 +100,11 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * executes the action the player selected
+     *
+     * @param action player selected action
+     */
     public void performAction(Action action) {
         switch (action) {
             case MOVE:
@@ -297,10 +319,18 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * signals display to show who the active player is
+     */
     public void provideActivePlayer() {
         display.sendActivePlayer(activePlayer.getName());
     }
 
+    /**
+     * attempts to perform a move action
+     *
+     * @return true if action was performed, false if canceled
+     */
     private boolean executeMove() {
         List<String> neighbors = locationNeighbors(activePlayer.getLocation());
         display.displayNeighbors(neighbors);
@@ -337,6 +367,11 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * attempts to perform the take role action
+     *
+     * @return true if action was completed, false if canceled
+     */
     private boolean takeRole() {
         SetLocation location = (SetLocation) board.getLocation(activePlayer.getLocation());
         display.rolesAtLocation(location.toStringWithHighlight(activePlayer.getActingRank()));
@@ -369,6 +404,12 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * signals display to prompt player to select a role as an extra attempts to fill selected role
+     *
+     * @param location location of role
+     * @return true if player successfully got a role, false if cancelled
+     */
     private boolean takeExtraRole(SetLocation location) {
         Roles roles = location.getRolesOnLocation();
         display.rolesAtLocation(roles.toStringWithHighlight(activePlayer.getActingRank()));
@@ -414,6 +455,12 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * signals display to prompt player to select a starring role, attempts to fill selected role
+     *
+     * @param location location of role
+     * @return true if player successfully got a role, false if cancelled
+     */
     private boolean takeStarringRole(SetLocation location) {
         Roles roles = location.getRolesOnScene();
         display.rolesAtLocation(roles.toStringWithHighlight(activePlayer.getActingRank()));
@@ -460,6 +507,9 @@ public class ActionProvider extends DisplayController {
 
     }
 
+    /**
+     * signals display to prompt player to upgrade, attempts to upgrade player to selected rank
+     */
     private void upgradePlayer() {
         CastingOffice office = (CastingOffice) board.getLocation("office");
         display.displayValidUpgrades(office
@@ -503,6 +553,11 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * signals display to prompt player for currency to be used in upgrade
+     *
+     * @return type of currency to be used
+     */
     private CurrencyType getCurrencyType() {
         String input = handleInput(display::sendPromptSelectCurrency);
         if (input.equalsIgnoreCase("credits")) {
@@ -526,6 +581,9 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * performs the act action
+     */
     private void act() {
         String playerName = activePlayer.getName();
         Dice dice = new Dice();
@@ -559,7 +617,9 @@ public class ActionProvider extends DisplayController {
         }
     }
 
-    // TODO need to revise this method
+    /**
+     * completes a scene and attempts to payout bonuses
+     */
     private void wrappedScene() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         display.sceneFinished(playerLocation.getName(), playerLocation.getSceneName());
@@ -601,6 +661,9 @@ public class ActionProvider extends DisplayController {
         gameState.decrementActiveScenes();
     }
 
+    /**
+     * performs the rehearse action
+     */
     private void rehearse() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         int budget = playerLocation.getSceneBudget();
@@ -612,15 +675,24 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * ends the current players turn
+     */
     private void endTurn() {
         display.playerDone(activePlayer.getName());
         activePlayer = gameState.changeActivePlayer();
     }
 
+    /**
+     * signal display to show day is ending
+     */
     public void endDay() {
         display.endDay(gameState.getCurrDay(), gameState.getEndDay());
     }
 
+    /**
+     * get game score and signal display to show score for end of game
+     */
     public void endGame() {
         Queue<Player> players = gameState.getPlayerOrder();
         List<String> winners = new ArrayList<>();
@@ -644,6 +716,12 @@ public class ActionProvider extends DisplayController {
         }
     }
 
+    /**
+     * find the name of all neighbors for a location
+     *
+     * @param location name of location
+     * @return neighbors of location
+     */
     private ArrayList<String> locationNeighbors(String location) {
         return board.getLocation(location).getNeighbors();
     }

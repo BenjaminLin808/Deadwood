@@ -19,6 +19,12 @@ public class UpgradeCost {
         return creditsCost;
     }
 
+    /**
+     * get the cost of an upgrade based on desired currency type
+     *
+     * @param currencyType type of currency to check
+     * @return cost of upgrade
+     */
     public int getCostByType(CurrencyType currencyType) {
         if (currencyType == CurrencyType.DOLLARS) {
             return dollarCost;

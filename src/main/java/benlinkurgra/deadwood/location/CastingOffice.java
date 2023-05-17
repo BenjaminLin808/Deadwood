@@ -53,6 +53,13 @@ public class CastingOffice extends Location {
         return false;
     }
 
+    /**
+     * determines the cost of an upgrade
+     *
+     * @param rank rank of upgrade
+     * @param currencyType type of currency to check
+     * @return cost of upgrade
+     */
     public int getCost(int rank, CurrencyType currencyType) {
         return upgrades.get(rank).getCostByType(currencyType);
     }
@@ -86,6 +93,14 @@ public class CastingOffice extends Location {
         return sb.toString();
     }
 
+    /**
+     * converts this obejct to a string with invalid upgrades highlighted
+     *
+     * @param playerActingRank acting rank of player
+     * @param playerCredits players amount of credits
+     * @param playerDollars amount of dollars player has
+     * @return string with invalid upgrades highlighted
+     */
     public String toStringWithHighlight(int playerActingRank, int playerCredits, int playerDollars) {
         String yellowText = "\u001B[33m";
         String resetTextColor = "\u001B[0m";

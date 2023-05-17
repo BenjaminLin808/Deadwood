@@ -42,6 +42,9 @@ public class Display {
                 """);
     }
 
+    /**
+     * display game map
+     */
     public void displayMap() {
         String map = """
             +----------------------------+ +----------------------------+
@@ -64,10 +67,20 @@ public class Display {
         System.out.println(map);
     }
 
+    /**
+     * displays player information
+     *
+     * @param player player to display
+     */
     public void playerInfo(String player) {
         System.out.println(player);
     }
 
+    /**
+     * displays location information
+     *
+     * @param location location to display
+     */
     public void locationInfo(String location) {
         System.out.println(location);
     }
@@ -86,7 +99,13 @@ public class Display {
         return input;
     }
 
-    public String colorizeName(String playerName) {
+    /**
+     * colorize a player name green
+     *
+     * @param playerName name to colorize
+     * @return colorized name
+     */
+    private String colorizeName(String playerName) {
         String greenText = "\u001B[32m";
         String resetText = "\u001B[0m";
         return greenText + playerName + resetText;
@@ -169,46 +188,6 @@ public class Display {
 
     public void displayValidUpgrades(String castingOffice) {
         System.out.println(castingOffice);
-//        String yellowText = "\u001B[33m";
-//        String resetTextColor = "\u001B[0m";
-//        String rankFormat = "%1$-10s";
-//        String dollarFormat = "%1$-13s";
-//        String creditFormat = "%1$-11s";
-//
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Here is a list of all rank upgrades. Invalid upgrades highlighted in ");
-//        sb.append(yellowText);
-//        sb.append("yellow");
-//        sb.append(resetTextColor);
-//        sb.append(":\n");
-//        sb.append("+----------+-------------+-----------+\n");
-//        sb.append("|   RANK   |   DOLLARS   |  CREDITS  |\n");
-//        sb.append("+----------+-------------+-----------+\n");
-//
-//        for (Map.Entry<Integer, UpgradeCost> upgrade : upgrades.entrySet()) {
-//            UpgradeCost upgradeCost = upgrade.getValue();
-//            int dollarCost = upgradeCost.getDollarCost();
-//            int creditCost = upgradeCost.getCreditsCost();
-//
-//            if (upgrade.getKey() <= player.getActingRank()) {
-//                sb.append("|" + yellowText + String.format(rankFormat, upgrade.getKey()) + resetTextColor +
-//                        "|" + yellowText + String.format(dollarFormat, dollarCost) + resetTextColor +
-//                        "|" + yellowText + String.format(creditFormat, creditCost) + resetTextColor +
-//                        "|\n");
-//            } else {
-//                String dollarColor = ((player.getDollars() < dollarCost)
-//                        ? yellowText : resetTextColor);
-//                String creditColor = ((player.getCredits() < creditCost)
-//                        ? yellowText : resetTextColor);
-//
-//                sb.append("|" + String.format(rankFormat, upgrade.getKey()) +
-//                        "|" + dollarColor + String.format(dollarFormat, dollarCost) + resetTextColor +
-//                        "|" + creditColor + String.format(creditFormat, creditCost) + resetTextColor +
-//                        "|\n");
-//            }
-//        }
-//        sb.append("+----------+-------------+-----------+");
-//        System.out.println(sb);
     }
 
     /**
@@ -230,10 +209,22 @@ public class Display {
         System.out.println(outputLocations);
     }
 
+    /**
+     * displays roles at location
+     *
+     * @param locationString location with roles
+     */
     public void rolesAtLocation(String locationString) {
         System.out.print(locationString);
     }
 
+    /**
+     * displays a move was successful
+     *
+     * @param playerName name of player who moved
+     * @param oldLocation previous location of player
+     * @param newLocation new location of player
+     */
     public void moveSuccess(String playerName, String oldLocation, String newLocation) {
         System.out.printf("Move successful, %s has moved from %s to %s\n",
                 colorizeName(playerName),
@@ -241,17 +232,33 @@ public class Display {
                 newLocation);
     }
 
+    /**
+     * displays that an upgrade was successful
+     *
+     * @param playerName name of player who upgraded
+     * @param rank new rank of player
+     */
     public void upgradeSuccess(String playerName, int rank) {
         System.out.printf("Upgrade successful, %s has upgraded to rank %d\n",
                 colorizeName(playerName),
                 rank);
     }
 
+    /**
+     * displays act action was successful, to be used for player acting off card
+     *
+     * @param playerName name of player who acted
+     */
     public void actSuccess(String playerName) {
         System.out.printf("Act successful, %s has earned 1 credit and 1 dollar.\n",
                 colorizeName(playerName));
     }
 
+    /**
+     * displays act action was successful, to be used for player acting on card
+     *
+     * @param playerName name of player who acted
+     */
     public void actSuccess(String playerName, String currencyType, int currencyIncrease) {
         System.out.printf("Act successful, %s has earned %d %s.\n",
                 colorizeName(playerName),
@@ -259,27 +266,58 @@ public class Display {
                 currencyType);
     }
 
+    /**
+     * displays rehearse was successful
+     *
+     * @param playerName player who rehearsed
+     * @param practiceTokens current practice tokens of player
+     */
     public void rehearseSuccess(String playerName, int practiceTokens) {
         System.out.printf("Rehearse successful, %s has %d practice tokens\n",
                 colorizeName(playerName),
                 practiceTokens);
     }
 
+    /**
+     * displays act action failed, to be used when acting off card
+     *
+     * @param playerName player who attempted to act
+     * @param dollars dollars earned
+     */
     public void actFail(String playerName, int dollars) {
         System.out.printf("Act failed, %s has earned %d dollar\n",
                 colorizeName(playerName),
                 dollars);
     }
 
+    /**
+     * displays act action failed, to be used when acting on card
+     *
+     * @param playerName player who attempted to act
+     */
     public void actFail(String playerName) {
         System.out.printf("Act failed, %s receives nothing.\n", colorizeName(playerName));
 
     }
 
+    /**
+     * displays rehearse action failed
+     *
+     * @param playerName player who attempted to rehearse
+     * @param practiceTokens players practice tokens
+     */
     public void rehearseFail(String playerName, int practiceTokens) {
         System.out.printf("Rehearse failed, %s has %d \n", colorizeName(playerName), practiceTokens);
     }
 
+    /**
+     * displays dice outcome from acting
+     *
+     * @param playerName name of player who acted
+     * @param outcome dice result
+     * @param practiceTokens players practice tokens
+     * @param budget scene budget
+     */
     public void diceOutcome(String playerName, int outcome, int practiceTokens, int budget) {
         System.out.printf("Player %s rolled %d.\n" +
                 "They have %d practice token(s) and the scene budget is %d.\n",
@@ -289,40 +327,88 @@ public class Display {
                 budget);
     }
 
+    /**
+     * display scene has finished
+     *
+     * @param locationName name of location where scene finished
+     * @param sceneName name of scene that finished
+     */
     public void sceneFinished(String locationName, String sceneName) {
         System.out.printf("Scene %s has finished at location %s.\n", locationName, sceneName);
     }
 
+    /**
+     * displays bonus payout
+     *
+     * @param playerName name of player receiving bonus
+     * @param bonusAmount bonus amount earned
+     */
     public void earnBonus(String playerName, int bonusAmount) {
         System.out.printf("Player %s has earned a %d dollar bonus.\n",
                 colorizeName(playerName),
                 bonusAmount);
     }
 
+    /**
+     * announces a player toke a role
+     *
+     * @param playerName name of player who toke role
+     * @param locationName location role was taken at
+     * @param roleName name of role taken
+     */
     public void roleTaken(String playerName, String locationName, String roleName) {
         System.out.printf("Player %s, at Location %s, has taken the role: %s.\n",
                 colorizeName(playerName),
                 locationName, roleName);
     }
 
+    /**
+     * announce a players turn is over
+     *
+     * @param playerName name of player
+     */
     public void playerDone(String playerName) {
         System.out.printf("Ending player %s's turn.\n", colorizeName(playerName));
     }
 
+    /**
+     * announce day has ended
+     *
+     * @param currDay day that is ending
+     * @param lastDay total days in game
+     */
     public void endDay(int currDay, int lastDay) {
         System.out.printf("Day %d of %d is ending.\n", currDay, lastDay);
     }
 
+    /**
+     * announce a players score
+     *
+     * @param playerName player name
+     * @param score player score
+     */
     public void score(String playerName, int score) {
         System.out.printf("Player %s scored %d.\n", colorizeName(playerName), score);
     }
 
+    /**
+     * announce a winner
+     *
+     * @param playerName name of game winner
+     * @param score winning score
+     */
     public void winners(String playerName, int score) {
         System.out.printf("Player %s has won the game with a score of %d.",
                 colorizeName(playerName),
                 score);
     }
 
+    /**
+     * announce winners, for use in a tie
+     *
+     * @param winners list of winners names
+     * @param score winning score
+     */
     public void winners(List<String> winners, int score) {
         StringBuilder sb = new StringBuilder();
         sb.append("Game is a tie. Winners are ");
@@ -391,26 +477,55 @@ public class Display {
         System.out.printf("%s can not %s, %s.\n", colorizeName(playerName), action, reason);
     }
 
+    /**
+     * inform players of invalid entry for a move
+     *
+     * @param input provided invalid input
+     */
     public void displayInvalidMoveLocation(String input) {
         System.out.printf("Invalid input, %s is not a valid selection for a move.\n", input);
     }
 
+    /**
+     * inform players of invalid selection for new rank
+     *
+     * @param input provided invalid input
+     */
     public void displayInvalidRankSelection(String input) {
         System.out.printf("Invalid input, %s is not a valid rank number, please select a number from 2 to 6.\n", input);
     }
 
+    /**
+     * inform players of invalid selection for a role type
+     *
+     * @param input provided invalid input
+     */
     public void invalidRoleType(String input) {
         System.out.printf("Invalid input, %s is not valid role type.\n", input);
     }
 
+    /**
+     * informs players of an invalid selection for a currency type
+     *
+     * @param input provided invalid input
+     */
     public void invalidCurrency(String input) {
         System.out.printf("Invalid input, %s is not a valid currency.\n", input);
     }
 
+    /**
+     * informs players of invalid selection for a role
+     *
+     * @param input provided invalid input
+     * @param numRoles number of available roles for selection
+     */
     public void invalidRoleSelection(int input, int numRoles) {
         System.out.printf("Invalid input, %d is out of range please select a number from 1 to %d.\n", input, numRoles);
     }
 
+    /**
+     * error occurred
+     */
     public void displaySomethingWentWrong() {
         System.out.println("Sorry, something went wrong.");
     }
@@ -443,16 +558,25 @@ public class Display {
         System.out.print("Select new location: ");
     }
 
+    /**
+     * Used to ask player to choose an action
+     */
     public void sendPromptSelectAction() {
         System.out.println("To select an action, enter the number corresponding to the action.");
         System.out.print("Enter action: ");
     }
 
+    /**
+     * Used to ask player for a upgrade rank selection
+     */
     public void sendPromptSelectUpgrade() {
         System.out.println("To select a new rank enter the number of the rank.");
         System.out.print("Enter rank: ");
     }
 
+    /**
+     * Used to ask player for the current to be used in an upgrade
+     */
     public void sendPromptSelectCurrency() {
         System.out.println("""
                 Select a currency type by typing the currency name or it's corresponding number.
@@ -461,6 +585,9 @@ public class Display {
         System.out.print("Select Currency: ");
     }
 
+    /**
+     * Used to ask player for the type of role they wish to take
+     */
     public void promptRoleType() {
         System.out.println("""
                 Would you like to take a role as an extra on location, or a starring role on scene?
@@ -470,6 +597,9 @@ public class Display {
         System.out.print("Select Role Type: ");
     }
 
+    /**
+     * Use to ask player to select the number of the role they wish to take
+     */
     public void promptRole() {
         System.out.println("Enter the number of the role you would like to select " +
                 "or type \"back\" to select another role type.");

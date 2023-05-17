@@ -2,8 +2,6 @@ package benlinkurgra.deadwood.model;
 
 import benlinkurgra.deadwood.CurrencyType;
 
-import java.util.ArrayList;
-
 public class Player {
     private final String name;
     private String location = "trailer";
@@ -23,26 +21,6 @@ public class Player {
         this.name = name;
     }
 
-    /**
-     * Update player rank, assumes player meets requirements for upgrade
-     *
-     * @param newRank rank to upgrade player to
-     * @param currencyType currency to spend on upgrade
-     * @param amount cost of upgrade
-     */
-    public void upgrade(int newRank, CurrencyType currencyType, int amount) {
-        if (currencyType == CurrencyType.CREDITS) {
-            decreaseCredits(amount);
-        } else { // if (currencyType == CurrencyType.DOLLARS) {
-            decreaseDollars(amount);
-        }
-        this.actingRank = newRank;
-    }
-
-    public int score() {
-        return credits + dollars + (5 * actingRank);
-    }
-
     public String getName() {
         return name;
     }
@@ -59,10 +37,20 @@ public class Player {
         return credits;
     }
 
+    /**
+     * add a given amount to players credits
+     *
+     * @param credits amount of credits earned
+     */
     public void addCredits(int credits) {
         this.credits += credits;
     }
 
+    /**
+     * decrease a players credits
+     *
+     * @param credits amount of credits spent
+     */
     public void decreaseCredits(int credits) {
         this.credits -= credits;
     }
@@ -71,10 +59,20 @@ public class Player {
         return dollars;
     }
 
+    /**
+     * add a given amount to dollars player has
+     *
+     * @param dollars dollars earned
+     */
     public void addDollars(int dollars) {
         this.dollars += dollars;
     }
 
+    /**
+     * decrease amount of dollars player has
+     *
+     * @param dollar dollars spent
+     */
     public void decreaseDollars(int dollar) {
         this.dollars -= dollar;
     }
@@ -95,14 +93,48 @@ public class Player {
         return practiceToken;
     }
 
+    /**
+     * resets practice tokens to zero
+     */
     public void resetPracticeTokens() {
         this.practiceToken = 0;
     }
 
+    /**
+     * add one practice token
+     */
     public void addPracticeToken() {
         ++this.practiceToken;
     }
 
+    /**
+     * Update player rank, assumes player meets requirements for upgrade
+     *
+     * @param newRank rank to upgrade player to
+     * @param currencyType currency to spend on upgrade
+     * @param amount cost of upgrade
+     */
+    public void upgrade(int newRank, CurrencyType currencyType, int amount) {
+        if (currencyType == CurrencyType.CREDITS) {
+            decreaseCredits(amount);
+        } else { // if (currencyType == CurrencyType.DOLLARS) {
+            decreaseDollars(amount);
+        }
+        this.actingRank = newRank;
+    }
+
+    /**
+     * calculate the players score
+     *
+     * @return players score
+     */
+    public int score() {
+        return credits + dollars + (5 * actingRank);
+    }
+
+    /**
+     * resets player location, role status and practice tokens
+     */
     public void startNewDay() {
         this.location = "trailer";
         this.workingRole = false;
