@@ -68,7 +68,7 @@ public class ParseCardXML {
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
                 roleList.add(new RoleData(partLevel, partName, partLine));
             }
-            sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList)));
+            sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList), sceneNum));
         }
         Collections.shuffle(sceneCards);
         return new LinkedList<>(sceneCards);

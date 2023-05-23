@@ -8,11 +8,14 @@ public class Scene {
     private final String description;
     private final Roles roles;
 
-    public Scene(String name, int budget, String description, Roles roles) {
+    private final int sceneNum;
+
+    public Scene(String name, int budget, String description, Roles roles, int sceneNum) {
         this.name = name;
         this.budget = budget;
         this.description = description;
         this.roles = roles;
+        this.sceneNum = sceneNum;
     }
 
     protected String getName() {
