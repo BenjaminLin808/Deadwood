@@ -8,6 +8,8 @@ package benlinkurgra.deadwood;
 
 */
 
+import benlinkurgra.deadwood.controller.GameInitializer;
+
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.ImageIcon;
@@ -31,6 +33,7 @@ public class BoardLayersListener extends JFrame {
 
     // JLayered Pane
     JLayeredPane bPane;
+
 
     // Constructor
 
@@ -78,6 +81,7 @@ public class BoardLayersListener extends JFrame {
         playerlabel.setBounds(114,227,46,46);
         playerlabel.setVisible(false);
         bPane.add(playerlabel,Integer.valueOf(3));
+
 
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
@@ -141,6 +145,10 @@ public class BoardLayersListener extends JFrame {
         board.setVisible(true);
 
         // Take input from the user about number of players
-        JOptionPane.showInputDialog(board, "How many players?");
+        int playerNum = 0;
+        while (playerNum < 2 || playerNum > 8) {
+            playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
+        }
+
     }
 }

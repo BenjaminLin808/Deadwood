@@ -10,6 +10,7 @@ import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
 import benlinkurgra.deadwood.readxml.ParseCardXML;
 
+import javax.swing.*;
 import java.util.Map;
 import java.util.Queue;
 
@@ -75,6 +76,9 @@ public class Main {
         actionProvider = new ActionProvider(display, activePlayer, board, gameState);
     }
 
+    private static void startGameGui(){
+        BoardLayersListener boardLayersListener = new BoardLayersListener();
+    }
     /**
      * executes commands to get an action from a player
      *
@@ -120,7 +124,8 @@ public class Main {
      * @param args arguments, NONE EXPECTED
      */
     public static void main(String[] args) {
-        startGame();
+        if (args[0].equals("term")) {
+        startGame(); // new for gui
         boolean gameNotOver = true;
         while (gameNotOver) {
             takeTurn();
@@ -132,5 +137,17 @@ public class Main {
             }
         }
         actionProvider.endGame();
+        } else if (args[0].equals("gui")) {
+            // run gui application
+            BoardLayersListener board = new BoardLayersListener();
+            board.setVisible(true);
+
+            int playerNum = 0;
+            while (playerNum < 2 || playerNum > 8) {
+                playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
+            }
+        } else {
+            System.out.println("Error, invalid input.");
+        }
     }
 }

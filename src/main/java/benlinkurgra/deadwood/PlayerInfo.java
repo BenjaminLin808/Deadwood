@@ -20,14 +20,13 @@ public class PlayerInfo extends JFrame {
     }
 
     public void playPlayerInfo() {
-        for(Player player : playerOrder){
-//            players.add(new JLabel());
-//            ImageIcon pIcon = new ImageIcon("src/main/images/dice/b1.png");
-//            players.setIcon(pIcon);
-//            //playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());
-//            playerlabel.setBounds(114,227,46,46);
-//            playerlabel.setVisible(false);
-//            bPane.add(playerlabel,Integer.valueOf(3));
+        for(int i = 0; i < playerOrder.size(); i++){
+            players.add(new JLabel());
+            ImageIcon pIcon = new ImageIcon("src/main/images/dice/b1.png");
+            players.get(i).setIcon(pIcon);
+            players.get(i).setBounds(114 ,227 - (i * 10),pIcon.getIconWidth(),pIcon.getIconHeight());
+            players.get(i).setVisible(true);
+            bPane.add(players.get(i),Integer.valueOf(3));
         }
     }
 }
