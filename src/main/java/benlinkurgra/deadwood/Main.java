@@ -3,6 +3,7 @@ package benlinkurgra.deadwood;
 import benlinkurgra.deadwood.controller.Action;
 import benlinkurgra.deadwood.controller.ActionProvider;
 import benlinkurgra.deadwood.controller.GameInitializer;
+import benlinkurgra.deadwood.controller.GuiInitializer;
 import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.Scene;
 import benlinkurgra.deadwood.model.Board;
@@ -78,6 +79,22 @@ public class Main {
 
     private static void startGameGui(){
         BoardLayersListener boardLayersListener = new BoardLayersListener();
+        boardLayersListener.setVisible(true);
+        GuiInitializer guiInitializer = new GuiInitializer();
+
+        Map<String, Location> locations = getBoardComponents();
+        Queue<Scene> scenes = getSceneComponents();
+        board = new Board(locations, scenes);
+
+        // start game and get starting game parameters
+        int numPlayers = guiInitializer.getNumberPlayers(boardLayersListener);
+        String[] playerNames = new String[] { "b", "c", "g", "o", "p", "r", "v", "w", "y" };
+        Queue<Player> players = guiInitializer.determinePlayerOrder(numPlayers, playerNames);
+        if (numPlayers == 2 || numPlayers == 3) {
+            gameState = new GameState(3, scenes, players);
+        } else {
+            gameState = new GameState(scenes, players);
+        }
     }
     /**
      * executes commands to get an action from a player
@@ -124,30 +141,31 @@ public class Main {
      * @param args arguments, NONE EXPECTED
      */
     public static void main(String[] args) {
-        if (args[0].equals("term")) {
-        startGame(); // new for gui
-        boolean gameNotOver = true;
-        while (gameNotOver) {
-            takeTurn();
-            if (gameState.getActiveScenes() == 1) {
-                boolean lastDay = endDay();
-                if (lastDay) {
-                    gameNotOver = false;
-                }
-            }
-        }
-        actionProvider.endGame();
-        } else if (args[0].equals("gui")) {
-            // run gui application
-            BoardLayersListener board = new BoardLayersListener();
-            board.setVisible(true);
-
-            int playerNum = 0;
-            while (playerNum < 2 || playerNum > 8) {
-                playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
-            }
-        } else {
-            System.out.println("Error, invalid input.");
-        }
+        startGameGui();
+//        if (args[0].equals("term")) {
+//        startGame(); // new for gui
+//        boolean gameNotOver = true;
+//        while (gameNotOver) {
+//            takeTurn();
+//            if (gameState.getActiveScenes() == 1) {
+//                boolean lastDay = endDay();
+//                if (lastDay) {
+//                    gameNotOver = false;
+//                }
+//            }
+//        }
+//        actionProvider.endGame();
+//        } else if (args[0].equals("gui")) {
+//            // run gui application
+//            BoardLayersListener board = new BoardLayersListener();
+//            board.setVisible(true);
+//
+//            int playerNum = 0;
+//            while (playerNum < 2 || playerNum > 8) {
+//                playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
+//            }
+//        } else {
+//            System.out.println("Error, invalid input.");
+//        }
     }
 }

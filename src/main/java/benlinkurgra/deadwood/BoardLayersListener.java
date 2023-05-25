@@ -9,6 +9,8 @@ package benlinkurgra.deadwood;
 */
 
 import benlinkurgra.deadwood.controller.GameInitializer;
+import benlinkurgra.deadwood.controller.GuiInitializer;
+import benlinkurgra.deadwood.model.Player;
 
 import java.awt.*;
 import javax.swing.*;
@@ -17,6 +19,8 @@ import javax.imageio.ImageIO;
 import java.awt.event.*;
 import javax.swing.JOptionPane;
 import java.lang.*;
+import java.util.ArrayList;
+import java.util.Queue;
 
 public class BoardLayersListener extends JFrame {
 
@@ -141,14 +145,6 @@ public class BoardLayersListener extends JFrame {
 
     public static void main(String[] args) {
 
-        BoardLayersListener board = new BoardLayersListener();
-        board.setVisible(true);
-
-        // Take input from the user about number of players
-        int playerNum = 0;
-        while (playerNum < 2 || playerNum > 8) {
-            playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
-        }
 
     }
 }
