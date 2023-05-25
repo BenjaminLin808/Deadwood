@@ -95,6 +95,9 @@ public class Main {
         } else {
             gameState = new GameState(scenes, players);
         }
+
+        PlayerInfo playerInfo = new PlayerInfo(numPlayers, players, boardLayersListener.getbPane());
+        playerInfo.playPlayerInfo();
     }
     /**
      * executes commands to get an action from a player

@@ -89,7 +89,7 @@ public class BoardLayersListener extends JFrame {
 
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
-        mLabel.setBounds(icon.getIconWidth()+40,0,100,20);
+        mLabel.setBounds(icon.getIconWidth()+40,0,150,20);
         bPane.add(mLabel, Integer.valueOf(2));
 
         // Create Action buttons
@@ -112,6 +112,10 @@ public class BoardLayersListener extends JFrame {
         bPane.add(bAct, Integer.valueOf(2));
         bPane.add(bRehearse, Integer.valueOf(2));
         bPane.add(bMove, Integer.valueOf(2));
+    }
+
+    public JLayeredPane getbPane() {
+        return bPane;
     }
 
     // This class implements Mouse Events
