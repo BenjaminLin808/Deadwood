@@ -124,7 +124,9 @@ public class Main {
      * @param args arguments, NONE EXPECTED
      */
     public static void main(String[] args) {
-        if (args[0].equals("term")) {
+        if (args.length != 1) {
+            System.out.println("Error, no argument supplied, expects either \"term\" or \"gui\".");
+        } else if (args[0].equals("term")) {
         startGame(); // new for gui
         boolean gameNotOver = true;
         while (gameNotOver) {
@@ -147,7 +149,7 @@ public class Main {
                 playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
             }
         } else {
-            System.out.println("Error, invalid input.");
+            System.out.println("Error, unexpected argument.");
         }
     }
 }
