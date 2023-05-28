@@ -66,6 +66,12 @@ public class ParseBoardXML {
 
             String setName = set.getAttribute("name");
             ArrayList<String> neighbors = new ArrayList<>();
+            int[] setArea = new int[4];
+            Element setAreaElement = (Element) set.getElementsByTagName("area").item(0);
+            setArea[0] = Integer.parseInt(setAreaElement.getAttribute("x"));
+            setArea[1] = Integer.parseInt(setAreaElement.getAttribute("y"));
+            setArea[2] = Integer.parseInt(setAreaElement.getAttribute("h"));
+            setArea[3] = Integer.parseInt(setAreaElement.getAttribute("w"));
 
             int takes = 0;
             int roleRank = 0;
@@ -82,13 +88,22 @@ public class ParseBoardXML {
                 }
             }
 
+
             List<RoleData> roleList = new ArrayList<>();
             for(int j = 0; j < partsElement.getLength(); j++){
                 Element part = (Element) partsElement.item(j);
                 String partName = part.getAttribute("name");
                 int partLevel = Integer.parseInt(part.getAttribute("level"));
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
-                roleList.add(new RoleData(partLevel, partName, partLine));
+
+                Element areaElement = (Element) part.getElementsByTagName("area").item(0);
+                int[] area = new int[4];
+                area[0] = Integer.parseInt(areaElement.getAttribute("x"));
+                area[1] = Integer.parseInt(areaElement.getAttribute("y"));
+                area[2] = Integer.parseInt(areaElement.getAttribute("h"));
+                area[3] = Integer.parseInt(areaElement.getAttribute("w"));
+
+                roleList.add(new RoleData(partLevel, partName, partLine, area));
             }
             Roles setRoles = new Roles(roleList);
             SetLocation setLocation = new SetLocation(setName, takes, setRoles, neighbors);

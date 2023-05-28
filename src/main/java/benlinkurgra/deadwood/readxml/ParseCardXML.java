@@ -66,7 +66,16 @@ public class ParseCardXML {
                 String partName = part.getAttribute("name");
                 int partLevel = Integer.parseInt(part.getAttribute("level"));
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
-                roleList.add(new RoleData(partLevel, partName, partLine));
+
+                Element areaElement = (Element) part.getElementsByTagName("area").item(0);
+                int[] area = new int[4];
+                area[0] = Integer.parseInt(areaElement.getAttribute("x"));
+                area[1] = Integer.parseInt(areaElement.getAttribute("y"));
+                area[2] = Integer.parseInt(areaElement.getAttribute("h"));
+                area[3] = Integer.parseInt(areaElement.getAttribute("w"));
+
+
+                roleList.add(new RoleData(partLevel, partName, partLine, area));
             }
             sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList), sceneNum));
         }

@@ -1,5 +1,7 @@
 package benlinkurgra.deadwood;
 
+import benlinkurgra.deadwood.location.Scene;
+import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
 import javax.swing.*;
@@ -13,10 +15,13 @@ public class PlayerInfo extends JFrame {
     private int playerNum;
     private ArrayList<JLabel> players = new ArrayList<>();
 
-    public PlayerInfo(int playerNum, Queue<Player> playerOrder, JLayeredPane bPane){
+    private GameState gameState;
+
+    public PlayerInfo(int playerNum, Queue<Player> playerOrder, JLayeredPane bPane, GameState gameState){
         this.playerNum = playerNum;
         this.playerOrder = playerOrder;
         this.bPane = bPane;
+        this.gameState = gameState;
     }
 
     public void playPlayerInfo() {
@@ -29,19 +34,30 @@ public class PlayerInfo extends JFrame {
             players.get(i).setBounds(20+(i * 230) ,900,pIcon.getIconWidth(),pIcon.getIconHeight());
             players.get(i).setVisible(true);
             bPane.add(players.get(i),Integer.valueOf(3));
+
             JLabel mLabel = new JLabel("Player Name: "+ currPlayer.getName());
             mLabel.setBounds(70+(i*230),880, 180, 60);
             bPane.add(mLabel, Integer.valueOf(2));
+
             JLabel rank = new JLabel("Player Rank: " + currPlayer.getActingRank());
             rank.setBounds(70+(i*230),900, 180, 60);
             bPane.add(rank, Integer.valueOf(2));
+
             JLabel dollars = new JLabel("Player Dollars: " + currPlayer.getDollars());
             dollars.setBounds(70+(i*230),920, 180, 60);
             bPane.add(dollars, Integer.valueOf(2));
+
             JLabel credits = new JLabel("Player Credits: " + currPlayer.getCredits());
             credits.setBounds(70+(i*230),940, 180, 60);
             bPane.add(credits, Integer.valueOf(2));
+        }
+    }
 
+    public void placeCards(){
+        Queue<Scene> scenes  = gameState.getSceneOrder();
+        while (!scenes.isEmpty()) {
+            Scene element = scenes.poll();
+            System.out.println(element.getName());
         }
     }
 }

@@ -18,7 +18,7 @@ public class Scene {
         this.sceneNum = sceneNum;
     }
 
-    protected String getName() {
+    public String getName() {
         return name;
     }
 

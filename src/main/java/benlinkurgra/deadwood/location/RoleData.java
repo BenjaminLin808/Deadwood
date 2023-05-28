@@ -6,12 +6,15 @@ public class RoleData {
     private final String roleDescription;
     private String playerOnRole;
 
+    private int[] area;
 
-    public RoleData(int rank, String name, String description) {
+
+    public RoleData(int rank, String name, String description, int[] area) {
         this.rank = rank;
         this.name = name;
         this.roleDescription = description;
         playerOnRole = "";
+        this.area = area;
     }
 
     public int getRank() {
