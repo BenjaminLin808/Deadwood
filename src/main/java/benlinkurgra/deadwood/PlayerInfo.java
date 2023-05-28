@@ -15,13 +15,11 @@ public class PlayerInfo extends JFrame {
     private int playerNum;
     private ArrayList<JLabel> players = new ArrayList<>();
 
-    private GameState gameState;
 
-    public PlayerInfo(int playerNum, Queue<Player> playerOrder, JLayeredPane bPane, GameState gameState){
+    public PlayerInfo(int playerNum, Queue<Player> playerOrder, JLayeredPane bPane){
         this.playerNum = playerNum;
         this.playerOrder = playerOrder;
         this.bPane = bPane;
-        this.gameState = gameState;
     }
 
     public void playPlayerInfo() {
@@ -53,12 +51,5 @@ public class PlayerInfo extends JFrame {
         }
     }
 
-    public void placeCards(){
-        Queue<Scene> scenes  = gameState.getSceneOrder();
-        while (!scenes.isEmpty()) {
-            Scene element = scenes.poll();
-            System.out.println(element.getName());
-        }
-    }
 }
 

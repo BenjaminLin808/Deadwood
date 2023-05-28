@@ -10,12 +10,15 @@ public class SetLocation extends Location {
     private Scene scene;
     private SceneStatus sceneStatus;
 
-    public SetLocation(String name, int maxShotTokens, Roles roles, ArrayList<String> neighbors) {
+    private int[] setArea;
+
+    public SetLocation(String name, int maxShotTokens, Roles roles, ArrayList<String> neighbors, int[] setArea) {
         super(name, neighbors);
         this.maxShotTokens = maxShotTokens;
         this.currentShotTokens = maxShotTokens;
         this.roles = roles;
         this.sceneStatus = SceneStatus.HIDDEN;
+        this.setArea = setArea;
     }
 
     public int getCurrentShotTokens() {

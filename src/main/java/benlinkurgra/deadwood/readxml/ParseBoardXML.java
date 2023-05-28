@@ -9,12 +9,10 @@ import benlinkurgra.deadwood.location.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
-
-import java.net.URL;
 import java.util.*;
 
 public class ParseBoardXML {
-    public Map<String, Location> getLocations(URL filename) throws ParserConfigurationException {
+    public Map<String, Location> getLocations(String filename) throws ParserConfigurationException {
         Map<String, Location> locations = new HashMap<>();
         try {
             Document doc = getDocFromFile(filename);
@@ -27,7 +25,7 @@ public class ParseBoardXML {
         }
     }
 
-    private Document getDocFromFile(URL filename)
+    private Document getDocFromFile(String filename)
             throws ParserConfigurationException{
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -35,7 +33,7 @@ public class ParseBoardXML {
             Document doc = null;
 
             try {
-                doc = db.parse(filename.openConnection().getInputStream());
+                doc = db.parse(filename);
             } catch (Exception ex){
                 System.out.println("XML parse failure");
                 ex.printStackTrace();
@@ -68,6 +66,7 @@ public class ParseBoardXML {
 
             String setName = set.getAttribute("name");
             ArrayList<String> neighbors = new ArrayList<>();
+
             int[] setArea = new int[4];
             Element setAreaElement = (Element) set.getElementsByTagName("area").item(0);
             setArea[0] = Integer.parseInt(setAreaElement.getAttribute("x"));
@@ -90,7 +89,6 @@ public class ParseBoardXML {
                 }
             }
 
-
             List<RoleData> roleList = new ArrayList<>();
             for(int j = 0; j < partsElement.getLength(); j++){
                 Element part = (Element) partsElement.item(j);
@@ -99,16 +97,16 @@ public class ParseBoardXML {
                 String partLine =  part.getElementsByTagName("line").item(0).getTextContent();
 
                 Element areaElement = (Element) part.getElementsByTagName("area").item(0);
-                int[] area = new int[4];
-                area[0] = Integer.parseInt(areaElement.getAttribute("x"));
-                area[1] = Integer.parseInt(areaElement.getAttribute("y"));
-                area[2] = Integer.parseInt(areaElement.getAttribute("h"));
-                area[3] = Integer.parseInt(areaElement.getAttribute("w"));
+                int[] roleArea = new int[4];
+                roleArea[0] = Integer.parseInt(areaElement.getAttribute("x"));
+                roleArea[1] = Integer.parseInt(areaElement.getAttribute("y"));
+                roleArea[2] = Integer.parseInt(areaElement.getAttribute("h"));
+                roleArea[3] = Integer.parseInt(areaElement.getAttribute("w"));
 
-                roleList.add(new RoleData(partLevel, partName, partLine, area));
+                roleList.add(new RoleData(partLevel, partName, partLine, roleArea));
             }
             Roles setRoles = new Roles(roleList);
-            SetLocation setLocation = new SetLocation(setName, takes, setRoles, neighbors);
+            SetLocation setLocation = new SetLocation(setName, takes, setRoles, neighbors, setArea);
             setsData.put(setName, setLocation);
         }
         return setsData;

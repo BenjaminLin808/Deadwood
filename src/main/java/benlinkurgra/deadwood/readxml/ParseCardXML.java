@@ -10,13 +10,11 @@ import benlinkurgra.deadwood.model.Player;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
-
-import java.net.URL;
 import java.util.*;
 
 public class ParseCardXML {
 
-    public Queue<Scene> getScenes(URL filename) throws ParserConfigurationException {
+    public Queue<Scene> getScenes(String filename) throws ParserConfigurationException {
         try {
             Document doc = getDocFromFile(filename);
             return readCardData(doc);
@@ -26,14 +24,14 @@ public class ParseCardXML {
         }
     }
 
-    private Document getDocFromFile(URL filename)
+    private Document getDocFromFile(String filename)
             throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document doc = null;
 
         try{
-            doc = db.parse(filename.openConnection().getInputStream());
+            doc = db.parse(filename);
         } catch (Exception ex){
             System.out.println("XML parse failure");
             ex.printStackTrace();
@@ -75,7 +73,6 @@ public class ParseCardXML {
                 area[1] = Integer.parseInt(areaElement.getAttribute("y"));
                 area[2] = Integer.parseInt(areaElement.getAttribute("h"));
                 area[3] = Integer.parseInt(areaElement.getAttribute("w"));
-
 
                 roleList.add(new RoleData(partLevel, partName, partLine, area));
             }
