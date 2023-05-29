@@ -10,10 +10,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
+import java.net.URL;
 import java.util.*;
 
 public class ParseBoardXML {
-    public Map<String, Location> getLocations(String filename) throws ParserConfigurationException {
+    public Map<String, Location> getLocations(URL filename) throws ParserConfigurationException {
         Map<String, Location> locations = new HashMap<>();
         try {
             Document doc = getDocFromFile(filename);
@@ -26,7 +27,7 @@ public class ParseBoardXML {
         }
     }
 
-    private Document getDocFromFile(String filename)
+    private Document getDocFromFile(URL filename)
             throws ParserConfigurationException {
         {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -34,7 +35,7 @@ public class ParseBoardXML {
             Document doc = null;
 
             try {
-                doc = db.parse(filename);
+                doc = db.parse(filename.openConnection().getInputStream());
             } catch (Exception ex) {
                 System.out.println("XML parse failure");
                 ex.printStackTrace();
