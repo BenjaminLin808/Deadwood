@@ -9,16 +9,20 @@ public class SetLocation extends Location {
     private final Roles roles;
     private Scene scene;
     private SceneStatus sceneStatus;
+    private final List<Coordinates> takeCoordinates;
 
-    private int[] setArea;
-
-    public SetLocation(String name, int maxShotTokens, Roles roles, ArrayList<String> neighbors, int[] setArea) {
-        super(name, neighbors);
+    public SetLocation(String name,
+                       int maxShotTokens,
+                       Roles roles,
+                       ArrayList<String> neighbors,
+                       Coordinates coordinates,
+                       List<Coordinates> takeCoordinates) {
+        super(name, neighbors, coordinates);
         this.maxShotTokens = maxShotTokens;
         this.currentShotTokens = maxShotTokens;
         this.roles = roles;
         this.sceneStatus = SceneStatus.HIDDEN;
-        this.setArea = setArea;
+        this.takeCoordinates = takeCoordinates;
     }
 
     public int getCurrentShotTokens() {
@@ -103,6 +107,10 @@ public class SetLocation extends Location {
 
     public Scene getScene() {
         return scene;
+    }
+
+    public List<Coordinates> getTakeCoordinates() {
+        return takeCoordinates;
     }
 
     /**

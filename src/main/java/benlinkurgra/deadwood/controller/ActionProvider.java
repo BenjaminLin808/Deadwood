@@ -203,27 +203,7 @@ public class ActionProvider extends DisplayController {
                 actionModel.canAct().isValid(),
                 actionModel.canRehearse().isValid(),
                 actionModel.canUpgrade().isValid(),
-                canEndTurn(false));
-    }
-
-    /**
-     * Determines if active player can end turn.
-     * Player can not end role when they are working a role and have not performed an action.
-     *
-     * @param withPrint signal to display why player can not end turn
-     * @return true if player can end turn, otherwise false.
-     */
-    private boolean canEndTurn(boolean withPrint) {
-        if (!activePlayer.isWorkingRole() || gameState.isCurrentPlayerDone()) {
-            return true;
-        } else {
-            if (withPrint) {
-                display.displayCanNotPerformAction(activePlayer.getName(),
-                        "end turn",
-                        "currently acting a role must either act or rehearse");
-            }
-            return false;
-        }
+                actionModel.canEndTurn().isValid());
     }
 
     /**

@@ -4,17 +4,16 @@ public class RoleData {
     private final int rank;
     private final String name;
     private final String roleDescription;
+    private final Coordinates coordinates;
     private String playerOnRole;
 
-    private int[] roleArea;
 
-
-    public RoleData(int rank, String name, String description, int[] roleArea) {
+    public RoleData(int rank, String name, String description, Coordinates coordinates) {
         this.rank = rank;
         this.name = name;
         this.roleDescription = description;
+        this.coordinates = coordinates;
         playerOnRole = "";
-        this.roleArea = roleArea;
     }
 
     public int getRank() {
@@ -26,6 +25,10 @@ public class RoleData {
     }
     public String getRoleDescription() {
         return roleDescription;
+    }
+
+    public Coordinates getCoordinates() {
+        return coordinates;
     }
 
     public String getPlayerOnRole() {

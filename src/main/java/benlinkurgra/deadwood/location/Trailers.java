@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Trailers extends Location {
 
-    public Trailers(String name, ArrayList<String> neighbors) {
-        super(name, neighbors);
+    public Trailers(String name, ArrayList<String> neighbors, Coordinates coordinates) {
+        super(name, neighbors, coordinates);
     }
 
 }

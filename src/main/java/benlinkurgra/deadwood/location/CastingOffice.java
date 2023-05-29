@@ -8,16 +8,21 @@ import java.util.Map;
 
 public class CastingOffice extends Location {
     private final Map<Integer, UpgradeCost> upgrades;
-    public CastingOffice(String name, Map<Integer, UpgradeCost> upgrades, ArrayList<String> neighbors) {
-        super(name, neighbors);
+
+    public CastingOffice(
+            String name,
+            Map<Integer, UpgradeCost> upgrades,
+            ArrayList<String> neighbors,
+            Coordinates coordinates) {
+        super(name, neighbors, coordinates);
         this.upgrades = upgrades;
     }
 
     /**
      * determines if a rank upgrade is valid
      *
-     * @param player the player who is requesting the rank increase
-     * @param newRank the acting rank that the player wishes to upgrade to
+     * @param player   the player who is requesting the rank increase
+     * @param newRank  the acting rank that the player wishes to upgrade to
      * @param currency the currency type the player desires to use
      * @return returns true if the player can upgrade false otherwise
      */
@@ -45,7 +50,7 @@ public class CastingOffice extends Location {
             if (key > player.getActingRank()) {
                 UpgradeCost upgradeCost = upgrades.get(key);
                 if (upgradeCost.getCreditsCost() <= player.getCredits() ||
-                upgradeCost.getDollarCost() <= player.getDollars()) {
+                        upgradeCost.getDollarCost() <= player.getDollars()) {
                     return true;
                 }
             }
@@ -56,7 +61,7 @@ public class CastingOffice extends Location {
     /**
      * determines the cost of an upgrade
      *
-     * @param rank rank of upgrade
+     * @param rank         rank of upgrade
      * @param currencyType type of currency to check
      * @return cost of upgrade
      */
@@ -97,8 +102,8 @@ public class CastingOffice extends Location {
      * converts this obejct to a string with invalid upgrades highlighted
      *
      * @param playerActingRank acting rank of player
-     * @param playerCredits players amount of credits
-     * @param playerDollars amount of dollars player has
+     * @param playerCredits    players amount of credits
+     * @param playerDollars    amount of dollars player has
      * @return string with invalid upgrades highlighted
      */
     public String toStringWithHighlight(int playerActingRank, int playerCredits, int playerDollars) {
