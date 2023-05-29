@@ -87,8 +87,9 @@ public class Main {
             gameState = new GameState(scenes, players);
         }
 
-        PlayerInfo playerInfo = new PlayerInfo(numPlayers, players, boardLayersListener.getbPane());
-        playerInfo.playPlayerInfo();
+        Gui gui = new Gui(numPlayers, players, boardLayersListener.getbPane(), board);
+        gui.playPlayerInfo();
+        gui.setUp(locations);
     }
     /**
      * executes commands to get an action from a player
@@ -133,7 +134,7 @@ public class Main {
      * @param args arguments, NONE EXPECTED
      */
     public static void main(String[] args) {
-//        startGameGui();
+        startGameGui();
         if (args.length != 1) {
             System.out.println("Error, unexpected number of arguments.");
         } else if (args[0].equals("term")) {
