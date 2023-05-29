@@ -3,6 +3,7 @@ package benlinkurgra.deadwood.controller;
 import benlinkurgra.deadwood.CurrencyType;
 import benlinkurgra.deadwood.Dice;
 import benlinkurgra.deadwood.location.*;
+import benlinkurgra.deadwood.model.Action;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.Display;
 import benlinkurgra.deadwood.GameState;
@@ -15,12 +16,14 @@ public class ActionProvider extends DisplayController {
     private Player activePlayer;
     private final Board board;
     private final GameState gameState;
+    private final Action actionModel;
 
     public ActionProvider(Display display, Player activePlayer, Board board, GameState gameState) {
         super(display);
         this.activePlayer = activePlayer;
         this.board = board;
         this.gameState = gameState;
+        this.actionModel = new Action(activePlayer, board, gameState);
     }
 
     /**
@@ -53,7 +56,7 @@ public class ActionProvider extends DisplayController {
      *
      * @return action user selected
      */
-    public Action parseActionRequest() {
+    public ActionsEnum parseActionRequest() {
         String input = handleInput(display::sendPromptSelectAction);
         try {
             int actionNumber = Integer.parseInt(input);
@@ -61,7 +64,7 @@ public class ActionProvider extends DisplayController {
                 display.sendInvalidActionSelection(actionNumber);
                 return parseActionRequest();
             }
-            Action action = Action.valueOf(actionNumber);
+            ActionsEnum action = ActionsEnum.valueOf(actionNumber);
             if (validateActionSelection(action)) {
                 return action;
             } else {
@@ -79,20 +82,73 @@ public class ActionProvider extends DisplayController {
      * @param action action user selected
      * @return true if user can perform action, otherwise false
      */
-    private boolean validateActionSelection(Action action) {
+    private boolean validateActionSelection(ActionsEnum action) {
         switch (action) {
             case MOVE:
-                return canMove(true);
+                Action.Validity checkMove = actionModel.canMove();
+                if (checkMove.isValid()) {
+                    return true;
+                } else {
+                    display.displayCanNotPerformAction(
+                            activePlayer.getName(),
+                            "move",
+                            checkMove.getReason());
+                    return false;
+                }
             case TAKE_ROLE:
-                return canTakeRole(true);
+                Action.Validity checkRole = actionModel.canTakeRole();
+                if (checkRole.isValid()) {
+                    return true;
+                } else {
+                    display.displayCanNotPerformAction(
+                            activePlayer.getName(),
+                            "take a role",
+                            checkRole.getReason());
+                    return false;
+                }
             case ACT:
-                return canAct(true);
+                Action.Validity checkAct = actionModel.canAct();
+                if (checkAct.isValid()) {
+                    return true;
+                } else {
+                    display.displayCanNotPerformAction(
+                            activePlayer.getName(),
+                            "act",
+                            checkAct.getReason());
+                    return false;
+                }
             case REHEARSE:
-                return canRehearse(true);
+                Action.Validity checkRehearse = actionModel.canRehearse();
+                if (checkRehearse.isValid()) {
+                    return true;
+                } else {
+                    display.displayCanNotPerformAction(
+                            activePlayer.getName(),
+                            "rehearse",
+                            checkRehearse.getReason());
+                    return false;
+                }
             case UPGRADE:
-                return canUpgrade(true);
+                Action.Validity checkUpgrade = actionModel.canUpgrade();
+                if (checkUpgrade.isValid()) {
+                    return true;
+                } else {
+                    display.displayCanNotPerformAction(
+                            activePlayer.getName(),
+                            "upgrade",
+                            checkUpgrade.getReason());
+                    return false;
+                }
             case END_TURN:
-                return canEndTurn(true);
+                Action.Validity checkEndTurn = actionModel.canEndTurn();
+                if (checkEndTurn.isValid()) {
+                    return true;
+                } else {
+                    display.displayCanNotPerformAction(activePlayer.getName(),
+                            "end turn",
+                            checkEndTurn.getReason());
+                    return false;
+                }
             default:
                 System.out.println("with validate,,,, action: " + action);
                 display.displaySomethingWentWrong();
@@ -105,7 +161,7 @@ public class ActionProvider extends DisplayController {
      *
      * @param action player selected action
      */
-    public void performAction(Action action) {
+    public void performAction(ActionsEnum action) {
         switch (action) {
             case MOVE:
                 if (executeMove()) {
@@ -142,161 +198,12 @@ public class ActionProvider extends DisplayController {
      * Signal display to provide a list of actions and highlight actions based on availability.
      */
     public void provideActionsWithHighlighting() {
-        display.sendActions(canMove(false),
-                canTakeRole(false),
-                canAct(false),
-                canRehearse(false),
-                canUpgrade(false),
+        display.sendActions(actionModel.canMove().isValid(),
+                actionModel.canTakeRole().isValid(),
+                actionModel.canAct().isValid(),
+                actionModel.canRehearse().isValid(),
+                actionModel.canUpgrade().isValid(),
                 canEndTurn(false));
-    }
-
-    /**
-     * Determines if active player can move.
-     *
-     * @param withPrint signal to display why move can not be performed
-     * @return true if player can move, false otherwise.
-     */
-    private boolean canMove(boolean withPrint) {
-        String playerName = activePlayer.getName();
-        String action = "move";
-        if (gameState.isCurrentPlayerDone()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "action already performed");
-            }
-            return false;
-        } else if (activePlayer.isWorkingRole()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "currently acting on role");
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Determine if active player can take a role.
-     *
-     * @param withPrint signal to display why role can not be taken
-     * @return true if player can take a role, false otherwise.
-     */
-    private boolean canTakeRole(boolean withPrint) {
-        String playerName = activePlayer.getName();
-        String action = "take a role";
-        String locationName = activePlayer.getLocation();
-        if (!board.isSetLocation(locationName)) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "must be at a set location");
-            }
-            return false;
-        } else if (activePlayer.isWorkingRole()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "already working a role");
-            }
-            return false;
-        } else {
-            SetLocation location = (SetLocation) board.getLocation(locationName);
-            boolean hasRoles = !(location.getAllAvailableRoles(activePlayer.getActingRank()).size() > 0);
-            if (location.getSceneStatus() == SceneStatus.COMPLETED) {
-                if (withPrint) {
-                    display.displayCanNotPerformAction(playerName, action, "the scene at location already completed");
-                }
-                return false;
-            } else if (hasRoles) {
-                if (withPrint) {
-                    display.displayCanNotPerformAction(playerName, action, "location has no open roles that player meets requirements for");
-                }
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    /**
-     * Determines if active player can act.
-     *
-     * @param withPrint signal to display why player can not act
-     * @return true if player can act, false otherwise.
-     */
-    private boolean canAct(boolean withPrint) {
-        String playerName = activePlayer.getName();
-        String action = "act";
-        if (gameState.isCurrentPlayerDone()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "action already performed");
-            }
-            return false;
-        } else if (!activePlayer.isWorkingRole()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "must be working a role");
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * Determines if the active player can rehearse.
-     *
-     * @param withPrint signal to display why player can not rehearse
-     * @return true if player can rehearse, false otherwise.
-     */
-    private boolean canRehearse(boolean withPrint) {
-        String playerName = activePlayer.getName();
-        String action = "rehearse";
-        if (gameState.isCurrentPlayerDone()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "action already performed");
-            }
-            return false;
-        } else if (!activePlayer.isWorkingRole()) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "must be working a role");
-            }
-            return false;
-        } else {
-            SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
-            int budget = playerLocation.getSceneBudget();
-            if (activePlayer.getPracticeToken() + 1 >= budget) {
-                if (withPrint) {
-                    display.displayCanNotPerformAction(playerName, action, "success already guaranteed");
-                }
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    /**
-     * Determine if active player can upgrade.
-     *
-     * @param withPrint signal to display why player can not upgrade
-     * @return true if active player can upgrade, false otherwise.
-     */
-    private boolean canUpgrade(boolean withPrint) {
-        String playerName = activePlayer.getName();
-        String action = "upgrade";
-        if (!activePlayer.getLocation().equals("office")) {
-            if (withPrint) {
-                display.displayCanNotPerformAction(playerName, action, "must be at casting office");
-            }
-            return false;
-        } else {
-            CastingOffice office = (CastingOffice) board.getLocation("office");
-            if (!office.hasUpgrades(activePlayer)) {
-                if (withPrint) {
-                    display.displayCanNotPerformAction(playerName,
-                            action,
-                            "player either can not afford any higher ranks or is already max rank");
-                }
-                return false;
-            } else {
-                return true;
-            }
-        }
     }
 
     /**
@@ -342,7 +249,6 @@ public class ActionProvider extends DisplayController {
             OptionalInt index = IntStream.range(0, neighbors.size())
                     .filter(i -> neighbors.get(i).equalsIgnoreCase(input))
                     .findFirst();
-
             if (index.isPresent()) {
                 String newLocation = neighbors.get(index.getAsInt());
                 display.moveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
@@ -681,6 +587,7 @@ public class ActionProvider extends DisplayController {
     private void endTurn() {
         display.playerDone(activePlayer.getName());
         activePlayer = gameState.changeActivePlayer();
+        actionModel.setActivePlayer(activePlayer);
     }
 
     /**

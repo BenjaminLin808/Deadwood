@@ -1,5 +1,5 @@
 package benlinkurgra.deadwood;
-import benlinkurgra.deadwood.controller.Action;
+import benlinkurgra.deadwood.controller.ActionsEnum;
 import benlinkurgra.deadwood.controller.ActionProvider;
 import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.GuiInitializer;
@@ -9,7 +9,7 @@ import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
 import benlinkurgra.deadwood.readxml.ParseCardXML;
-import javax.swing.*;
+
 import java.util.Map;
 import java.util.Queue;
 public class Main {
@@ -95,7 +95,7 @@ public class Main {
      *
      * @return action performed
      */
-    private static Action getAction() {
+    private static ActionsEnum getAction() {
         actionProvider.provideActivePlayer();
         actionProvider.provideActionsWithHighlighting();
         return actionProvider.parseActionRequest();
@@ -106,9 +106,9 @@ public class Main {
     private static void takeTurn() {
         boolean turnNoOver = true;
         while (turnNoOver) {
-            Action action = getAction();
-            actionProvider.performAction(action);
-            if (action == Action.END_TURN) {
+            ActionsEnum actionType = getAction();
+            actionProvider.performAction(actionType);
+            if (actionType == ActionsEnum.END_TURN) {
                 turnNoOver = false;
             }
         }
@@ -126,28 +126,32 @@ public class Main {
         }
         return lastDayEnded;
     }
+
     /**
      * play a game of deadwood
      *
      * @param args arguments, NONE EXPECTED
      */
     public static void main(String[] args) {
-        startGameGui();
-//        if (args[0].equals("term")) {
-//        startGame(); // new for gui
-//        boolean gameNotOver = true;
-//        while (gameNotOver) {
-//            takeTurn();
-//            if (gameState.getActiveScenes() == 1) {
-//                boolean lastDay = endDay();
-//                if (lastDay) {
-//                    gameNotOver = false;
-//                }
-//            }
-//        }
-//        actionProvider.endGame();
-//        } else if (args[0].equals("gui")) {
-//            // run gui application
+//        startGameGui();
+        if (args.length != 1) {
+            System.out.println("Error, unexpected number of arguments.");
+        } else if (args[0].equals("term")) {
+        startGame(); // new for gui
+        boolean gameNotOver = true;
+        while (gameNotOver) {
+            takeTurn();
+            if (gameState.getActiveScenes() == 1) {
+                boolean lastDay = endDay();
+                if (lastDay) {
+                    gameNotOver = false;
+                }
+            }
+        }
+        actionProvider.endGame();
+        } else if (args[0].equals("gui")) {
+            // run gui application
+            startGameGui();
 //            BoardLayersListener board = new BoardLayersListener();
 //            board.setVisible(true);
 //
@@ -155,8 +159,8 @@ public class Main {
 //            while (playerNum < 2 || playerNum > 8) {
 //                playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
 //            }
-//        } else {
-//            System.out.println("Error, invalid input.");
-//        }
+        } else {
+            System.out.println("Error, invalid input.");
+        }
     }
 }

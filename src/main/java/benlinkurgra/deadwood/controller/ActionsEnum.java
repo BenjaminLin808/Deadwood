@@ -1,6 +1,6 @@
 package benlinkurgra.deadwood.controller;
 
-public enum Action {
+public enum ActionsEnum {
     INVALID(-1),
     MOVE(1),
     TAKE_ROLE(2),
@@ -11,7 +11,7 @@ public enum Action {
 
     private final int value;
 
-    Action(int value) {
+    ActionsEnum(int value) {
         this.value = value;
     }
 
@@ -19,8 +19,8 @@ public enum Action {
         return value;
     }
 
-    public static Action valueOf(int value) {
-        for (Action action : values()) {
+    public static ActionsEnum valueOf(int value) {
+        for (ActionsEnum action : values()) {
             if (action.getValue() == value) {
                 return action;
             }
