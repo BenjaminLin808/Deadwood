@@ -164,22 +164,16 @@ public class ActionProvider extends DisplayController {
     public void performAction(ActionsEnum action) {
         switch (action) {
             case MOVE:
-                if (executeMove()) {
-                    gameState.setCurrentPlayerDoneTrue();
-                }
+                executeMove();
                 break;
             case TAKE_ROLE:
-                if (takeRole()) {
-                    gameState.setCurrentPlayerDoneTrue();
-                }
+                takeRole();
                 break;
             case ACT:
                 act();
-                gameState.setCurrentPlayerDoneTrue();
                 break;
             case REHEARSE:
                 rehearse();
-                gameState.setCurrentPlayerDoneTrue();
                 break;
             case UPGRADE:
                 upgradePlayer();
@@ -232,7 +226,7 @@ public class ActionProvider extends DisplayController {
             if (index.isPresent()) {
                 String newLocation = neighbors.get(index.getAsInt());
                 display.moveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
-                activePlayer.setLocation(newLocation);
+                actionModel.move(newLocation);
                 return true;
             } else {
                 try {
@@ -242,7 +236,7 @@ public class ActionProvider extends DisplayController {
                     } else {
                         String newLocation = neighbors.get(locationNumber - 1);
                         display.moveSuccess(activePlayer.getName(), activePlayer.getLocation(), newLocation);
-                        activePlayer.setLocation(newLocation);
+                        actionModel.move(newLocation);
                         return true;
                     }
                 } catch (Exception e) {
@@ -312,11 +306,9 @@ public class ActionProvider extends DisplayController {
                     return takeExtraRole(location);
                 } else {
                     String roleName = roles.getRoleList().get(roleNum).getName();
-                    boolean roleFilled = location.fillRoleOnLocation(activePlayer.getName(),
-                            activePlayer.getActingRank(),
-                            roleName);
-                    if (roleFilled) {
-                        activePlayer.setWorkingRole(true);
+                    boolean canTakeRole = location.canTakeRole(activePlayer.getActingRank(), roleName);
+                    if (canTakeRole) {
+                        actionModel.takeRole(location, roleName, false);
                         display.roleTaken(activePlayer.getName(), location.getName(), roleName);
                         return true;
                     } else {
@@ -363,11 +355,9 @@ public class ActionProvider extends DisplayController {
                     return takeStarringRole(location);
                 } else {
                     String roleName = roles.getRoleList().get(roleNum).getName();
-                    boolean roleFilled = location.fillRoleOnScene(activePlayer.getName(),
-                            activePlayer.getActingRank(),
-                            roleName);
-                    if (roleFilled) {
-                        activePlayer.setWorkingRole(true);
+                    boolean canTakeRole = location.canTakeRole(activePlayer.getActingRank(), roleName);
+                    if (canTakeRole) {
+                        actionModel.takeRole(location, roleName, true);
                         display.roleTaken(activePlayer.getName(), location.getName(), roleName);
                         return true;
                     } else {
@@ -380,7 +370,7 @@ public class ActionProvider extends DisplayController {
                             reason = "could not find role";
                         }
                         display.displayCanNotPerformAction(activePlayer.getName(),
-                                "take role" + roleName,
+                                "take role " + roleName,
                                 reason);
                         return takeStarringRole(location);
                     }
@@ -420,8 +410,7 @@ public class ActionProvider extends DisplayController {
                 } else {
                     CurrencyType currencyType = getCurrencyType();
                     if (office.isValidUpgrade(activePlayer, rankNumber, currencyType)) {
-                        int cost = office.getCost(rankNumber, currencyType);
-                        activePlayer.upgrade(rankNumber, currencyType, cost);
+                        actionModel.upgrade(rankNumber, currencyType);
                         display.upgradeSuccess(activePlayer.getName(), rankNumber);
                     } else {
                         display.displayCanNotPerformAction(activePlayer.getName(),
@@ -471,34 +460,43 @@ public class ActionProvider extends DisplayController {
      * performs the act action
      */
     private void act() {
-        String playerName = activePlayer.getName();
-        Dice dice = new Dice();
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
-        boolean onCard = playerLocation.isActingOnScene(playerName);
+        Dice dice = new Dice();
         int outcome = dice.roll();
-        int practiceToken = activePlayer.getPracticeToken();
-        int budget = playerLocation.getSceneBudget();
-        display.diceOutcome(playerName, outcome, practiceToken, budget);
-        boolean success = outcome + practiceToken >= budget;
-        if (success) {
-            playerLocation.removeShotToken();
-            if (onCard) {
-                activePlayer.addCredits(2);
-                display.actSuccess(playerName, "credits", 2);
-            } else {
-                activePlayer.addCredits(1);
-                activePlayer.addDollars(1);
-                display.actSuccess(playerName);
-            }
+        display.diceOutcome(
+                activePlayer.getName(),
+                outcome,
+                activePlayer.getPracticeToken(),
+                playerLocation.getSceneBudget());
+
+        Action.ActOutcome actOutcome = actionModel.act(outcome);
+
+        String greenText = "\u001B[32m";
+        String resetText = "\u001B[0m";
+        StringBuilder message = new StringBuilder("Act action ");
+        if (actOutcome.isActSuccess()) {
+            message.append("successful, ");
         } else {
-            if (onCard) {
-                display.actFail(playerName);
-            } else {
-                activePlayer.addDollars(1);
-                display.actFail(playerName, 1);
-            }
+            message.append("failed, ");
         }
-        if (playerLocation.getCurrentShotTokens() == 0) {
+        message.append("player ");
+        message.append(greenText);
+        message.append(activePlayer.getName());
+        message.append(resetText);
+        message.append(" earns ");
+        if (actOutcome.getCreditsEarned() == 0 && actOutcome.getDollarsEarned() == 0) {
+            message.append("nothing.");
+        } else if (actOutcome.getCreditsEarned() != 0 && actOutcome.getDollarsEarned() != 0) {
+            message.append("1 credit and 1 dollar.");
+        } else if (actOutcome.getCreditsEarned() != 0) {
+            message.append("2 credits.");
+        } else {
+            message.append("1 dollar.");
+        }
+
+        display.actOutcome(message.toString());
+
+        if (actOutcome.isSceneFinished()) {
             wrappedScene();
         }
     }
@@ -509,56 +507,22 @@ public class ActionProvider extends DisplayController {
     private void wrappedScene() {
         SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
         display.sceneFinished(playerLocation.getName(), playerLocation.getSceneName());
-        List<String> playersOnCard = playerLocation.playersActingOnScene();
-        List<Player> playersOffCard = gameState.getPlayers(playerLocation.playersActingOnLocation());
 
-        // If players are working on scene payout bonus
-        if (playersOnCard.size() != 0) {
-            Dice dice = new Dice();
-            int budget = playerLocation.getSceneBudget();
-            Queue<Player> orderedPlayersOnCard = gameState.getPlayersInOrder(playersOnCard);
-            for (int i = 0; i < budget; i++) {
-                int diceOutcome = dice.roll();
-                Player player = orderedPlayersOnCard.remove();
-                player.addDollars(diceOutcome);
-                display.earnBonus(player.getName(), diceOutcome);
-                orderedPlayersOnCard.add(player);
-            }
-            for (Player player : playersOffCard) {
-                int roleRank = playerLocation.getLocationRoleRank(player.getName());
-                player.addDollars(roleRank);
-                display.earnBonus(player.getName(), roleRank);
-            }
+        Action.ScenePayout scenePayout = actionModel.finishScene();
 
-            for (Player player : orderedPlayersOnCard) {
-                player.setWorkingRole(false);
-                player.resetPracticeTokens();
-            }
-
+        if (scenePayout.isBonusPayed()) {
+            display.earnBonus(scenePayout.getEarnings());
+        } else {
+            display.noBonus();
         }
-
-        for (Player player : playersOffCard) {
-            player.setWorkingRole(false);
-            player.resetPracticeTokens();
-        }
-
-        playerLocation.emptyLocationRoles();
-        playerLocation.setSceneStatus(SceneStatus.COMPLETED);
-        gameState.decrementActiveScenes();
     }
 
     /**
      * performs the rehearse action
      */
     private void rehearse() {
-        SetLocation playerLocation = (SetLocation) board.getLocation(activePlayer.getLocation());
-        int budget = playerLocation.getSceneBudget();
-        if (activePlayer.getPracticeToken() == budget - 1) {
-            display.rehearseFail(activePlayer.getName(), activePlayer.getPracticeToken());
-        } else {
-            activePlayer.addPracticeToken();
-            display.rehearseSuccess(activePlayer.getName(), activePlayer.getPracticeToken());
-        }
+        actionModel.rehearse();
+        display.rehearseSuccess(activePlayer.getName(), activePlayer.getPracticeToken());
     }
 
     /**
@@ -566,15 +530,15 @@ public class ActionProvider extends DisplayController {
      */
     private void endTurn() {
         display.playerDone(activePlayer.getName());
-        activePlayer = gameState.changeActivePlayer();
-        actionModel.setActivePlayer(activePlayer);
+        activePlayer = actionModel.endTurn();
     }
 
     /**
      * signal display to show day is ending
      */
-    public void endDay() {
+    public boolean endDay() {
         display.endDay(gameState.getCurrDay(), gameState.getEndDay());
+        return actionModel.endDay();
     }
 
     /**

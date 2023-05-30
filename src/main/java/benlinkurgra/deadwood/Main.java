@@ -24,8 +24,7 @@ public class Main {
     private static Map<String, Location> getBoardComponents() {
         try {
             ParseBoardXML boardXML = new ParseBoardXML();
-            Map<String, Location> locations = boardXML.getLocations(Main.class.getResource("/board.xml"));
-            return locations;
+            return boardXML.getLocations(Main.class.getResource("/board.xml"));
         } catch (Exception e) {
             System.exit(-1);
             return null;
@@ -114,19 +113,6 @@ public class Main {
             }
         }
     }
-    /**
-     * executes commands to end a day
-     *
-     * @return return true if day was last day, otherwise false
-     */
-    private static boolean endDay() {
-        actionProvider.endDay();
-        boolean lastDayEnded = gameState.endDay();
-        if (!lastDayEnded) {
-            board.dealNewScenes(gameState.getSceneOrder());
-        }
-        return lastDayEnded;
-    }
 
     /**
      * play a game of deadwood
@@ -134,7 +120,6 @@ public class Main {
      * @param args arguments, NONE EXPECTED
      */
     public static void main(String[] args) {
-        startGameGui();
         if (args.length != 1) {
             System.out.println("Error, unexpected number of arguments.");
         } else if (args[0].equals("term")) {
@@ -143,7 +128,7 @@ public class Main {
         while (gameNotOver) {
             takeTurn();
             if (gameState.getActiveScenes() == 1) {
-                boolean lastDay = endDay();
+                boolean lastDay = actionProvider.endDay();
                 if (lastDay) {
                     gameNotOver = false;
                 }

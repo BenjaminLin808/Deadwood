@@ -154,28 +154,48 @@ public class SetLocation extends Location {
     }
 
     /**
-     * attempts to place player on scene role
+     * determines if a role can be taken given a specific acting rank
+     *
+     * @param actingRank player acting rank
+     * @param roleName name of role
+     * @return true if role can be taken, otherwise false
+     */
+    public boolean canTakeRole(int actingRank, String roleName) {
+        List<RoleData> allRoles = getRolesOnScene().availableRoles(actingRank);
+        allRoles.addAll(roles.availableRoles(actingRank));
+        for (RoleData role : allRoles) {
+            if (role.getName().equals(roleName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * place player on scene role, throws exception if role could not be filled
      *
      * @param playerName name of player
      * @param playerRank rank of player
-     * @param roleName name of role to take
-     * @return true if player has filled role, otherwise false
+     * @param roleName   name of role to take
      */
-    public boolean fillRoleOnScene(String playerName, int playerRank, String roleName) {
-        return scene.getRoles().fillRole(playerName, playerRank, roleName);
+    public void fillRoleOnScene(String playerName, int playerRank, String roleName) {
+        if (!scene.getRoles().fillRole(playerName, playerRank, roleName)) {
+            throw new IllegalArgumentException("Role " + roleName + " could not be filled.");
+        }
     }
 
 
     /**
-     * attempts to place player on location role
+     * place player on location role, throws exception if role could not be filled
      *
      * @param playerName name of player
      * @param playerRank rank of player
-     * @param roleName name of role to take
-     * @return true if player has filled role, otherwise false
+     * @param roleName   name of role to take
      */
-    public boolean fillRoleOnLocation(String playerName, int playerRank, String roleName) {
-        return roles.fillRole(playerName, playerRank, roleName);
+    public void fillRoleOnLocation(String playerName, int playerRank, String roleName) {
+        if (!roles.fillRole(playerName, playerRank, roleName)) {
+            throw new IllegalArgumentException("Role " + roleName + " could not be filled.");
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package benlinkurgra.deadwood;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Display {
@@ -232,6 +233,10 @@ public class Display {
                 newLocation);
     }
 
+    public void actOutcome(String message) {
+        System.out.println(message);
+    }
+
     /**
      * displays that an upgrade was successful
      *
@@ -245,28 +250,6 @@ public class Display {
     }
 
     /**
-     * displays act action was successful, to be used for player acting off card
-     *
-     * @param playerName name of player who acted
-     */
-    public void actSuccess(String playerName) {
-        System.out.printf("Act successful, %s has earned 1 credit and 1 dollar.\n",
-                colorizeName(playerName));
-    }
-
-    /**
-     * displays act action was successful, to be used for player acting on card
-     *
-     * @param playerName name of player who acted
-     */
-    public void actSuccess(String playerName, String currencyType, int currencyIncrease) {
-        System.out.printf("Act successful, %s has earned %d %s.\n",
-                colorizeName(playerName),
-                currencyIncrease,
-                currencyType);
-    }
-
-    /**
      * displays rehearse was successful
      *
      * @param playerName player who rehearsed
@@ -276,28 +259,6 @@ public class Display {
         System.out.printf("Rehearse successful, %s has %d practice tokens\n",
                 colorizeName(playerName),
                 practiceTokens);
-    }
-
-    /**
-     * displays act action failed, to be used when acting off card
-     *
-     * @param playerName player who attempted to act
-     * @param dollars dollars earned
-     */
-    public void actFail(String playerName, int dollars) {
-        System.out.printf("Act failed, %s has earned %d dollar\n",
-                colorizeName(playerName),
-                dollars);
-    }
-
-    /**
-     * displays act action failed, to be used when acting on card
-     *
-     * @param playerName player who attempted to act
-     */
-    public void actFail(String playerName) {
-        System.out.printf("Act failed, %s receives nothing.\n", colorizeName(playerName));
-
     }
 
     /**
@@ -340,13 +301,21 @@ public class Display {
     /**
      * displays bonus payout
      *
-     * @param playerName name of player receiving bonus
-     * @param bonusAmount bonus amount earned
+     * @param earnings map where keys are player names and values are bonus earned
      */
-    public void earnBonus(String playerName, int bonusAmount) {
-        System.out.printf("Player %s has earned a %d dollar bonus.\n",
-                colorizeName(playerName),
-                bonusAmount);
+    public void earnBonus(Map<String, Integer> earnings) {
+        for (Map.Entry<String, Integer> entry : earnings.entrySet()) {
+            String playerName = entry.getKey();
+            int earningsValue = entry.getValue();
+            System.out.printf("Player %s has earned a %d dollar bonus.%n", playerName, earningsValue);
+        }
+    }
+
+    /**
+     * announce no bonus payout
+     */
+    public void noBonus() {
+        System.out.println("No players working on scene, no bonus payout earned.");
     }
 
     /**
