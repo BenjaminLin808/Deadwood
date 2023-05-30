@@ -24,6 +24,8 @@ import java.util.Queue;
 
 public class BoardLayersListener extends JFrame {
 
+
+
     // JLabels
     JLabel boardlabel;
     JLabel cardlabel;
@@ -34,6 +36,9 @@ public class BoardLayersListener extends JFrame {
     JButton bAct;
     JButton bRehearse;
     JButton bMove;
+    JButton bUpgrade;
+    JButton bTakeARole;
+    JButton bEndTurn;
 
     // JLayered Pane
     JLayeredPane bPane;
@@ -63,29 +68,6 @@ public class BoardLayersListener extends JFrame {
         // Set the size of the GUI
         setSize(icon.getIconWidth()+200,icon.getIconHeight());
 
-        // Add a scene card to this room
-        cardlabel = new JLabel();
-        ImageIcon cIcon =  new ImageIcon("src/main/images/cards/01.png");
-        cardlabel.setIcon(cIcon);
-        cardlabel.setBounds(20,65,cIcon.getIconWidth()+2,cIcon.getIconHeight());
-        cardlabel.setOpaque(true);
-
-        // Add the card to the lower layer
-        bPane.add(cardlabel, Integer.valueOf(1));
-
-
-
-
-        // Add a dice to represent a player.
-        // Role for Crusty the prospector. The x and y co-ordiantes are taken from Board.xml file
-        playerlabel = new JLabel();
-        ImageIcon pIcon = new ImageIcon("src/main/images/dice/b1.png");
-        playerlabel.setIcon(pIcon);
-        //playerlabel.setBounds(114,227,pIcon.getIconWidth(),pIcon.getIconHeight());
-        playerlabel.setBounds(114,227,46,46);
-        playerlabel.setVisible(false);
-        bPane.add(playerlabel,Integer.valueOf(3));
-
 
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
@@ -93,26 +75,63 @@ public class BoardLayersListener extends JFrame {
         bPane.add(mLabel, Integer.valueOf(2));
 
         // Create Action buttons
-        bAct = new JButton("ACT");
-        bAct.setBackground(Color.white);
-        bAct.setBounds(icon.getIconWidth()+10, 30,100, 20);
-        bAct.addMouseListener(new boardMouseListener());
-
-        bRehearse = new JButton("REHEARSE");
-        bRehearse.setBackground(Color.white);
-        bRehearse.setBounds(icon.getIconWidth()+10,60,100, 20);
-        bRehearse.addMouseListener(new boardMouseListener());
-
-        bMove = new JButton("MOVE");
-        bMove.setBackground(Color.white);
-        bMove.setBounds(icon.getIconWidth()+10,90,100, 20);
-        bMove.addMouseListener(new boardMouseListener());
+        Act();
+        Rehearse();
+        Move();
+        TakeARole();
+        Upgrade();
+        EndTurn();
 
         // Place the action buttons in the top layer
         bPane.add(bAct, Integer.valueOf(2));
         bPane.add(bRehearse, Integer.valueOf(2));
         bPane.add(bMove, Integer.valueOf(2));
+        bPane.add(bTakeARole, Integer.valueOf(2));
+        bPane.add(bUpgrade, Integer.valueOf(2));
+        bPane.add(bEndTurn, Integer.valueOf(2));
     }
+    public void Act(){
+        bAct = new JButton("ACT");
+        bAct.setBackground(Color.white);
+        bAct.setBounds(1210, 30,150, 60);
+        bAct.addMouseListener(new boardMouseListener());
+    }
+
+    public void Rehearse(){
+        bRehearse = new JButton("REHEARSE");
+        bRehearse.setBackground(Color.white);
+        bRehearse.setBounds(1210,100,150, 60);
+        bRehearse.addMouseListener(new boardMouseListener());
+    }
+
+    public void Move(){
+        bMove = new JButton("MOVE");
+        bMove.setBackground(Color.white);
+        bMove.setBounds(1210,170,150, 60);
+        bMove.addMouseListener(new boardMouseListener());
+    }
+
+    public void TakeARole(){
+        bTakeARole = new JButton("Take A Role");
+        bTakeARole.setBackground(Color.white);
+        bTakeARole.setBounds(1210,240,150, 60);
+        bTakeARole.addMouseListener(new boardMouseListener());
+    }
+
+    public void Upgrade(){
+        bUpgrade = new JButton("Upgrade");
+        bUpgrade.setBackground(Color.white);
+        bUpgrade.setBounds(1210,310,150, 60);
+        bUpgrade.addMouseListener(new boardMouseListener());
+    }
+
+    public void EndTurn(){
+        bEndTurn = new JButton("End Turn");
+        bEndTurn.setBackground(Color.white);
+        bEndTurn.setBounds(1210,380,150, 60);
+        bEndTurn.addMouseListener(new boardMouseListener());
+    }
+
 
     public JLayeredPane getbPane() {
         return bPane;
