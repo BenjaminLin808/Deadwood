@@ -138,13 +138,7 @@ public class Main {
         } else if (args[0].equals("gui")) {
             // run gui application
             startGameGui();
-//            BoardLayersListener board = new BoardLayersListener();
-//            board.setVisible(true);
-//
-//            int playerNum = 0;
-//            while (playerNum < 2 || playerNum > 8) {
-//                playerNum = Integer.parseInt(JOptionPane.showInputDialog(board, "How many players?"));
-//            }
+
         } else {
             System.out.println("Error, invalid input.");
         }
