@@ -11,6 +11,7 @@ package benlinkurgra.deadwood;
 import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.GuiInitializer;
 import benlinkurgra.deadwood.model.Action;
+import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ import java.util.Queue;
 public class BoardLayersListener extends JFrame {
 
     private Action actionModel;
-
+    private Gui gui;
 
     // JLabels
     JLabel boardlabel;
@@ -71,27 +72,6 @@ public class BoardLayersListener extends JFrame {
         // Set the size of the GUI
         setSize(icon.getIconWidth()+200,icon.getIconHeight());
 
-
-        // Create the Menu for action buttons
-//        mLabel = new JLabel("MENU");
-//        mLabel.setBounds(icon.getIconWidth()+40,0,150,20);
-//        bPane.add(mLabel, Integer.valueOf(2));
-//
-//        // Create Action buttons
-//        Act();
-//        Rehearse();
-//        Move();
-//        TakeARole();
-//        Upgrade();
-//        EndTurn();
-//
-//        // Place the action buttons in the top layer
-//        bPane.add(bAct, Integer.valueOf(2));
-//        bPane.add(bRehearse, Integer.valueOf(2));
-//        bPane.add(bMove, Integer.valueOf(2));
-//        bPane.add(bTakeARole, Integer.valueOf(2));
-//        bPane.add(bUpgrade, Integer.valueOf(2));
-//        bPane.add(bEndTurn, Integer.valueOf(2));
     }
 
     public void createButtons() {
@@ -121,7 +101,7 @@ public class BoardLayersListener extends JFrame {
     public void setActionModel(Action actionModel) {
         this.actionModel = actionModel;
     }
-
+    public void setGui(Gui gui){this.gui = gui;}
     public void Act(){
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
@@ -150,10 +130,21 @@ public class BoardLayersListener extends JFrame {
         bMove.setBackground(Color.white);
         bMove.setEnabled(actionModel.canMove().isValid());
         bMove.setBounds(1210,170,150, 60);
-        bMove.setEnabled(actionModel.canMove().isValid());
 //        bMove.addMouseListener(new boardMouseListener());
         bMove.addActionListener(e -> {
             System.out.println("Move is Selected\n");
+            ArrayList<String> neighbors = actionModel.getBoard().getLocation(actionModel.getActivePlayer().getLocation()).getNeighbors();
+            for (int i = 0; i < neighbors.size(); i++) {
+                String neighbor = neighbors.get(i);
+                JButton bLocation = new JButton(neighbor);
+                bLocation.setBackground(Color.white);
+                bLocation.setBounds(1210+(i+1)*140, 170, 150, 60);
+                bPane.add(bLocation);
+                bLocation.addActionListener(location -> {
+                    actionModel.getActivePlayer().setLocation(neighbor);
+                    JLabel activePlayer = gui.getPlayers().get(actionModel.getActivePlayer().getName());
+                });
+            }
         });
     }
 

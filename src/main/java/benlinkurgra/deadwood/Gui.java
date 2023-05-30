@@ -26,6 +26,18 @@ public class Gui extends JFrame {
         this.board = board;
     }
 
+    public Map<String, JLabel> getPlayers() {
+        return players;
+    }
+
+    public Map<String, JLabel> getCardsLocations() {
+        return cardsLocations;
+    }
+
+    public Map<String, ArrayList<JLabel>> getShots() {
+        return shots;
+    }
+
     public void playPlayerInfo() {
         Queue<Player> playersOrder = new LinkedList<>(playerOrder);
         for(int i = 0; i < playerOrder.size(); i++){
@@ -104,6 +116,8 @@ public class Gui extends JFrame {
             players.get(currPlayer.getName()).setBounds(trailerX+20 + (i%3 * 50), trailerY-40+(i/3 * 50), trailerW, trailerH);
             bPane.add(players.get(currPlayer.getName()), Integer.valueOf(3));
         }
+
+
     }
 }
 

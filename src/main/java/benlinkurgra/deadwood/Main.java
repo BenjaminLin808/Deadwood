@@ -90,6 +90,7 @@ public class Main {
         boardLayersListener.setActionModel(new Action(gameState.getActivePlayer(), board, gameState));
         boardLayersListener.createButtons();
         Gui gui = new Gui(numPlayers, players, boardLayersListener.getbPane(), board);
+        boardLayersListener.setGui(gui);
         gui.playPlayerInfo();
         gui.setUp(locations);
     }

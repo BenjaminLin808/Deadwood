@@ -89,6 +89,18 @@ public class Action {
         this.gameState = gameState;
     }
 
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
     public void setActivePlayer(Player activePlayer) {
         this.activePlayer = activePlayer;
     }
