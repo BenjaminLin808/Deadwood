@@ -125,8 +125,12 @@ public class BoardLayersListener extends JFrame {
     public void Act(){
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
+        bAct.setEnabled(actionModel.canAct().isValid());
         bAct.setBounds(1210, 30,150, 60);
-        bAct.addMouseListener(new boardMouseListener());
+//        bAct.addMouseListener(new boardMouseListener());
+        bAct.addActionListener(e -> {
+            System.out.println("Act is Selected\n");
+        });
     }
 
     public void Rehearse(){
@@ -144,30 +148,47 @@ public class BoardLayersListener extends JFrame {
     public void Move(){
         bMove = new JButton("MOVE");
         bMove.setBackground(Color.white);
+        bMove.setEnabled(actionModel.canMove().isValid());
         bMove.setBounds(1210,170,150, 60);
         bMove.setEnabled(actionModel.canMove().isValid());
-        bMove.addMouseListener(new boardMouseListener());
+//        bMove.addMouseListener(new boardMouseListener());
+        bMove.addActionListener(e -> {
+            System.out.println("Move is Selected\n");
+        });
     }
+
 
     public void TakeARole(){
         bTakeARole = new JButton("Take A Role");
         bTakeARole.setBackground(Color.white);
+        bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
         bTakeARole.setBounds(1210,240,150, 60);
-        bTakeARole.addMouseListener(new boardMouseListener());
+//        bTakeARole.addMouseListener(new boardMouseListener());
+        bTakeARole.addActionListener(e -> {
+            System.out.println("TakeARole is Selected\n");
+        });
     }
 
     public void Upgrade(){
         bUpgrade = new JButton("Upgrade");
         bUpgrade.setBackground(Color.white);
+        bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
         bUpgrade.setBounds(1210,310,150, 60);
-        bUpgrade.addMouseListener(new boardMouseListener());
+//        bUpgrade.addMouseListener(new boardMouseListener());
+        bUpgrade.addActionListener(e -> {
+            System.out.println("Upgrade is Selected\n");
+        });
     }
 
     public void EndTurn(){
         bEndTurn = new JButton("End Turn");
         bEndTurn.setBackground(Color.white);
+        bEndTurn.setEnabled(actionModel.canEndTurn().isValid());
         bEndTurn.setBounds(1210,380,150, 60);
-        bEndTurn.addMouseListener(new boardMouseListener());
+//        bEndTurn.addMouseListener(new boardMouseListener());
+        bEndTurn.addActionListener(e -> {
+            System.out.println("EndTurn is Selected\n");
+        });
     }
 
 
