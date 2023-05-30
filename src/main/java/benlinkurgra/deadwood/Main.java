@@ -5,6 +5,7 @@ import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.GuiInitializer;
 import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.Scene;
+import benlinkurgra.deadwood.model.Action;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 import benlinkurgra.deadwood.readxml.ParseBoardXML;
@@ -67,7 +68,8 @@ public class Main {
         actionProvider = new ActionProvider(display, activePlayer, board, gameState);
     }
 
-    private static void startGameGui(){
+    private static void startGameGui() {
+
         BoardLayersListener boardLayersListener = new BoardLayersListener();
         boardLayersListener.setVisible(true);
         GuiInitializer guiInitializer = new GuiInitializer();
@@ -85,7 +87,8 @@ public class Main {
         } else {
             gameState = new GameState(scenes, players);
         }
-
+        boardLayersListener.setActionModel(new Action(gameState.getActivePlayer(), board, gameState));
+        boardLayersListener.createButtons();
         Gui gui = new Gui(numPlayers, players, boardLayersListener.getbPane(), board);
         gui.playPlayerInfo();
         gui.setUp(locations);

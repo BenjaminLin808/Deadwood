@@ -10,6 +10,7 @@ package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.GuiInitializer;
+import benlinkurgra.deadwood.model.Action;
 import benlinkurgra.deadwood.model.Player;
 
 import java.awt.*;
@@ -24,6 +25,7 @@ import java.util.Queue;
 
 public class BoardLayersListener extends JFrame {
 
+    private Action actionModel;
 
 
     // JLabels
@@ -50,6 +52,7 @@ public class BoardLayersListener extends JFrame {
 
         // Set the title of the JFrame
         super("Deadwood");
+
         // Set the exit option for the JFrame
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -69,6 +72,30 @@ public class BoardLayersListener extends JFrame {
         setSize(icon.getIconWidth()+200,icon.getIconHeight());
 
 
+        // Create the Menu for action buttons
+//        mLabel = new JLabel("MENU");
+//        mLabel.setBounds(icon.getIconWidth()+40,0,150,20);
+//        bPane.add(mLabel, Integer.valueOf(2));
+//
+//        // Create Action buttons
+//        Act();
+//        Rehearse();
+//        Move();
+//        TakeARole();
+//        Upgrade();
+//        EndTurn();
+//
+//        // Place the action buttons in the top layer
+//        bPane.add(bAct, Integer.valueOf(2));
+//        bPane.add(bRehearse, Integer.valueOf(2));
+//        bPane.add(bMove, Integer.valueOf(2));
+//        bPane.add(bTakeARole, Integer.valueOf(2));
+//        bPane.add(bUpgrade, Integer.valueOf(2));
+//        bPane.add(bEndTurn, Integer.valueOf(2));
+    }
+
+    public void createButtons() {
+        ImageIcon icon =  new ImageIcon("src/main/images/board.jpg");
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
         mLabel.setBounds(icon.getIconWidth()+40,0,150,20);
@@ -90,6 +117,11 @@ public class BoardLayersListener extends JFrame {
         bPane.add(bUpgrade, Integer.valueOf(2));
         bPane.add(bEndTurn, Integer.valueOf(2));
     }
+
+    public void setActionModel(Action actionModel) {
+        this.actionModel = actionModel;
+    }
+
     public void Act(){
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
@@ -100,14 +132,20 @@ public class BoardLayersListener extends JFrame {
     public void Rehearse(){
         bRehearse = new JButton("REHEARSE");
         bRehearse.setBackground(Color.white);
+        bRehearse.setEnabled(actionModel.canRehearse().isValid());
         bRehearse.setBounds(1210,100,150, 60);
-        bRehearse.addMouseListener(new boardMouseListener());
+//        bRehearse.addMouseListener(new boardMouseListener());
+        bRehearse.addActionListener(e -> {
+            System.out.println("Rehearse is Selected\n");
+        });
     }
+
 
     public void Move(){
         bMove = new JButton("MOVE");
         bMove.setBackground(Color.white);
         bMove.setBounds(1210,170,150, 60);
+        bMove.setEnabled(actionModel.canMove().isValid());
         bMove.addMouseListener(new boardMouseListener());
     }
 
@@ -150,9 +188,9 @@ public class BoardLayersListener extends JFrame {
                 playerlabel.setVisible(true);
                 System.out.println("Acting is Selected\n");
             }
-            else if (e.getSource()== bRehearse){
-                System.out.println("Rehearse is Selected\n");
-            }
+//            else if (e.getSource()== bRehearse){
+//                System.out.println("Rehearse is Selected\n");
+//            }
             else if (e.getSource()== bMove){
                 System.out.println("Move is Selected\n");
             }
