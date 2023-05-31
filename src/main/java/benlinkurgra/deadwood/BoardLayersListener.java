@@ -159,7 +159,6 @@ public class BoardLayersListener extends JFrame {
                     for(JButton button : locationButtons){
                         button.setVisible(false);
                     }
-                    createButtons();
                     bMove.setEnabled(false);
                 });
             }
@@ -174,6 +173,7 @@ public class BoardLayersListener extends JFrame {
 //        bTakeARole.addMouseListener(new boardMouseListener());
         bTakeARole.addActionListener(e -> {
             System.out.println("TakeARole is Selected\n");
+
         });
     }
 
