@@ -210,6 +210,7 @@ public class BoardLayersListener extends JFrame {
                     }
                     resetMoveButton();
                     bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
+                    bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
                 });
             }
         });
@@ -292,31 +293,27 @@ public class BoardLayersListener extends JFrame {
         JButton upgradeCredits = new JButton("Upgrade With Credits");
 
         upgradeDollars.setBackground(Color.white);
-        upgradeDollars.setBounds(1400, 380, 150, 60);
+        upgradeDollars.setBounds(1400, 380, 220, 60);
         bPane.add(upgradeDollars);
         int dollars = upgradeCost.getDollarCost();
         upgradeDollars.addActionListener(f -> {
-             JButton upgradeDollar = new JButton("Dollars: " + dollars);
-            upgradeDollar.setBackground(Color.white);
-            upgradeDollar.setBounds(1400, 460, 150, 60);
             if(activePlayer.getDollars() < dollars){
                 activePlayer.upgrade(newRank, CurrencyType.DOLLARS, dollars);
             }
+            resetUpgradeButton();
             bPane.remove(upgradeDollars);
             bPane.remove(upgradeCredits);
         });
 
         upgradeCredits.setBackground(Color.white);
-        upgradeCredits.setBounds(1400, 460, 150, 60);
+        upgradeCredits.setBounds(1400, 460, 220, 60);
         bPane.add(upgradeCredits);
         int credits = upgradeCost.getCreditsCost();
-        upgradeCredits.addActionListener(f -> {
-            JButton upgradeCredit = new JButton("Credits: " + credits);
-            upgradeCredit.setBackground(Color.white);
-            upgradeCredit.setBounds(1400, 460, 150, 60);
+        upgradeCredits.addActionListener(e -> {
             if(activePlayer.getCredits() < credits){
                 activePlayer.upgrade(newRank, CurrencyType.CREDITS, credits);
             }
+            resetUpgradeButton();
             bPane.remove(upgradeDollars);
             bPane.remove(upgradeCredits);
         });
@@ -331,7 +328,6 @@ public class BoardLayersListener extends JFrame {
         bEndTurn.setBounds(1210, 380, 150, 60);
         bEndTurn.addActionListener(e -> {
             actionModel.endTurn();
-//            resetMoveButton();
             refreshButtons();
         });
     }
@@ -348,6 +344,7 @@ public class BoardLayersListener extends JFrame {
         locationButtons.clear();
         bMove.setEnabled(actionModel.canMove().isValid());
     }
+
     private void resetTakeARoleButton() {
         System.out.println("Called reset");
         for (JButton button : roleButtons) {
@@ -356,6 +353,15 @@ public class BoardLayersListener extends JFrame {
         }
         roleButtons.clear();
         bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
+    }
+    private void resetUpgradeButton() {
+        System.out.println("Called reset");
+        for (JButton button : upgradeButtons) {
+            button.setVisible(false);
+            bPane.remove(button);
+        }
+        upgradeButtons.clear();
+        bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
     }
 
     public JLayeredPane getbPane() {
