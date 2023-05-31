@@ -159,8 +159,8 @@ public class BoardLayersListener extends JFrame {
                     for(JButton button : locationButtons){
                         button.setVisible(false);
                     }
-                    actionModel.setActivePlayer(gameState.changeActivePlayer());
                     createButtons();
+                    bMove.setEnabled(false);
                 });
             }
         });
@@ -195,7 +195,7 @@ public class BoardLayersListener extends JFrame {
         bEndTurn.setBounds(1210,380,150, 60);
 //        bEndTurn.addMouseListener(new boardMouseListener());
         bEndTurn.addActionListener(e -> {
-            System.out.println("EndTurn is Selected\n");
+            actionModel.endTurn();
         });
     }
 
