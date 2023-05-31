@@ -208,7 +208,8 @@ public class BoardLayersListener extends JFrame {
                     for (JButton button : locationButtons) {
                         button.setVisible(false);
                     }
-//                    refreshButtons();
+                    resetMoveButton();
+                    bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
                 });
             }
         });
@@ -251,8 +252,7 @@ public class BoardLayersListener extends JFrame {
                     for (JButton button : roleButtons) {
                         button.setVisible(false);
                     }
-//                    refreshButtons();
-                    resetMoveButton();
+                    resetTakeARoleButton();
                 });
             }
         });
@@ -347,6 +347,15 @@ public class BoardLayersListener extends JFrame {
         }
         locationButtons.clear();
         bMove.setEnabled(actionModel.canMove().isValid());
+    }
+    private void resetTakeARoleButton() {
+        System.out.println("Called reset");
+        for (JButton button : roleButtons) {
+            button.setVisible(false);
+            bPane.remove(button);
+        }
+        roleButtons.clear();
+        bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
     }
 
     public JLayeredPane getbPane() {
