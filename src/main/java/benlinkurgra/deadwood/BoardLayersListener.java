@@ -64,23 +64,23 @@ public class BoardLayersListener extends JFrame {
 
         // Create the deadwood board
         boardlabel = new JLabel();
-        ImageIcon icon =  new ImageIcon("src/main/images/board.jpg");
+        ImageIcon icon = new ImageIcon("src/main/images/board.jpg");
         boardlabel.setIcon(icon);
-        boardlabel.setBounds(0,0,icon.getIconWidth(),icon.getIconHeight());
+        boardlabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
 
         // Add the board to the lowest layer
         bPane.add(boardlabel, Integer.valueOf(0));
 
         // Set the size of the GUI
-        setSize(icon.getIconWidth()+200,icon.getIconHeight());
+        setSize(icon.getIconWidth() + 200, icon.getIconHeight());
 
     }
 
     public void createButtons() {
-        ImageIcon icon =  new ImageIcon("src/main/images/board.jpg");
+        ImageIcon icon = new ImageIcon("src/main/images/board.jpg");
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
-        mLabel.setBounds(icon.getIconWidth()+40,0,150,20);
+        mLabel.setBounds(icon.getIconWidth() + 40, 0, 150, 20);
         bPane.add(mLabel, Integer.valueOf(2));
 
         // Create Action buttons
@@ -103,25 +103,35 @@ public class BoardLayersListener extends JFrame {
     public void setActionModel(Action actionModel) {
         this.actionModel = actionModel;
     }
-    public void setGui(Gui gui){this.gui = gui;}
-    public void setBoard(Board board) {this.board = board;}
-    public void setGameState(GameState gameState) {this.gameState = gameState;}
-    public void Act(){
+
+    public void setGui(Gui gui) {
+        this.gui = gui;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    public void Act() {
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
         bAct.setEnabled(actionModel.canAct().isValid());
-        bAct.setBounds(1210, 30,150, 60);
+        bAct.setBounds(1210, 30, 150, 60);
 //        bAct.addMouseListener(new boardMouseListener());
         bAct.addActionListener(e -> {
             System.out.println("Act is Selected\n");
         });
     }
 
-    public void Rehearse(){
+    public void Rehearse() {
         bRehearse = new JButton("REHEARSE");
         bRehearse.setBackground(Color.white);
         bRehearse.setEnabled(actionModel.canRehearse().isValid());
-        bRehearse.setBounds(1210,100,150, 60);
+        bRehearse.setBounds(1210, 100, 150, 60);
 //        bRehearse.addMouseListener(new boardMouseListener());
         bRehearse.addActionListener(e -> {
             System.out.println("Rehearse is Selected\n");
@@ -129,14 +139,14 @@ public class BoardLayersListener extends JFrame {
     }
 
 
-    public void Move(){
-        System.out.println("called move active player: " + actionModel.getActivePlayer().getName());
+    public void Move() {
+        System.out.println("called move, active player: " + actionModel.getActivePlayer().getName());
         bMove = new JButton("MOVE");
         locationButtons = new ArrayList<>();
         bMove.setBackground(Color.white);
         bMove.setEnabled(actionModel.canMove().isValid());
 
-        bMove.setBounds(1210,170,150, 60);
+        bMove.setBounds(1210, 170, 150, 60);
 //        bMove.addMouseListener(new boardMouseListener());
         bMove.addActionListener(e -> {
             System.out.println("Move is Selected\n");
@@ -146,13 +156,14 @@ public class BoardLayersListener extends JFrame {
                 String neighbor = neighbors.get(i);
                 JButton bLocation = new JButton(neighbor);
                 bLocation.setBackground(Color.white);
-                bLocation.setBounds(1210+(i+1)*140, 170, 150, 60);
+                bLocation.setBounds(1210 + (i + 1) * 140, 170, 150, 60);
                 bPane.add(bLocation);
                 locationButtons.add(bLocation);
                 bLocation.addActionListener(f -> {
                     boolean sceneReveled = actionModel.move(neighbor);
                     if (sceneReveled) {
                         //TODO reveal scene card
+
                     }
                     bMove.setEnabled(actionModel.canMove().isValid());
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
@@ -169,7 +180,7 @@ public class BoardLayersListener extends JFrame {
                         exception.printStackTrace();
                         System.exit(1);
                     }
-                    for(JButton button : locationButtons){
+                    for (JButton button : locationButtons) {
                         button.setVisible(false);
                     }
                 });
@@ -177,11 +188,11 @@ public class BoardLayersListener extends JFrame {
         });
     }
 
-    public void TakeARole(){
+    public void TakeARole() {
         bTakeARole = new JButton("Take A Role");
         bTakeARole.setBackground(Color.white);
         bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
-        bTakeARole.setBounds(1210,240,150, 60);
+        bTakeARole.setBounds(1210, 240, 150, 60);
 //        bTakeARole.addMouseListener(new boardMouseListener());
         bTakeARole.addActionListener(e -> {
             System.out.println("TakeARole is Selected\n");
@@ -189,33 +200,33 @@ public class BoardLayersListener extends JFrame {
             int playerRank = actionModel.getActivePlayer().getActingRank();
             List<RoleData> roleList = activePlayerLocation.getAllAvailableRoles(playerRank);
             ArrayList<JButton> roleButtons = new ArrayList<>();
-            for(int i = 0; i < roleList.size(); i++){
+            for (int i = 0; i < roleList.size(); i++) {
                 String roleName = roleList.get(i).getName();
                 JButton bRole = new JButton(roleName);
                 bRole.setBackground(Color.white);
-                bRole.setBounds(1210+(i+1)*140, 240, 150, 60);
+                bRole.setBounds(1210 + (i + 1) * 140, 240, 150, 60);
                 bPane.add(bRole);
                 roleButtons.add(bRole);
             }
         });
     }
 
-    public void Upgrade(){
+    public void Upgrade() {
         bUpgrade = new JButton("Upgrade");
         bUpgrade.setBackground(Color.white);
         bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
-        bUpgrade.setBounds(1210,310,150, 60);
+        bUpgrade.setBounds(1210, 310, 150, 60);
 //        bUpgrade.addMouseListener(new boardMouseListener());
         bUpgrade.addActionListener(e -> {
             System.out.println("Upgrade is Selected\n");
         });
     }
 
-    public void EndTurn(){
+    public void EndTurn() {
         bEndTurn = new JButton("End Turn");
         bEndTurn.setBackground(Color.white);
         bEndTurn.setEnabled(actionModel.canEndTurn().isValid());
-        bEndTurn.setBounds(1210,380,150, 60);
+        bEndTurn.setBounds(1210, 380, 150, 60);
         bEndTurn.addActionListener(e -> {
             actionModel.endTurn();
             resetMoveButton();
@@ -240,30 +251,33 @@ public class BoardLayersListener extends JFrame {
     }
 
 
-
     // This class implements Mouse Events
 
-    class boardMouseListener implements MouseListener{
+    class boardMouseListener implements MouseListener {
 
         // Code for the different button clicks
         public void mouseClicked(MouseEvent e) {
-            if (e.getSource()== bAct){
+            if (e.getSource() == bAct) {
                 playerlabel.setVisible(true);
                 System.out.println("Acting is Selected\n");
             }
 //            else if (e.getSource()== bRehearse){
 //                System.out.println("Rehearse is Selected\n");
 //            }
-            else if (e.getSource()== bMove){
+            else if (e.getSource() == bMove) {
                 System.out.println("TEST Move is Selected\n");
             }
         }
+
         public void mousePressed(MouseEvent e) {
         }
+
         public void mouseReleased(MouseEvent e) {
         }
+
         public void mouseEntered(MouseEvent e) {
         }
+
         public void mouseExited(MouseEvent e) {
         }
     }
