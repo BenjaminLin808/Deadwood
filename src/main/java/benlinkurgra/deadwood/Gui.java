@@ -110,16 +110,19 @@ public class Gui extends JFrame {
             players.put(currPlayer.getName(), playerDice);
             ImageIcon pIcon = new ImageIcon("src/main/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
             players.get(currPlayer.getName()).setIcon(pIcon);
-            Coordinates openCoordinate = board.getLocation("trailer").placePlayerOnLocation(currPlayer.getName());
-            players.get(currPlayer.getName()).setBounds(
-                    openCoordinate.getX(),
-                    openCoordinate.getY(),
-                    openCoordinate.getWidth(),
-                    openCoordinate.getHeight());
+            try {
+                Coordinates openCoordinate = board.getLocation("trailer").placePlayerOnLocation(currPlayer.getName());
+                players.get(currPlayer.getName()).setBounds(
+                        openCoordinate.getX(),
+                        openCoordinate.getY(),
+                        openCoordinate.getWidth(),
+                        openCoordinate.getHeight());
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
             bPane.add(players.get(currPlayer.getName()), Integer.valueOf(3));
         }
-
-
     }
 }
 

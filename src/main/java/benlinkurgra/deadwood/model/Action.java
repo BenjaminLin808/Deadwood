@@ -218,10 +218,19 @@ public class Action {
      * change appropriate states to move active player to a new Location, assumes newLocation is a valid location
      *
      * @param newLocation location player is moving to.
+     * @return true if SceneStatus was hidden, otherwise false
      */
-    public void move(String newLocation) {
+    public boolean move(String newLocation) {
         activePlayer.setLocation(newLocation);
         gameState.setCurrentPlayerDoneTrue();
+        if (board.isSetLocation(newLocation)) {
+            SetLocation location = (SetLocation) board.getLocation(newLocation);
+            if (location.getSceneStatus() == SceneStatus.HIDDEN) {
+                ((SetLocation)board.getLocation(newLocation)).setSceneStatus(SceneStatus.REVEALED);
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

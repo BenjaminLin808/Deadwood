@@ -8,8 +8,8 @@ package benlinkurgra.deadwood;
 
 */
 
-import benlinkurgra.deadwood.controller.GameInitializer;
-import benlinkurgra.deadwood.controller.GuiInitializer;
+import benlinkurgra.deadwood.location.Coordinates;
+import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.RoleData;
 import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Action;
@@ -19,16 +19,12 @@ import benlinkurgra.deadwood.model.Player;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.ImageIcon;
-import javax.imageio.ImageIO;
 import java.awt.event.*;
-import javax.swing.JOptionPane;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 public class BoardLayersListener extends JFrame {
-
     private Action actionModel;
     private Gui gui;
     private Board board;
@@ -47,6 +43,7 @@ public class BoardLayersListener extends JFrame {
     JButton bUpgrade;
     JButton bTakeARole;
     JButton bEndTurn;
+    private ArrayList<JButton> locationButtons;
 
     // JLayered Pane
     JLayeredPane bPane;
@@ -133,15 +130,18 @@ public class BoardLayersListener extends JFrame {
 
 
     public void Move(){
+        System.out.println("called move active player: " + actionModel.getActivePlayer().getName());
         bMove = new JButton("MOVE");
+        locationButtons = new ArrayList<>();
         bMove.setBackground(Color.white);
         bMove.setEnabled(actionModel.canMove().isValid());
+
         bMove.setBounds(1210,170,150, 60);
 //        bMove.addMouseListener(new boardMouseListener());
         bMove.addActionListener(e -> {
             System.out.println("Move is Selected\n");
-            ArrayList<String> neighbors = actionModel.getBoard().getLocation(actionModel.getActivePlayer().getLocation()).getNeighbors();
-            ArrayList<JButton> locationButtons = new ArrayList<>();
+            Player activePlayerInfo = actionModel.getActivePlayer();
+            ArrayList<String> neighbors = actionModel.getBoard().getLocation(activePlayerInfo.getLocation()).getNeighbors();
             for (int i = 0; i < neighbors.size(); i++) {
                 String neighbor = neighbors.get(i);
                 JButton bLocation = new JButton(neighbor);
@@ -149,19 +149,29 @@ public class BoardLayersListener extends JFrame {
                 bLocation.setBounds(1210+(i+1)*140, 170, 150, 60);
                 bPane.add(bLocation);
                 locationButtons.add(bLocation);
-                bLocation.addActionListener(location -> {
-                    actionModel.move(neighbor);
-                    JLabel activePlayer = gui.getPlayers().get(actionModel.getActivePlayer().getName());
-                    SetLocation setLocation = (SetLocation) board.getLocation(neighbor);
-                    int setLocationX = setLocation.getCoordinates().getX();
-                    int setLocationY = setLocation.getCoordinates().getY();
-                    int setLocationW = setLocation.getCoordinates().getWidth();
-                    int setLocationH = setLocation.getCoordinates().getHeight();
-                    activePlayer.setBounds(setLocationX, setLocationY, setLocationW, setLocationH);
+                bLocation.addActionListener(f -> {
+                    boolean sceneReveled = actionModel.move(neighbor);
+                    if (sceneReveled) {
+                        //TODO reveal scene card
+                    }
+                    bMove.setEnabled(actionModel.canMove().isValid());
+                    JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
+                    Location location = board.getLocation(neighbor);
+                    location.freePlayerPosition(activePlayerInfo.getName());
+                    try {
+                        Coordinates locationCoordinates = location.placePlayerOnLocation(activePlayerInfo.getName());
+                        activePlayer.setBounds(
+                                locationCoordinates.getX(),
+                                locationCoordinates.getY(),
+                                locationCoordinates.getWidth(),
+                                locationCoordinates.getHeight());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        System.exit(1);
+                    }
                     for(JButton button : locationButtons){
                         button.setVisible(false);
                     }
-                    createButtons();
                 });
             }
         });
@@ -186,7 +196,6 @@ public class BoardLayersListener extends JFrame {
                 bRole.setBounds(1210+(i+1)*140, 240, 150, 60);
                 bPane.add(bRole);
                 roleButtons.add(bRole);
-
             }
         });
     }
@@ -207,12 +216,24 @@ public class BoardLayersListener extends JFrame {
         bEndTurn.setBackground(Color.white);
         bEndTurn.setEnabled(actionModel.canEndTurn().isValid());
         bEndTurn.setBounds(1210,380,150, 60);
-//        bEndTurn.addMouseListener(new boardMouseListener());
         bEndTurn.addActionListener(e -> {
             actionModel.endTurn();
+            resetMoveButton();
         });
     }
 
+    /**
+     * Clears neighbour buttons and determines rather Move button should be active
+     */
+    private void resetMoveButton() {
+        System.out.println("Called reset");
+        for (JButton button : locationButtons) {
+            button.setVisible(false);
+            bPane.remove(button);
+        }
+        locationButtons.clear();
+        bMove.setEnabled(actionModel.canMove().isValid());
+    }
 
     public JLayeredPane getbPane() {
         return bPane;
@@ -226,7 +247,6 @@ public class BoardLayersListener extends JFrame {
 
         // Code for the different button clicks
         public void mouseClicked(MouseEvent e) {
-
             if (e.getSource()== bAct){
                 playerlabel.setVisible(true);
                 System.out.println("Acting is Selected\n");
@@ -235,7 +255,7 @@ public class BoardLayersListener extends JFrame {
 //                System.out.println("Rehearse is Selected\n");
 //            }
             else if (e.getSource()== bMove){
-                System.out.println("Move is Selected\n");
+                System.out.println("TEST Move is Selected\n");
             }
         }
         public void mousePressed(MouseEvent e) {
@@ -247,7 +267,6 @@ public class BoardLayersListener extends JFrame {
         public void mouseExited(MouseEvent e) {
         }
     }
-
 
     public static void main(String[] args) {
 
