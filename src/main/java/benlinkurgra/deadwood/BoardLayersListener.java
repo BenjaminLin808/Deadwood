@@ -8,10 +8,7 @@ package benlinkurgra.deadwood;
 
 */
 
-import benlinkurgra.deadwood.location.Coordinates;
-import benlinkurgra.deadwood.location.Location;
-import benlinkurgra.deadwood.location.RoleData;
-import benlinkurgra.deadwood.location.SetLocation;
+import benlinkurgra.deadwood.location.*;
 import benlinkurgra.deadwood.model.Action;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
@@ -45,6 +42,7 @@ public class BoardLayersListener extends JFrame {
     JButton bEndTurn;
     private ArrayList<JButton> locationButtons;
     private ArrayList<JButton> roleButtons = new ArrayList<>();
+    private ArrayList<JButton> upgradeButtons = new ArrayList<>();
 
     // JLayered Pane
     JLayeredPane bPane;
@@ -210,7 +208,7 @@ public class BoardLayersListener extends JFrame {
                     for (JButton button : locationButtons) {
                         button.setVisible(false);
                     }
-                    refreshButtons();
+//                    refreshButtons();
                 });
             }
         });
@@ -237,7 +235,7 @@ public class BoardLayersListener extends JFrame {
                 bPane.add(bRole);
                 roleButtons.add(bRole);
                 bRole.addActionListener(r -> {
-                    actionModel.takeRole((SetLocation) board.getLocation(actionModel.getActivePlayer().getLocation()), roleName, onCard);
+                    actionModel.takeRole(activePlayerLocation, roleName, onCard);
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
                     try {
                         Coordinates roleCoordinates = roleData.getCoordinates();
@@ -253,7 +251,8 @@ public class BoardLayersListener extends JFrame {
                     for (JButton button : roleButtons) {
                         button.setVisible(false);
                     }
-                    refreshButtons();
+//                    refreshButtons();
+                    resetMoveButton();
                 });
             }
         });
@@ -264,11 +263,66 @@ public class BoardLayersListener extends JFrame {
         bUpgrade.setBackground(Color.white);
         bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
         bUpgrade.setBounds(1210, 310, 150, 60);
-//        bUpgrade.addMouseListener(new boardMouseListener());
         bUpgrade.addActionListener(e -> {
             System.out.println("Upgrade is Selected\n");
+            Player activePlayerInfo = actionModel.getActivePlayer();
+            int playerRank = activePlayerInfo.getActingRank();
+            CastingOffice castingOffice = (CastingOffice) board.getLocation(activePlayerInfo.getLocation());
+            for(int i = playerRank; i < 7; i++){
+                JButton bUp = new JButton("" + i);
+                int rank = i;
+                bUp.setBackground(Color.white);
+                bUp.setBounds(1400, 240 + (i)*70, 150, 60);
+                bPane.add(bUp);
+                upgradeButtons.add(bUp);
+                bUp.addActionListener(f -> {
+                    for (JButton button : upgradeButtons) {
+                        button.setVisible(false);
+                    }
+                    upgradeMethods(activePlayerInfo, rank, castingOffice);
+                });
+            }
         });
     }
+
+    private void upgradeMethods(Player activePlayer, int newRank, CastingOffice castingOffice){
+        UpgradeCost upgradeCost = castingOffice.getUpgrades().get(newRank);
+
+        JButton upgradeDollars = new JButton("Upgrade With Dollars");
+        JButton upgradeCredits = new JButton("Upgrade With Credits");
+
+        upgradeDollars.setBackground(Color.white);
+        upgradeDollars.setBounds(1400, 380, 150, 60);
+        bPane.add(upgradeDollars);
+        int dollars = upgradeCost.getDollarCost();
+        upgradeDollars.addActionListener(f -> {
+             JButton upgradeDollar = new JButton("Dollars: " + dollars);
+            upgradeDollar.setBackground(Color.white);
+            upgradeDollar.setBounds(1400, 460, 150, 60);
+            if(activePlayer.getDollars() < dollars){
+                activePlayer.upgrade(newRank, CurrencyType.DOLLARS, dollars);
+            }
+            bPane.remove(upgradeDollars);
+            bPane.remove(upgradeCredits);
+        });
+
+        upgradeCredits.setBackground(Color.white);
+        upgradeCredits.setBounds(1400, 460, 150, 60);
+        bPane.add(upgradeCredits);
+        int credits = upgradeCost.getCreditsCost();
+        upgradeCredits.addActionListener(f -> {
+            JButton upgradeCredit = new JButton("Credits: " + credits);
+            upgradeCredit.setBackground(Color.white);
+            upgradeCredit.setBounds(1400, 460, 150, 60);
+            if(activePlayer.getCredits() < credits){
+                activePlayer.upgrade(newRank, CurrencyType.CREDITS, credits);
+            }
+            bPane.remove(upgradeDollars);
+            bPane.remove(upgradeCredits);
+        });
+
+    }
+
 
     public void EndTurn() {
         bEndTurn = new JButton("End Turn");
