@@ -7,14 +7,14 @@ public class Scene {
     private final int budget;
     private final String description;
     private final Roles roles;
-    private final int sceneNum;
+    private final String fileName;
 
-    public Scene(String name, int budget, String description, Roles roles, int sceneNum) {
+    public Scene(String name, int budget, String description, Roles roles, String fileName) {
         this.name = name;
         this.budget = budget;
         this.description = description;
         this.roles = roles;
-        this.sceneNum = sceneNum;
+        this.fileName = fileName;
     }
 
     public String getName() {
@@ -31,6 +31,10 @@ public class Scene {
 
     protected Roles getRoles() {
         return roles;
+    }
+
+    public String getFileName() {
+        return fileName;
     }
 
     /**

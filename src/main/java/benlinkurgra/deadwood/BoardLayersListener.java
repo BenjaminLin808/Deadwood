@@ -162,8 +162,7 @@ public class BoardLayersListener extends JFrame {
                 bLocation.addActionListener(f -> {
                     boolean sceneReveled = actionModel.move(neighbor);
                     if (sceneReveled) {
-                        //TODO reveal scene card
-
+                        gui.revealScene(neighbor);
                     }
                     bMove.setEnabled(actionModel.canMove().isValid());
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());

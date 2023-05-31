@@ -55,6 +55,10 @@ public class SetLocation extends Location {
         this.sceneStatus = sceneStatus;
     }
 
+    public String getSceneFileName() {
+        return scene.getFileName();
+    }
+
     /**
      * adds a new scene to the location
      *

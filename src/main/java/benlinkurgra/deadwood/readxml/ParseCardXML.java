@@ -53,12 +53,11 @@ public class ParseCardXML {
             Element card = (Element) cards.item(i);
             NodeList sceneElement = card.getElementsByTagName("scene");
             String cardName = card.getAttribute("name");
+            String sceneFileName = card.getAttribute("img");
             int budget = Integer.parseInt(card.getAttribute("budget"));
-            int sceneNum = 0;
             String sceneLine = "";
             for(int j = 0; j < sceneElement.getLength(); j++){
                 Element scene = (Element) sceneElement.item(j);
-                sceneNum = Integer.parseInt(scene.getAttribute("number"));
                 sceneLine = scene.getTextContent();
             }
             NodeList partsElement = card.getElementsByTagName("part");
@@ -77,7 +76,7 @@ public class ParseCardXML {
 
                 roleList.add(new RoleData(partLevel, partName, partLine, coordinates));
             }
-            sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList), sceneNum));
+            sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList), sceneFileName));
         }
         Collections.shuffle(sceneCards);
         return new LinkedList<>(sceneCards);

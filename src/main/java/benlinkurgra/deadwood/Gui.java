@@ -102,7 +102,6 @@ public class Gui extends JFrame {
                 }
             }
         }
-
         Queue<Player> playersOrder = new LinkedList<>(playerOrder);
 
         for (int i = 0; i < playerNum; i++) {
@@ -124,6 +123,13 @@ public class Gui extends JFrame {
             }
             bPane.add(players.get(currPlayer.getName()), Integer.valueOf(3));
         }
+    }
+
+    public void revealScene(String locationName) {
+        SetLocation location = (SetLocation) board.getLocation(locationName);
+        String sceneFileName = location.getSceneFileName();
+        ImageIcon sceneCard = new ImageIcon("src/main/images/cards/" + sceneFileName);
+        cardsLocations.get(locationName).setIcon(sceneCard);
     }
 }
 
