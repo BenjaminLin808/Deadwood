@@ -10,6 +10,7 @@ package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.GuiInitializer;
+import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Action;
 import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
@@ -28,6 +29,8 @@ public class BoardLayersListener extends JFrame {
 
     private Action actionModel;
     private Gui gui;
+    private Board board;
+    private GameState gameState;
 
     // JLabels
     JLabel boardlabel;
@@ -102,6 +105,8 @@ public class BoardLayersListener extends JFrame {
         this.actionModel = actionModel;
     }
     public void setGui(Gui gui){this.gui = gui;}
+    public void setBoard(Board board) {this.board = board;}
+    public void setGameState(GameState gameState) {this.gameState = gameState;}
     public void Act(){
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
@@ -134,20 +139,32 @@ public class BoardLayersListener extends JFrame {
         bMove.addActionListener(e -> {
             System.out.println("Move is Selected\n");
             ArrayList<String> neighbors = actionModel.getBoard().getLocation(actionModel.getActivePlayer().getLocation()).getNeighbors();
+            ArrayList<JButton> locationButtons = new ArrayList<>();
             for (int i = 0; i < neighbors.size(); i++) {
                 String neighbor = neighbors.get(i);
                 JButton bLocation = new JButton(neighbor);
                 bLocation.setBackground(Color.white);
                 bLocation.setBounds(1210+(i+1)*140, 170, 150, 60);
                 bPane.add(bLocation);
+                locationButtons.add(bLocation);
                 bLocation.addActionListener(location -> {
                     actionModel.getActivePlayer().setLocation(neighbor);
                     JLabel activePlayer = gui.getPlayers().get(actionModel.getActivePlayer().getName());
+                    SetLocation setLocation = (SetLocation) board.getLocation(neighbor);
+                    int setLocationX = setLocation.getCoordinates().getX();
+                    int setLocationY = setLocation.getCoordinates().getY();
+                    int setLocationW = setLocation.getCoordinates().getWidth();
+                    int setLocationH = setLocation.getCoordinates().getHeight();
+                    activePlayer.setBounds(setLocationX, setLocationY, setLocationW, setLocationH);
+                    for(JButton button : locationButtons){
+                        button.setVisible(false);
+                    }
+                    actionModel.setActivePlayer(gameState.changeActivePlayer());
+                    createButtons();
                 });
             }
         });
     }
-
 
     public void TakeARole(){
         bTakeARole = new JButton("Take A Role");

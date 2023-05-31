@@ -88,6 +88,7 @@ public class Main {
             gameState = new GameState(scenes, players);
         }
         boardLayersListener.setActionModel(new Action(gameState.getActivePlayer(), board, gameState));
+        boardLayersListener.setBoard(board);
         boardLayersListener.createButtons();
         Gui gui = new Gui(numPlayers, players, boardLayersListener.getbPane(), board);
         boardLayersListener.setGui(gui);
