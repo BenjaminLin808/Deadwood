@@ -18,6 +18,8 @@ public class Gui extends JFrame {
     private Board board;
     private Map<String, JLabel> cardsLocations = new HashMap<>();
 
+    private Map<String, PlayerBottomDisplay> playerBottomDisplayMap = new HashMap<>();
+
     private Map<String, ArrayList<JLabel>> shots = new HashMap<>();
 
     public Gui(int playerNum, Queue<Player> playerOrder, JLayeredPane bPane, Board board) {
@@ -43,28 +45,64 @@ public class Gui extends JFrame {
         Queue<Player> playersOrder = new LinkedList<>(playerOrder);
         for (int i = 0; i < playerOrder.size(); i++) {
             Player currPlayer = playersOrder.poll();
-            JLabel playerDice = new JLabel();
             ImageIcon pIcon = new ImageIcon("src/main/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
-            playerDice.setIcon(pIcon);
-            playerDice.setBounds(20 + (i * 230), 900, pIcon.getIconWidth(), pIcon.getIconHeight());
-            playerDice.setVisible(true);
-            bPane.add(playerDice, Integer.valueOf(3));
 
-            JLabel mLabel = new JLabel("Player Name: " + currPlayer.getName());
-            mLabel.setBounds(70 + (i * 230), 880, 180, 60);
-            bPane.add(mLabel, Integer.valueOf(2));
+            PlayerBottomDisplay playerBottomDisplay = new PlayerBottomDisplay(
+                    currPlayer.getName(),
+                    currPlayer.getActingRank(),
+                    currPlayer.getDollars(),
+                    currPlayer.getCredits(),
+                    pIcon
+            );
 
-            JLabel rank = new JLabel("Player Rank: " + currPlayer.getActingRank());
-            rank.setBounds(70 + (i * 230), 900, 180, 60);
-            bPane.add(rank, Integer.valueOf(2));
+            playerBottomDisplay.getPlayerDice().setBounds(
+                    20 + (i * 230),
+                    900,
+                    pIcon.getIconWidth(),
+                    pIcon.getIconHeight());
+            playerBottomDisplay.getPlayerDice().setVisible(true);
+            bPane.add(playerBottomDisplay.getPlayerDice(), Integer.valueOf(3));
 
-            JLabel dollars = new JLabel("Player Dollars: " + currPlayer.getDollars());
-            dollars.setBounds(70 + (i * 230), 920, 180, 60);
-            bPane.add(dollars, Integer.valueOf(2));
 
-            JLabel credits = new JLabel("Player Credits: " + currPlayer.getCredits());
-            credits.setBounds(70 + (i * 230), 940, 180, 60);
-            bPane.add(credits, Integer.valueOf(2));
+            playerBottomDisplay.getNameLabel().setBounds(70 + (i * 230), 880, 180, 60);
+            bPane.add(playerBottomDisplay.getNameLabel(), Integer.valueOf(2));
+
+            playerBottomDisplay.getRankLabel().setBounds(70 + (i * 230), 900, 180, 60);
+            bPane.add(playerBottomDisplay.getRankLabel(), Integer.valueOf(2));
+
+            playerBottomDisplay.getDollarsLabel().setBounds(70 + (i * 230), 920, 180, 60);
+            bPane.add(playerBottomDisplay.getDollarsLabel(), Integer.valueOf(2));
+
+            playerBottomDisplay.getCreditsLabel().setBounds(70 + (i * 230), 940, 180, 60);
+            bPane.add(playerBottomDisplay.getCreditsLabel(), Integer.valueOf(2));
+
+            playerBottomDisplayMap.put(currPlayer.getName(), playerBottomDisplay);
+        }
+    }
+
+    /**
+     * Updates the player dollar amount on bottom display
+     *
+     * @param playerName name of player for update
+     * @param dollars amount of dollars player has
+     */
+    public void updateDollarsLabel(String playerName, int dollars) {
+        PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
+        if (playerDisplay != null) {
+            playerDisplay.updateDollars(dollars);
+        }
+    }
+
+    /**
+     * Updates the player credit amount on bottom display
+     *
+     * @param playerName name of player for update
+     * @param credits amount of credits player has
+     */
+    public void updateCreditsLabel(String playerName, int credits) {
+        PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
+        if (playerDisplay != null) {
+            playerDisplay.updateCredits(credits);
         }
     }
 

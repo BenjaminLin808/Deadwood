@@ -32,6 +32,7 @@ public class BoardLayersListener extends JFrame {
     JLabel cardlabel;
     JLabel playerlabel;
     JLabel mLabel;
+    JTextArea activityResultLabel;
 
     //JButtons
     JButton bAct;
@@ -69,10 +70,20 @@ public class BoardLayersListener extends JFrame {
 
         // Add the board to the lowest layer
         bPane.add(boardlabel, Integer.valueOf(0));
-
+        activityResultLabel = new JTextArea();
+        activityResultLabel.setBounds(icon.getIconWidth() + 10, 600, 200, 250);
+        activityResultLabel.setFont(new Font(activityResultLabel.getFont().getFontName(), Font.PLAIN, 20));
+        activityResultLabel.setLineWrap(true);
+        activityResultLabel.setWrapStyleWord(true);
+        activityResultLabel.setEditable(false);
+        bPane.add(activityResultLabel);
         // Set the size of the GUI
         setSize(icon.getIconWidth() + 200, icon.getIconHeight());
 
+    }
+
+    public void resetDisplay() {
+        activityResultLabel.setText("Active Player is " + actionModel.getActivePlayer());
     }
 
     public void createButtons() {
@@ -149,9 +160,28 @@ public class BoardLayersListener extends JFrame {
         bAct.setEnabled(actionModel.canAct().isValid());
         bAct.setBounds(1210, 30, 150, 60);
 //        bAct.addMouseListener(new boardMouseListener());
+
         bAct.addActionListener(e -> {
             System.out.println("Act is Selected\n");
+            int roll = new Dice().roll();
+            Action.ActOutcome actOutcome = actionModel.act(roll);
+            activityResultLabel.append("Acting roll result: " + roll);
+            activityResultLabel.append(actOutcome.isActSuccess() ?
+                    "\nsuccessful performed role\n" : "\nfailed to perform role\n");
+            Player activePlayerInfo = actionModel.getActivePlayer();
+            if (actOutcome.getCreditsEarned() != 0) {
+                activityResultLabel.append("Earned " + actOutcome.getCreditsEarned() + " credit(s)\n");
+                gui.updateCreditsLabel(activePlayerInfo.getName(), activePlayerInfo.getCredits());
+            }
+            if (actOutcome.getDollarsEarned() != 0) {
+                activityResultLabel.append("Earned " + actOutcome.getDollarsEarned() + " dollar(s)\n");
+                gui.updateDollarsLabel(activePlayerInfo.getName(), activePlayerInfo.getDollars());
+            }
+
+            //TODO check if scene is finished
         });
+
+
     }
 
     public void Rehearse() {
@@ -190,7 +220,6 @@ public class BoardLayersListener extends JFrame {
                     if (sceneReveled) {
                         gui.revealScene(neighbor);
                     }
-                    bMove.setEnabled(actionModel.canMove().isValid());
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
                     Location location = board.getLocation(neighbor);
                     location.freePlayerPosition(activePlayerInfo.getName());
@@ -204,9 +233,6 @@ public class BoardLayersListener extends JFrame {
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         System.exit(1);
-                    }
-                    for (JButton button : locationButtons) {
-                        button.setVisible(false);
                     }
                     resetMoveButton();
                     bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
