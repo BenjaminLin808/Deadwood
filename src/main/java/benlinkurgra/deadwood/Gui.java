@@ -1,5 +1,6 @@
 package benlinkurgra.deadwood;
 
+import benlinkurgra.deadwood.location.Coordinates;
 import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Board;
@@ -90,10 +91,6 @@ public class Gui extends JFrame {
         }
 
         Queue<Player> playersOrder = new LinkedList<>(playerOrder);
-        int trailerX = board.getLocation("trailer").getCoordinates().getX();
-        int trailerY = board.getLocation("trailer").getCoordinates().getY();
-        int trailerH = board.getLocation("trailer").getCoordinates().getHeight();
-        int trailerW = board.getLocation("trailer").getCoordinates().getWidth();
 
         for(int i = 0; i < playerNum; i++) {
             Player currPlayer = playersOrder.poll();
@@ -101,7 +98,12 @@ public class Gui extends JFrame {
             players.put(currPlayer.getName(), playerDice);
             ImageIcon pIcon = new ImageIcon("src/main/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
             players.get(currPlayer.getName()).setIcon(pIcon);
-            players.get(currPlayer.getName()).setBounds(trailerX+20 + (i%3 * 50), trailerY-40+(i/3 * 50), trailerW, trailerH);
+            Coordinates openCoordinate = board.getLocation("Saloon").placePlayerOnLocation(currPlayer.getName());
+            players.get(currPlayer.getName()).setBounds(
+                    openCoordinate.getX(),
+                    openCoordinate.getY(),
+                    openCoordinate.getWidth(),
+                    openCoordinate.getHeight());
             bPane.add(players.get(currPlayer.getName()), Integer.valueOf(3));
         }
     }
