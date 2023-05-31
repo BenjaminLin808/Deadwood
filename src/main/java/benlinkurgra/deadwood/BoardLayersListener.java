@@ -44,6 +44,7 @@ public class BoardLayersListener extends JFrame {
     JButton bTakeARole;
     JButton bEndTurn;
     private ArrayList<JButton> locationButtons;
+    private ArrayList<JButton> roleButtons = new ArrayList<>();
 
     // JLayered Pane
     JLayeredPane bPane;
@@ -226,7 +227,6 @@ public class BoardLayersListener extends JFrame {
             SetLocation activePlayerLocation = (SetLocation) board.getLocation(actionModel.getActivePlayer().getLocation());
             int playerRank = actionModel.getActivePlayer().getActingRank();
             List<RoleData> roleList = activePlayerLocation.getAllAvailableRoles(playerRank);
-            ArrayList<JButton> roleButtons = new ArrayList<>();
             for (int i = 0; i < roleList.size(); i++) {
                 String roleName = roleList.get(i).getName();
                 Boolean onCard = roleList.get(i).getOnCard();
@@ -277,7 +277,8 @@ public class BoardLayersListener extends JFrame {
         bEndTurn.setBounds(1210, 380, 150, 60);
         bEndTurn.addActionListener(e -> {
             actionModel.endTurn();
-            resetMoveButton();
+//            resetMoveButton();
+            refreshButtons();
         });
     }
 
