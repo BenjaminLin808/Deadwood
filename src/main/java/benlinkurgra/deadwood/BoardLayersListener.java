@@ -115,7 +115,35 @@ public class BoardLayersListener extends JFrame {
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
+    public void refreshButtons() {
+        // Remove existing buttons from the container
+        bPane.remove(bAct);
+        bPane.remove(bRehearse);
+        bPane.remove(bMove);
+        bPane.remove(bTakeARole);
+        bPane.remove(bUpgrade);
+        bPane.remove(bEndTurn);
 
+        // Create and set up new buttons
+        Act();
+        Rehearse();
+        Move();
+        TakeARole();
+        Upgrade();
+        EndTurn();
+
+        // Place the new buttons in the top layer
+        bPane.add(bAct, Integer.valueOf(2));
+        bPane.add(bRehearse, Integer.valueOf(2));
+        bPane.add(bMove, Integer.valueOf(2));
+        bPane.add(bTakeARole, Integer.valueOf(2));
+        bPane.add(bUpgrade, Integer.valueOf(2));
+        bPane.add(bEndTurn, Integer.valueOf(2));
+
+        // Repaint the container to reflect the changes
+        bPane.revalidate();
+        bPane.repaint();
+    }
     public void Act() {
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
@@ -182,6 +210,7 @@ public class BoardLayersListener extends JFrame {
                     for (JButton button : locationButtons) {
                         button.setVisible(false);
                     }
+                    refreshButtons();
                 });
             }
         });
@@ -206,6 +235,9 @@ public class BoardLayersListener extends JFrame {
                 bRole.setBounds(1210 + (i + 1) * 140, 240, 150, 60);
                 bPane.add(bRole);
                 roleButtons.add(bRole);
+                bRole.addActionListener(r -> {
+//                    actionModel.takeRole(actionModel.getActivePlayer().getLocation(), roleName, );
+                });
             }
         });
     }
