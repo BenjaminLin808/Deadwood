@@ -110,7 +110,7 @@ public class Gui extends JFrame {
             players.put(currPlayer.getName(), playerDice);
             ImageIcon pIcon = new ImageIcon("src/main/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
             players.get(currPlayer.getName()).setIcon(pIcon);
-            Coordinates openCoordinate = board.getLocation("Saloon").placePlayerOnLocation(currPlayer.getName());
+            Coordinates openCoordinate = board.getLocation("trailer").placePlayerOnLocation(currPlayer.getName());
             players.get(currPlayer.getName()).setBounds(
                     openCoordinate.getX(),
                     openCoordinate.getY(),

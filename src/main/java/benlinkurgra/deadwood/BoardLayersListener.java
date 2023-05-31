@@ -10,6 +10,7 @@ package benlinkurgra.deadwood;
 
 import benlinkurgra.deadwood.controller.GameInitializer;
 import benlinkurgra.deadwood.controller.GuiInitializer;
+import benlinkurgra.deadwood.location.RoleData;
 import benlinkurgra.deadwood.location.SetLocation;
 import benlinkurgra.deadwood.model.Action;
 import benlinkurgra.deadwood.model.Board;
@@ -23,6 +24,7 @@ import java.awt.event.*;
 import javax.swing.JOptionPane;
 import java.lang.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 public class BoardLayersListener extends JFrame {
@@ -148,7 +150,7 @@ public class BoardLayersListener extends JFrame {
                 bPane.add(bLocation);
                 locationButtons.add(bLocation);
                 bLocation.addActionListener(location -> {
-                    actionModel.getActivePlayer().setLocation(neighbor);
+                    actionModel.move(neighbor);
                     JLabel activePlayer = gui.getPlayers().get(actionModel.getActivePlayer().getName());
                     SetLocation setLocation = (SetLocation) board.getLocation(neighbor);
                     int setLocationX = setLocation.getCoordinates().getX();
@@ -159,7 +161,7 @@ public class BoardLayersListener extends JFrame {
                     for(JButton button : locationButtons){
                         button.setVisible(false);
                     }
-                    bMove.setEnabled(false);
+                    createButtons();
                 });
             }
         });
@@ -173,7 +175,19 @@ public class BoardLayersListener extends JFrame {
 //        bTakeARole.addMouseListener(new boardMouseListener());
         bTakeARole.addActionListener(e -> {
             System.out.println("TakeARole is Selected\n");
+            SetLocation activePlayerLocation = (SetLocation) board.getLocation(actionModel.getActivePlayer().getLocation());
+            int playerRank = actionModel.getActivePlayer().getActingRank();
+            List<RoleData> roleList = activePlayerLocation.getAllAvailableRoles(playerRank);
+            ArrayList<JButton> roleButtons = new ArrayList<>();
+            for(int i = 0; i < roleList.size(); i++){
+                String roleName = roleList.get(i).getName();
+                JButton bRole = new JButton(roleName);
+                bRole.setBackground(Color.white);
+                bRole.setBounds(1210+(i+1)*140, 240, 150, 60);
+                bPane.add(bRole);
+                roleButtons.add(bRole);
 
+            }
         });
     }
 
