@@ -6,14 +6,20 @@ public class RoleData {
     private final String roleDescription;
     private final Coordinates coordinates;
     private String playerOnRole;
+    private Boolean onCard;
 
 
-    public RoleData(int rank, String name, String description, Coordinates coordinates) {
+    public RoleData(int rank, String name, String description, Coordinates coordinates, Boolean onCard) {
         this.rank = rank;
         this.name = name;
         this.roleDescription = description;
         this.coordinates = coordinates;
         playerOnRole = "";
+        this.onCard = onCard;
+    }
+
+    public Boolean getOnCard() {
+        return onCard;
     }
 
     public int getRank() {

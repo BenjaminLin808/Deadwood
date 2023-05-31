@@ -175,7 +175,6 @@ public class BoardLayersListener extends JFrame {
         bMove.setEnabled(actionModel.canMove().isValid());
 
         bMove.setBounds(1210, 170, 150, 60);
-//        bMove.addMouseListener(new boardMouseListener());
         bMove.addActionListener(e -> {
             System.out.println("Move is Selected\n");
             Player activePlayerInfo = actionModel.getActivePlayer();
@@ -221,22 +220,40 @@ public class BoardLayersListener extends JFrame {
         bTakeARole.setBackground(Color.white);
         bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
         bTakeARole.setBounds(1210, 240, 150, 60);
-//        bTakeARole.addMouseListener(new boardMouseListener());
         bTakeARole.addActionListener(e -> {
             System.out.println("TakeARole is Selected\n");
+            Player activePlayerInfo = actionModel.getActivePlayer();
             SetLocation activePlayerLocation = (SetLocation) board.getLocation(actionModel.getActivePlayer().getLocation());
             int playerRank = actionModel.getActivePlayer().getActingRank();
             List<RoleData> roleList = activePlayerLocation.getAllAvailableRoles(playerRank);
             ArrayList<JButton> roleButtons = new ArrayList<>();
             for (int i = 0; i < roleList.size(); i++) {
                 String roleName = roleList.get(i).getName();
+                Boolean onCard = roleList.get(i).getOnCard();
+                RoleData roleData = roleList.get(i);
                 JButton bRole = new JButton(roleName);
                 bRole.setBackground(Color.white);
-                bRole.setBounds(1210 + (i + 1) * 140, 240, 150, 60);
+                bRole.setBounds(1400, 240 + (i)*70, 150, 60);
                 bPane.add(bRole);
                 roleButtons.add(bRole);
                 bRole.addActionListener(r -> {
-//                    actionModel.takeRole(actionModel.getActivePlayer().getLocation(), roleName, );
+                    actionModel.takeRole((SetLocation) board.getLocation(actionModel.getActivePlayer().getLocation()), roleName, onCard);
+                    JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
+                    try {
+                        Coordinates roleCoordinates = roleData.getCoordinates();
+                        activePlayer.setBounds(
+                                roleCoordinates.getX(),
+                                roleCoordinates.getY(),
+                                roleCoordinates.getWidth(),
+                                roleCoordinates.getHeight());
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+                        System.exit(1);
+                    }
+                    for (JButton button : roleButtons) {
+                        button.setVisible(false);
+                    }
+                    refreshButtons();
                 });
             }
         });

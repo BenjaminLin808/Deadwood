@@ -116,7 +116,7 @@ public class ParseBoardXML {
                         Integer.parseInt(areaElement.getAttribute("w")),
                         Integer.parseInt(areaElement.getAttribute("h")));
 
-                roleList.add(new RoleData(partLevel, partName, partLine, roleCoordinates));
+                roleList.add(new RoleData(partLevel, partName, partLine, roleCoordinates, false));
             }
             Roles setRoles = new Roles(roleList);
             SetLocation setLocation = new SetLocation(

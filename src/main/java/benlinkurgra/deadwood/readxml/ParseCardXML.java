@@ -74,7 +74,7 @@ public class ParseCardXML {
                         Integer.parseInt(areaElement.getAttribute("w")),
                         Integer.parseInt(areaElement.getAttribute("h")));
 
-                roleList.add(new RoleData(partLevel, partName, partLine, coordinates));
+                roleList.add(new RoleData(partLevel, partName, partLine, coordinates, true));
             }
             sceneCards.add(new Scene(cardName, budget, sceneLine, new Roles(roleList), sceneFileName));
         }
