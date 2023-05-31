@@ -27,6 +27,18 @@ public class Gui extends JFrame {
         this.board = board;
     }
 
+    public Map<String, JLabel> getPlayers() {
+        return players;
+    }
+
+    public Map<String, JLabel> getCardsLocations() {
+        return cardsLocations;
+    }
+
+    public Map<String, ArrayList<JLabel>> getShots() {
+        return shots;
+    }
+
     public void playPlayerInfo() {
         Queue<Player> playersOrder = new LinkedList<>(playerOrder);
         for(int i = 0; i < playerOrder.size(); i++){
@@ -106,6 +118,8 @@ public class Gui extends JFrame {
                     openCoordinate.getHeight());
             bPane.add(players.get(currPlayer.getName()), Integer.valueOf(3));
         }
+
+
     }
 }
 
