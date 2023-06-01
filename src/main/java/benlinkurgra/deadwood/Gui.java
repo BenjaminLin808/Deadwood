@@ -134,6 +134,7 @@ public class Gui extends JFrame {
         PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
         if(playerDisplay != null){
             playerDisplay.updatePlayerDice(playerName, rank);
+            players.get(playerName).setIcon(new ImageIcon("src/main/images/dice/" + playerName + rank + ".png"));
         }
     }
 

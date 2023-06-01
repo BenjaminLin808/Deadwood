@@ -408,6 +408,7 @@ public class BoardLayersListener extends JFrame {
             upgradeDollars.setVisible(false);
             gui.updateRankLabel(activePlayer.getName(), activePlayer.getActingRank());
             gui.updatePlayerDice(activePlayer.getName(), activePlayer.getActingRank());
+            gui.updateDollarsLabel(activePlayer.getName(), activePlayer.getDollars());
         });
 
         upgradeCredits.setBackground(Color.white);
@@ -423,6 +424,7 @@ public class BoardLayersListener extends JFrame {
             upgradeDollars.setVisible(false);
             gui.updateRankLabel(activePlayer.getName(), activePlayer.getActingRank());
             gui.updatePlayerDice(activePlayer.getName(), activePlayer.getActingRank());
+            gui.updateCreditsLabel(activePlayer.getName(), activePlayer.getCredits());
         });
 
     }
