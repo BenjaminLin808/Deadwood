@@ -87,15 +87,15 @@ public class BoardLayersListener extends JFrame {
     }
 
     public void displayScores(Map<String, Integer> playerScores, List<String> winners){
-        activityResultLabel.setText("End of Game");
+        activityResultLabel.setText("End of Game    ");
         for(String player : playerScores.keySet()){
-            activityResultLabel.append(player + " scored " +  playerScores.get(player));
+            activityResultLabel.append(player + " scored " +  playerScores.get(player)+ "   ");
         }
         String finalWinner = "";
         for(String winner : winners){
             finalWinner += winner + " ";
         }
-        activityResultLabel.append(finalWinner);
+        activityResultLabel.append("The winner/s: "+ finalWinner);
     }
 
     public void createButtons() {
@@ -444,6 +444,7 @@ public class BoardLayersListener extends JFrame {
             if (gameState.getActiveScenes() == 1) {
                 if (actionModel.endDay()) {
                     // day was last day score and end game
+                    EndGame();
                 } else {
                     // day not last day, start new day
                     startNewDay();
@@ -459,7 +460,6 @@ public class BoardLayersListener extends JFrame {
         Queue<Player> players = gameState.getPlayerOrder();
 
         for (Player player :players) {
-            // free current player positions and move player to trailers
             Location playerLocation = board.getLocation(player.getLocation());
             String playerName = player.getName();
             playerLocation.freePlayerPosition(playerName);
@@ -471,7 +471,6 @@ public class BoardLayersListener extends JFrame {
                     trailerCoordinates.getWidth(),
                     trailerCoordinates.getHeight());
 
-            // reset practice tokens, (expected outcome is all == 0)
             gui.updatePracticeLabel(playerName, player.getPracticeToken());
         }
 
