@@ -327,11 +327,18 @@ public class BoardLayersListener extends JFrame {
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
                     try {
                         Coordinates roleCoordinates = roleData.getCoordinates();
-                        activePlayer.setBounds(
-                                roleCoordinates.getX(),
-                                roleCoordinates.getY(),
-                                roleCoordinates.getWidth(),
-                                roleCoordinates.getHeight());
+                        int roleX = roleCoordinates.getX();
+                        int roleY = roleCoordinates.getY();
+                        int roleW = roleCoordinates.getWidth();
+                        int roleH = roleCoordinates.getHeight();
+                        System.out.println("roleData: " + roleData.getOnCard());
+                        if(roleData.getOnCard()){
+                            roleX += activePlayerLocation.getCoordinates().getX();
+                            roleY += activePlayerLocation.getCoordinates().getY() - 55;
+                            roleW += activePlayerLocation.getCoordinates().getWidth();
+                            roleH += activePlayerLocation.getCoordinates().getHeight();
+                        }
+                        activePlayer.setBounds(roleX, roleY, roleW, roleH);
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         System.exit(1);
