@@ -20,6 +20,7 @@ import java.awt.event.*;
 import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class BoardLayersListener extends JFrame {
     private Action actionModel;
@@ -71,7 +72,7 @@ public class BoardLayersListener extends JFrame {
         // Add the board to the lowest layer
         bPane.add(boardlabel, Integer.valueOf(0));
         activityResultLabel = new JTextArea();
-        activityResultLabel.setBounds(icon.getIconWidth() + 10, 600, 200, 250);
+        activityResultLabel.setBounds(icon.getIconWidth() + 10, 500, 220, 300);
         activityResultLabel.setFont(new Font(activityResultLabel.getFont().getFontName(), Font.PLAIN, 20));
         activityResultLabel.setLineWrap(true);
         activityResultLabel.setWrapStyleWord(true);
@@ -83,7 +84,7 @@ public class BoardLayersListener extends JFrame {
     }
 
     public void resetDisplay() {
-        activityResultLabel.setText("Active Player is " + actionModel.getActivePlayer());
+        activityResultLabel.setText("Active Player is " + actionModel.getActivePlayer().getName() + "\n");
     }
 
     public void createButtons() {
@@ -154,6 +155,16 @@ public class BoardLayersListener extends JFrame {
         bPane.revalidate();
         bPane.repaint();
     }
+
+    public void setEnabledAll() {
+        bAct.setEnabled(actionModel.canAct().isValid());
+        bRehearse.setEnabled(actionModel.canRehearse().isValid());
+        bMove.setEnabled(actionModel.canMove().isValid());
+        bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
+        bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
+        bEndTurn.setEnabled(actionModel.canEndTurn().isValid());
+    }
+
     public void Act() {
         bAct = new JButton("ACT");
         bAct.setBackground(Color.white);
@@ -166,9 +177,21 @@ public class BoardLayersListener extends JFrame {
             int roll = new Dice().roll();
             Action.ActOutcome actOutcome = actionModel.act(roll);
             activityResultLabel.append("Acting roll result: " + roll);
-            activityResultLabel.append(actOutcome.isActSuccess() ?
-                    "\nsuccessful performed role\n" : "\nfailed to perform role\n");
+
             Player activePlayerInfo = actionModel.getActivePlayer();
+            if (actOutcome.isActSuccess()) {
+                activityResultLabel.append("\nsuccessful performed role\n");
+                ArrayList<JLabel> shots = gui.getShots().get(activePlayerInfo.getLocation());
+                for (JLabel shot : shots) {
+                    if (shot.isVisible()) {
+                        shot.setVisible(false);
+                        break;
+                    }
+                }
+            } else {
+                activityResultLabel.append("\nfailed to perform role\n");
+            }
+
             if (actOutcome.getCreditsEarned() != 0) {
                 activityResultLabel.append("Earned " + actOutcome.getCreditsEarned() + " credit(s)\n");
                 gui.updateCreditsLabel(activePlayerInfo.getName(), activePlayerInfo.getCredits());
@@ -178,7 +201,40 @@ public class BoardLayersListener extends JFrame {
                 gui.updateDollarsLabel(activePlayerInfo.getName(), activePlayerInfo.getDollars());
             }
 
-            //TODO check if scene is finished
+            if (actOutcome.isSceneFinished()) {
+                SetLocation location = (SetLocation) actionModel.getBoard().getLocation(activePlayerInfo.getLocation());
+                List<String> playersActing = location.playersActingOnLocation();
+
+                Action.ScenePayout scenePayout = actionModel.finishScene();
+
+                if (scenePayout.isBonusPayed()) {
+                    activityResultLabel.append("Scene has finished, paying out bonuses\n");
+                    Map<String, Integer> earnings = scenePayout.getEarnings();
+                    for (String name : earnings.keySet()) {
+                        activityResultLabel.append("Player " + name + " earns " + earnings.get(name) + " dollars\n");
+                        gui.updateDollarsLabel(name, gameState.getPlayer(name).getDollars());
+                    }
+                } else {
+                    activityResultLabel.append("Scene has finished, no bonus received\n");
+                }
+
+                playersActing.addAll(location.playersActingOnScene());
+                for (String playerName : playersActing) {
+                    // move players off roles
+                    Coordinates locationCoordinates = location.placePlayerOnLocation(playerName);
+                    gui.getPlayers().get(playerName).setBounds(
+                            locationCoordinates.getX(),
+                            locationCoordinates.getY(),
+                            locationCoordinates.getWidth(),
+                            locationCoordinates.getHeight());
+                    location.freePlayerPosition(playerName);
+                    // display 0 practice token for players
+                    gui.updatePracticeLabel(playerName, 0);
+                }
+                // display scene completed
+                gui.completeScene(location.getName());
+            }
+            setEnabledAll();
         });
 
 
@@ -192,6 +248,10 @@ public class BoardLayersListener extends JFrame {
 //        bRehearse.addMouseListener(new boardMouseListener());
         bRehearse.addActionListener(e -> {
             System.out.println("Rehearse is Selected\n");
+            actionModel.rehearse();
+            Player activePlayerInfo = actionModel.getActivePlayer();
+            gui.updatePracticeLabel(activePlayerInfo.getName(), activePlayerInfo.getPracticeToken());
+            setEnabledAll();
         });
     }
 
@@ -355,6 +415,7 @@ public class BoardLayersListener extends JFrame {
         bEndTurn.addActionListener(e -> {
             actionModel.endTurn();
             refreshButtons();
+            resetDisplay();
         });
     }
 

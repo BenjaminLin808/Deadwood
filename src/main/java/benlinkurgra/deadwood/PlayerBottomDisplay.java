@@ -8,6 +8,7 @@ public class PlayerBottomDisplay {
     private JLabel rankLabel;
     private JLabel dollarsLabel;
     private JLabel creditsLabel;
+    private JLabel practiceLabel;
 
     public PlayerBottomDisplay(String playerName, int actingRank, int dollars, int credits, ImageIcon icon) {
         playerDice = new JLabel();
@@ -16,6 +17,7 @@ public class PlayerBottomDisplay {
         rankLabel = new JLabel("Player Rank: " + actingRank);
         dollarsLabel = new JLabel("Player Dollars: " + dollars);
         creditsLabel = new JLabel("Player Credits: " + credits);
+        practiceLabel = new JLabel("Player Practice Tokens: 0");
     }
 
     public JLabel getPlayerDice() {
@@ -38,6 +40,10 @@ public class PlayerBottomDisplay {
         return creditsLabel;
     }
 
+    public JLabel getPracticeLabel() {
+        return practiceLabel;
+    }
+
     /**
      * update the dollars label
      *
@@ -54,5 +60,9 @@ public class PlayerBottomDisplay {
      */
     public void updateCredits(int credits) {
         creditsLabel.setText("Player Credits: " + credits);
+    }
+
+    public void updatePracticeTokens(int tokens) {
+        practiceLabel.setText("Player Practice Tokens: " + tokens);
     }
 }

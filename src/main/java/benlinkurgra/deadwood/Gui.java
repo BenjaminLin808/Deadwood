@@ -7,6 +7,7 @@ import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.*;
 
@@ -76,6 +77,9 @@ public class Gui extends JFrame {
             playerBottomDisplay.getCreditsLabel().setBounds(70 + (i * 230), 940, 180, 60);
             bPane.add(playerBottomDisplay.getCreditsLabel(), Integer.valueOf(2));
 
+            playerBottomDisplay.getPracticeLabel().setBounds(70 + (i * 230), 960, 180, 60);
+            bPane.add(playerBottomDisplay.getPracticeLabel(), Integer.valueOf(2));
+
             playerBottomDisplayMap.put(currPlayer.getName(), playerBottomDisplay);
         }
     }
@@ -103,6 +107,19 @@ public class Gui extends JFrame {
         PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
         if (playerDisplay != null) {
             playerDisplay.updateCredits(credits);
+        }
+    }
+
+    /**
+     * Updates the player practice token amount on bottom display
+     *
+     * @param playerName name of player for update
+     * @param tokens amount of practice tokens player has
+     */
+    public void updatePracticeLabel(String playerName, int tokens) {
+        PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
+        if (playerDisplay != null) {
+            playerDisplay.updatePracticeTokens(tokens);
         }
     }
 
@@ -168,6 +185,10 @@ public class Gui extends JFrame {
         String sceneFileName = location.getSceneFileName();
         ImageIcon sceneCard = new ImageIcon("src/main/images/cards/" + sceneFileName);
         cardsLocations.get(locationName).setIcon(sceneCard);
+    }
+
+    public void completeScene(String locationName) {
+        cardsLocations.get(locationName).setVisible(false);
     }
 }
 

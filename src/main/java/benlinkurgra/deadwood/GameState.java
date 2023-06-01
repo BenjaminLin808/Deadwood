@@ -162,6 +162,17 @@ public class GameState {
         // Create a new queue with the sorted players and return it
         return new LinkedList<>(selectedPlayers);
     }
+
+    public Player getPlayer(String name) {
+        for (Player player : playerOrder) {
+            if (player.getName().equals(name)) {
+                return player;
+            }
+        }
+        throw new IllegalArgumentException("Error, method getPlayer received illegal argument, " +
+                name +
+                " is not a player name");
+    }
 }
 
 
