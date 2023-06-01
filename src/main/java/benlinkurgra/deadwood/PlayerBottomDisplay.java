@@ -62,6 +62,13 @@ public class PlayerBottomDisplay {
         creditsLabel.setText("Player Credits: " + credits);
     }
 
+    public void updateRank(int rank){
+        rankLabel.setText("Player Rank: " + rank);
+    }
+
+    public void updatePlayerDice(String playerName, int rank){
+        playerDice.setIcon(new ImageIcon("src/main/images/dice/" + playerName + rank + ".png"));
+    }
     public void updatePracticeTokens(int tokens) {
         practiceLabel.setText("Player Practice Tokens: " + tokens);
     }

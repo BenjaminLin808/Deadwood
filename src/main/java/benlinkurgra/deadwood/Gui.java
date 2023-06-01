@@ -123,6 +123,20 @@ public class Gui extends JFrame {
         }
     }
 
+    public void updateRankLabel(String playerName, int rank){
+        PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
+        if(playerDisplay != null){
+            playerDisplay.updateRank(rank);
+        }
+    }
+
+    public void updatePlayerDice(String playerName, int rank){
+        PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
+        if(playerDisplay != null){
+            playerDisplay.updatePlayerDice(playerName, rank);
+        }
+    }
+
     public void setUp(Map<String, Location> locations) {
         Set<String> keys = locations.keySet();
 

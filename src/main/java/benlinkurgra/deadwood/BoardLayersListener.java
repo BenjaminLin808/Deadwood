@@ -355,7 +355,7 @@ public class BoardLayersListener extends JFrame {
             Player activePlayerInfo = actionModel.getActivePlayer();
             int playerRank = activePlayerInfo.getActingRank();
             CastingOffice castingOffice = (CastingOffice) board.getLocation(activePlayerInfo.getLocation());
-            for(int i = playerRank; i < 7; i++){
+            for(int i = playerRank+1; i < 7; i++){
                 JButton bUp = new JButton("" + i);
                 int rank = i;
                 bUp.setBackground(Color.white);
@@ -383,12 +383,15 @@ public class BoardLayersListener extends JFrame {
         bPane.add(upgradeDollars);
         int dollars = upgradeCost.getDollarCost();
         upgradeDollars.addActionListener(f -> {
-            if(activePlayer.getDollars() < dollars){
+            if(activePlayer.getDollars() >= dollars){
                 activePlayer.upgrade(newRank, CurrencyType.DOLLARS, dollars);
+                System.out.println("Dollars: "+dollars);
             }
             resetUpgradeButton();
-            bPane.remove(upgradeDollars);
-            bPane.remove(upgradeCredits);
+            upgradeCredits.setVisible(false);
+            upgradeDollars.setVisible(false);
+            gui.updateRankLabel(activePlayer.getName(), activePlayer.getActingRank());
+            gui.updatePlayerDice(activePlayer.getName(), activePlayer.getActingRank());
         });
 
         upgradeCredits.setBackground(Color.white);
@@ -396,12 +399,14 @@ public class BoardLayersListener extends JFrame {
         bPane.add(upgradeCredits);
         int credits = upgradeCost.getCreditsCost();
         upgradeCredits.addActionListener(e -> {
-            if(activePlayer.getCredits() < credits){
+            if(activePlayer.getCredits() >= credits){
                 activePlayer.upgrade(newRank, CurrencyType.CREDITS, credits);
             }
             resetUpgradeButton();
-            bPane.remove(upgradeDollars);
-            bPane.remove(upgradeCredits);
+            upgradeCredits.setVisible(false);
+            upgradeDollars.setVisible(false);
+            gui.updateRankLabel(activePlayer.getName(), activePlayer.getActingRank());
+            gui.updatePlayerDice(activePlayer.getName(), activePlayer.getActingRank());
         });
 
     }
