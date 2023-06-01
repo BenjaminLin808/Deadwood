@@ -18,9 +18,8 @@ import javax.swing.*;
 import javax.swing.ImageIcon;
 import java.awt.event.*;
 import java.lang.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class BoardLayersListener extends JFrame {
     private Action actionModel;
@@ -72,7 +71,7 @@ public class BoardLayersListener extends JFrame {
         // Add the board to the lowest layer
         bPane.add(boardlabel, Integer.valueOf(0));
         activityResultLabel = new JTextArea();
-        activityResultLabel.setBounds(icon.getIconWidth() + 10, 500, 220, 300);
+        activityResultLabel.setBounds(icon.getIconWidth() + 10, 600, 220, 300);
         activityResultLabel.setFont(new Font(activityResultLabel.getFont().getFontName(), Font.PLAIN, 20));
         activityResultLabel.setLineWrap(true);
         activityResultLabel.setWrapStyleWord(true);
@@ -85,6 +84,18 @@ public class BoardLayersListener extends JFrame {
 
     public void resetDisplay() {
         activityResultLabel.setText("Active Player is " + actionModel.getActivePlayer().getName() + "\n");
+    }
+
+    public void displayScores(Map<String, Integer> playerScores, List<String> winners){
+        activityResultLabel.setText("End of Game");
+        for(String player : playerScores.keySet()){
+            activityResultLabel.append(player + " scored " +  playerScores.get(player));
+        }
+        String finalWinner = "";
+        for(String winner : winners){
+            finalWinner += winner + " ";
+        }
+        activityResultLabel.append(finalWinner);
     }
 
     public void createButtons() {
@@ -170,8 +181,6 @@ public class BoardLayersListener extends JFrame {
         bAct.setBackground(Color.white);
         bAct.setEnabled(actionModel.canAct().isValid());
         bAct.setBounds(1210, 30, 150, 60);
-//        bAct.addMouseListener(new boardMouseListener());
-
         bAct.addActionListener(e -> {
             System.out.println("Act is Selected\n");
             int roll = new Dice().roll();
@@ -431,6 +440,24 @@ public class BoardLayersListener extends JFrame {
         });
     }
 
+    public void EndGame() {
+        Queue<Player> players = gameState.getPlayerOrder();
+        Map<String, Integer> playerScores = new HashMap<>();
+        List<String> winners = new ArrayList<>();
+        int highScore = 0;
+        for (Player player : players) {
+            int score = player.score();
+            playerScores.put(player.getName(), score);
+            if (score > highScore) {
+                winners.clear();
+                winners.add(player.getName());
+                highScore = score;
+            } else if (score == highScore) {
+                winners.add(player.getName());
+            }
+        }
+        displayScores(playerScores, winners);
+    }
     /**
      * Clears neighbour buttons and determines rather Move button should be active
      */
