@@ -4,6 +4,7 @@ import benlinkurgra.deadwood.location.Location;
 import benlinkurgra.deadwood.location.Scene;
 import benlinkurgra.deadwood.location.SetLocation;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -51,6 +52,21 @@ public class Board {
      */
     public boolean isSetLocation(Location location) {
         return location instanceof SetLocation;
+    }
+
+    /**
+     * grabs all set locations on the board
+     *
+     * @return a list containing all set locations
+     */
+    public List<SetLocation> getSetLocations() {
+        List<SetLocation> setLocations = new ArrayList<>();
+        for (Location location : locations.values()) {
+            if (isSetLocation(location)) {
+                setLocations.add((SetLocation) location);
+            }
+        }
+        return setLocations;
     }
 
     public void dealNewScenes(Queue<Scene> scenes) {

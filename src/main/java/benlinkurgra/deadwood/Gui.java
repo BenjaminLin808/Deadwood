@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.*;
+import java.util.List;
 
 public class Gui extends JFrame {
     private Queue<Player> playerOrder;
@@ -138,13 +139,27 @@ public class Gui extends JFrame {
         }
     }
 
+    public void resetScenes() {
+        ImageIcon cardback = new ImageIcon("src/main/images/cardback-small.jpg");
+        for (JLabel cardLocation : cardsLocations.values()) {
+            cardLocation.setVisible(true);
+            cardLocation.setIcon(cardback);
+        }
+
+        for (ArrayList<JLabel> shots : shots.values()) {
+            for (JLabel shot : shots) {
+                shot.setVisible(true);
+            }
+        }
+    }
+
     public void setUp(Map<String, Location> locations) {
         Set<String> keys = locations.keySet();
 
         for (String key : keys) {
-            JLabel value = new JLabel();
-            cardsLocations.put(key, value);
             if (!key.equals("office") && !key.equals("trailer")) {
+                JLabel value = new JLabel();
+                cardsLocations.put(key, value);
                 Coordinates locationCoordinates = board.getLocation(key).getCoordinates();
                 int x = locationCoordinates.getX();
                 int y = locationCoordinates.getY();

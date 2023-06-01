@@ -291,7 +291,7 @@ public class BoardLayersListener extends JFrame {
                     }
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
                     Location location = board.getLocation(neighbor);
-                    location.freePlayerPosition(activePlayerInfo.getName());
+                    board.getLocation(activePlayerInfo.getLocation()).freePlayerPosition(activePlayerInfo.getName());
                     try {
                         Coordinates locationCoordinates = location.placePlayerOnLocation(activePlayerInfo.getName());
                         activePlayer.setBounds(
@@ -333,6 +333,7 @@ public class BoardLayersListener extends JFrame {
                 roleButtons.add(bRole);
                 bRole.addActionListener(r -> {
                     actionModel.takeRole(activePlayerLocation, roleName, onCard);
+                    activePlayerLocation.freePlayerPosition(activePlayerInfo.getName());
                     JLabel activePlayer = gui.getPlayers().get(activePlayerInfo.getName());
                     try {
                         Coordinates roleCoordinates = roleData.getCoordinates();
@@ -439,7 +440,43 @@ public class BoardLayersListener extends JFrame {
             actionModel.endTurn();
             refreshButtons();
             resetDisplay();
+            // Check if day should be ended
+            if (gameState.getActiveScenes() == 1) {
+                if (actionModel.endDay()) {
+                    // day was last day score and end game
+                } else {
+                    // day not last day, start new day
+                    startNewDay();
+                }
+            }
         });
+    }
+
+    /**
+     * changes appropriate gui elements to start new day
+     */
+    private void startNewDay() {
+        Queue<Player> players = gameState.getPlayerOrder();
+
+        for (Player player :players) {
+            // free current player positions and move player to trailers
+            Location playerLocation = board.getLocation(player.getLocation());
+            String playerName = player.getName();
+            playerLocation.freePlayerPosition(playerName);
+            Coordinates trailerCoordinates = board.getLocation("trailer")
+                    .placePlayerOnLocation(playerName);
+            gui.getPlayers().get(playerName).setBounds(
+                    trailerCoordinates.getX(),
+                    trailerCoordinates.getY(),
+                    trailerCoordinates.getWidth(),
+                    trailerCoordinates.getHeight());
+
+            // reset practice tokens, (expected outcome is all == 0)
+            gui.updatePracticeLabel(playerName, player.getPracticeToken());
+        }
+
+        // changes scenes on board to hidden and reset shot counters
+        gui.resetScenes();
     }
 
     public void EndGame() {
