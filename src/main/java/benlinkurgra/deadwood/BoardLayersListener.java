@@ -170,8 +170,8 @@ public class BoardLayersListener extends JFrame {
     public void setEnabledAll() {
         bAct.setEnabled(actionModel.canAct().isValid());
         bRehearse.setEnabled(actionModel.canRehearse().isValid());
-        bMove.setEnabled(actionModel.canMove().isValid());
-        bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
+        resetMoveButton();
+        resetTakeARoleButton();
         bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
         bEndTurn.setEnabled(actionModel.canEndTurn().isValid());
     }
@@ -236,7 +236,6 @@ public class BoardLayersListener extends JFrame {
                             locationCoordinates.getY(),
                             locationCoordinates.getWidth(),
                             locationCoordinates.getHeight());
-                    location.freePlayerPosition(playerName);
                     // display 0 practice token for players
                     gui.updatePracticeLabel(playerName, 0);
                 }
@@ -303,9 +302,7 @@ public class BoardLayersListener extends JFrame {
                         exception.printStackTrace();
                         System.exit(1);
                     }
-                    resetMoveButton();
-                    bTakeARole.setEnabled(actionModel.canTakeRole().isValid());
-                    bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
+                    setEnabledAll();
                 });
             }
         });
@@ -356,7 +353,7 @@ public class BoardLayersListener extends JFrame {
                     for (JButton button : roleButtons) {
                         button.setVisible(false);
                     }
-                    resetTakeARoleButton();
+                    setEnabledAll();
                 });
             }
         });
@@ -386,6 +383,7 @@ public class BoardLayersListener extends JFrame {
                     upgradeMethods(activePlayerInfo, rank, castingOffice);
                 });
             }
+            setEnabledAll();
         });
     }
 
@@ -430,7 +428,6 @@ public class BoardLayersListener extends JFrame {
 
     }
 
-
     public void EndTurn() {
         bEndTurn = new JButton("End Turn");
         bEndTurn.setBackground(Color.white);
@@ -438,8 +435,6 @@ public class BoardLayersListener extends JFrame {
         bEndTurn.setBounds(1210, 380, 150, 60);
         bEndTurn.addActionListener(e -> {
             actionModel.endTurn();
-            refreshButtons();
-            resetDisplay();
             // Check if day should be ended
             if (gameState.getActiveScenes() == 1) {
                 if (actionModel.endDay()) {
@@ -450,6 +445,8 @@ public class BoardLayersListener extends JFrame {
                     startNewDay();
                 }
             }
+            setEnabledAll();
+            resetDisplay();            
         });
     }
 
@@ -531,7 +528,6 @@ public class BoardLayersListener extends JFrame {
     public JLayeredPane getbPane() {
         return bPane;
     }
-
 
     // This class implements Mouse Events
 
