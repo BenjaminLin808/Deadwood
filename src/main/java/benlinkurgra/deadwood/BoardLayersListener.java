@@ -64,7 +64,7 @@ public class BoardLayersListener extends JFrame {
 
         // Create the deadwood board
         boardlabel = new JLabel();
-        ImageIcon icon = new ImageIcon("src/main/images/board.jpg");
+        ImageIcon icon = new ImageIcon(Main.class.getResource("/images/board.jpg"));
         boardlabel.setIcon(icon);
         boardlabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
 
@@ -99,7 +99,7 @@ public class BoardLayersListener extends JFrame {
     }
 
     public void createButtons() {
-        ImageIcon icon = new ImageIcon("src/main/images/board.jpg");
+        ImageIcon icon = new ImageIcon(Main.class.getResource("/images/board.jpg"));
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
         mLabel.setBounds(icon.getIconWidth() + 40, 0, 150, 20);
@@ -529,39 +529,4 @@ public class BoardLayersListener extends JFrame {
         return bPane;
     }
 
-    // This class implements Mouse Events
-
-    class boardMouseListener implements MouseListener {
-
-        // Code for the different button clicks
-        public void mouseClicked(MouseEvent e) {
-            if (e.getSource() == bAct) {
-                playerlabel.setVisible(true);
-                System.out.println("Acting is Selected\n");
-            }
-//            else if (e.getSource()== bRehearse){
-//                System.out.println("Rehearse is Selected\n");
-//            }
-            else if (e.getSource() == bMove) {
-                System.out.println("TEST Move is Selected\n");
-            }
-        }
-
-        public void mousePressed(MouseEvent e) {
-        }
-
-        public void mouseReleased(MouseEvent e) {
-        }
-
-        public void mouseEntered(MouseEvent e) {
-        }
-
-        public void mouseExited(MouseEvent e) {
-        }
-    }
-
-    public static void main(String[] args) {
-
-
-    }
 }
