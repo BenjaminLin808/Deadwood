@@ -8,6 +8,7 @@ import benlinkurgra.deadwood.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.List;
@@ -47,7 +48,18 @@ public class Gui extends JFrame {
         Queue<Player> playersOrder = new LinkedList<>(playerOrder);
         for (int i = 0; i < playerOrder.size(); i++) {
             Player currPlayer = playersOrder.poll();
-            ImageIcon pIcon = new ImageIcon("src/main/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
+            ImageIcon pIcon = null;
+            try {
+                assert currPlayer != null;
+                URL iconURL = Gui.class.getResource("/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
+                assert iconURL != null;
+                pIcon = new ImageIcon(iconURL);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+
+//            ImageIcon pIcon = new ImageIcon("src/main/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png");
 
             PlayerBottomDisplay playerBottomDisplay = new PlayerBottomDisplay(
                     currPlayer.getName(),
