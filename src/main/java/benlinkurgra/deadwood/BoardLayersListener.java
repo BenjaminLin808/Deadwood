@@ -86,18 +86,6 @@ public class BoardLayersListener extends JFrame {
         activityResultLabel.setText("Active Player is " + actionModel.getActivePlayer().getName() + "\n");
     }
 
-    public void displayScores(Map<String, Integer> playerScores, List<String> winners){
-        activityResultLabel.setText("End of Game    ");
-        for(String player : playerScores.keySet()){
-            activityResultLabel.append(player + " scored " +  playerScores.get(player)+ "   ");
-        }
-        String finalWinner = "";
-        for(String winner : winners){
-            finalWinner += winner + " ";
-        }
-        activityResultLabel.append("The winner/s: "+ finalWinner);
-    }
-
     public void createButtons() {
         ImageIcon icon = new ImageIcon(Main.class.getResource("/images/board.jpg"));
         // Create the Menu for action buttons
@@ -491,7 +479,7 @@ public class BoardLayersListener extends JFrame {
                 winners.add(player.getName());
             }
         }
-        displayScores(playerScores, winners);
+        new ScoreScreen().displayScores(playerScores, winners);
     }
     /**
      * Clears neighbour buttons and determines rather Move button should be active
