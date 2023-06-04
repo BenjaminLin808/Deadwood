@@ -67,7 +67,7 @@ public class PlayerBottomDisplay {
     }
 
     public void updatePlayerDice(String playerName, int rank){
-        playerDice.setIcon(new ImageIcon(Main.class.getResource("/images/dice/" + playerName + rank + ".png")));
+        playerDice.setIcon(new ImageIcon(Deadwood.class.getResource("/images/dice/" + playerName + rank + ".png")));
     }
     public void updatePracticeTokens(int tokens) {
         practiceLabel.setText("Player Practice Tokens: " + tokens);

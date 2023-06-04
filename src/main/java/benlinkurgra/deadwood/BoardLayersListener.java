@@ -16,7 +16,6 @@ import benlinkurgra.deadwood.model.Player;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.ImageIcon;
-import java.awt.event.*;
 import java.lang.*;
 import java.util.*;
 import java.util.List;
@@ -64,7 +63,7 @@ public class BoardLayersListener extends JFrame {
 
         // Create the deadwood board
         boardlabel = new JLabel();
-        ImageIcon icon = new ImageIcon(Main.class.getResource("/images/board.jpg"));
+        ImageIcon icon = new ImageIcon(Deadwood.class.getResource("/images/board.jpg"));
         boardlabel.setIcon(icon);
         boardlabel.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
 
@@ -87,7 +86,7 @@ public class BoardLayersListener extends JFrame {
     }
 
     public void createButtons() {
-        ImageIcon icon = new ImageIcon(Main.class.getResource("/images/board.jpg"));
+        ImageIcon icon = new ImageIcon(Deadwood.class.getResource("/images/board.jpg"));
         // Create the Menu for action buttons
         mLabel = new JLabel("MENU");
         mLabel.setBounds(icon.getIconWidth() + 40, 0, 150, 20);

@@ -7,11 +7,9 @@ import benlinkurgra.deadwood.model.Board;
 import benlinkurgra.deadwood.model.Player;
 
 import javax.swing.*;
-import java.awt.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.*;
-import java.util.List;
 
 public class Gui extends JFrame {
     private Queue<Player> playerOrder;
@@ -145,12 +143,12 @@ public class Gui extends JFrame {
         PlayerBottomDisplay playerDisplay = playerBottomDisplayMap.get(playerName);
         if(playerDisplay != null){
             playerDisplay.updatePlayerDice(playerName, rank);
-            players.get(playerName).setIcon(new ImageIcon(Main.class.getResource("/images/dice/" + playerName + rank + ".png")));
+            players.get(playerName).setIcon(new ImageIcon(Deadwood.class.getResource("/images/dice/" + playerName + rank + ".png")));
         }
     }
 
     public void resetScenes() {
-        ImageIcon cardback = new ImageIcon(Main.class.getResource("/images/cardback-small.jpg"));
+        ImageIcon cardback = new ImageIcon(Deadwood.class.getResource("/images/cardback-small.jpg"));
         for (JLabel cardLocation : cardsLocations.values()) {
             cardLocation.setVisible(true);
             cardLocation.setIcon(cardback);
@@ -175,7 +173,7 @@ public class Gui extends JFrame {
                 int y = locationCoordinates.getY();
                 int h = locationCoordinates.getHeight();
                 int w = locationCoordinates.getWidth();
-                ImageIcon cardback = new ImageIcon(Main.class.getResource("/images/cardback-small.jpg"));
+                ImageIcon cardback = new ImageIcon(Deadwood.class.getResource("/images/cardback-small.jpg"));
                 cardsLocations.get(key).setIcon(cardback);
                 cardsLocations.get(key).setBounds(x, y, w, h);
                 bPane.add(cardsLocations.get(key), Integer.valueOf(2));
@@ -188,7 +186,7 @@ public class Gui extends JFrame {
                     int shotY = setLocation.getTakeCoordinates().get(i).getY();
                     int shotH = setLocation.getTakeCoordinates().get(i).getHeight();
                     int shotW = setLocation.getTakeCoordinates().get(i).getWidth();
-                    ImageIcon shot = new ImageIcon(Main.class.getResource("/images/shot.png"));
+                    ImageIcon shot = new ImageIcon(Deadwood.class.getResource("/images/shot.png"));
                     JLabel shotValue = new JLabel();
                     shots.get(key).add(shotValue);
                     shots.get(key).get(i).setIcon(shot);
@@ -203,7 +201,7 @@ public class Gui extends JFrame {
             Player currPlayer = playersOrder.poll();
             JLabel playerDice = new JLabel();
             players.put(currPlayer.getName(), playerDice);
-            ImageIcon pIcon = new ImageIcon(Main.class.getResource("/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png"));
+            ImageIcon pIcon = new ImageIcon(Deadwood.class.getResource("/images/dice/" + currPlayer.getName() + currPlayer.getActingRank() + ".png"));
             players.get(currPlayer.getName()).setIcon(pIcon);
             try {
                 Coordinates openCoordinate = board.getLocation("trailer").placePlayerOnLocation(currPlayer.getName());
@@ -223,7 +221,7 @@ public class Gui extends JFrame {
     public void revealScene(String locationName) {
         SetLocation location = (SetLocation) board.getLocation(locationName);
         String sceneFileName = location.getSceneFileName();
-        ImageIcon sceneCard = new ImageIcon(Main.class.getResource("/images/cards/" + sceneFileName));
+        ImageIcon sceneCard = new ImageIcon(Deadwood.class.getResource("/images/cards/" + sceneFileName));
         cardsLocations.get(locationName).setIcon(sceneCard);
     }
 

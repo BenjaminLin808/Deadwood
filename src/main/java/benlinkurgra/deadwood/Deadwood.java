@@ -13,7 +13,7 @@ import benlinkurgra.deadwood.readxml.ParseCardXML;
 
 import java.util.Map;
 import java.util.Queue;
-public class Main {
+public class Deadwood {
     private static ActionProvider actionProvider;
     private static Board board;
     private static GameState gameState;
@@ -25,7 +25,7 @@ public class Main {
     private static Map<String, Location> getBoardComponents() {
         try {
             ParseBoardXML boardXML = new ParseBoardXML();
-            return boardXML.getLocations(Main.class.getResource("/board.xml"));
+            return boardXML.getLocations(Deadwood.class.getResource("/board.xml"));
         } catch (Exception e) {
             System.exit(-1);
             return null;
@@ -39,7 +39,7 @@ public class Main {
     private static Queue<Scene> getSceneComponents() {
         try {
             ParseCardXML cardXML = new ParseCardXML();
-            return cardXML.getScenes(Main.class.getResource("/cards.xml"));
+            return cardXML.getScenes(Deadwood.class.getResource("/cards.xml"));
         } catch (Exception e) {
             System.exit(-1);
         }
