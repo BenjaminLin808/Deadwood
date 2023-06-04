@@ -75,7 +75,12 @@ public class BoardLayersListener extends JFrame {
         activityResultLabel.setLineWrap(true);
         activityResultLabel.setWrapStyleWord(true);
         activityResultLabel.setEditable(false);
-        bPane.add(activityResultLabel);
+        JScrollPane scrollPane = new JScrollPane(activityResultLabel);
+        scrollPane.setBounds(icon.getIconWidth() + 10, 600, 220, 300);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        bPane.add(scrollPane);
+
         // Set the size of the GUI
         setSize(icon.getIconWidth() + 200, icon.getIconHeight());
 
@@ -124,42 +129,13 @@ public class BoardLayersListener extends JFrame {
     public void setGameState(GameState gameState) {
         this.gameState = gameState;
     }
-    public void refreshButtons() {
-        // Remove existing buttons from the container
-        bPane.remove(bAct);
-        bPane.remove(bRehearse);
-        bPane.remove(bMove);
-        bPane.remove(bTakeARole);
-        bPane.remove(bUpgrade);
-        bPane.remove(bEndTurn);
-
-        // Create and set up new buttons
-        Act();
-        Rehearse();
-        Move();
-        TakeARole();
-        Upgrade();
-        EndTurn();
-
-        // Place the new buttons in the top layer
-        bPane.add(bAct, Integer.valueOf(2));
-        bPane.add(bRehearse, Integer.valueOf(2));
-        bPane.add(bMove, Integer.valueOf(2));
-        bPane.add(bTakeARole, Integer.valueOf(2));
-        bPane.add(bUpgrade, Integer.valueOf(2));
-        bPane.add(bEndTurn, Integer.valueOf(2));
-
-        // Repaint the container to reflect the changes
-        bPane.revalidate();
-        bPane.repaint();
-    }
 
     public void setEnabledAll() {
         bAct.setEnabled(actionModel.canAct().isValid());
         bRehearse.setEnabled(actionModel.canRehearse().isValid());
         resetMoveButton();
         resetTakeARoleButton();
-        bUpgrade.setEnabled(actionModel.canUpgrade().isValid());
+        resetUpgradeButton();
         bEndTurn.setEnabled(actionModel.canEndTurn().isValid());
     }
 
@@ -370,7 +346,6 @@ public class BoardLayersListener extends JFrame {
                     upgradeMethods(activePlayerInfo, rank, castingOffice);
                 });
             }
-            setEnabledAll();
         });
     }
 
@@ -395,6 +370,7 @@ public class BoardLayersListener extends JFrame {
             gui.updateRankLabel(activePlayer.getName(), activePlayer.getActingRank());
             gui.updatePlayerDice(activePlayer.getName(), activePlayer.getActingRank());
             gui.updateDollarsLabel(activePlayer.getName(), activePlayer.getDollars());
+            setEnabledAll();
         });
 
         upgradeCredits.setBackground(Color.white);
@@ -411,6 +387,7 @@ public class BoardLayersListener extends JFrame {
             gui.updateRankLabel(activePlayer.getName(), activePlayer.getActingRank());
             gui.updatePlayerDice(activePlayer.getName(), activePlayer.getActingRank());
             gui.updateCreditsLabel(activePlayer.getName(), activePlayer.getCredits());
+            setEnabledAll();
         });
 
     }
@@ -433,7 +410,9 @@ public class BoardLayersListener extends JFrame {
                 }
             }
             setEnabledAll();
-            resetDisplay();            
+            Action.Validity moveVal = actionModel.canMove();
+            System.out.println("moveVal: " + moveVal.isValid() + " reason: " + moveVal.getReason());
+            resetDisplay();
         });
     }
 
